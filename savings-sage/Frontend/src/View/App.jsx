@@ -1,5 +1,5 @@
 import {useEffect} from 'react'
-import './App.css'
+import '../Styles/App.css'
 //this is a test push
 function App() {
 
