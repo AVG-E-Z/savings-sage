@@ -1,4 +1,6 @@
-namespace SavingsSage.Model;
+using SavingsSage.Model;
+
+namespace savings_sage.Model;
 
 public class BankAccount
 {

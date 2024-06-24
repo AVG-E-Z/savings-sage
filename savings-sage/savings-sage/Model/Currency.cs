@@ -1,4 +1,5 @@
-namespace SavingsSage.Model;
+
+namespace savings_sage.Model;
 
 public enum Currency
 {
