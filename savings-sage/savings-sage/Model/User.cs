@@ -12,5 +12,5 @@ public class User
     public IEnumerable<Budget> Budgets { get; set; }
     public string EmailAddress { get; set; }
     public DateTime Birthday { get; init; }
-    
+    //password?
 }

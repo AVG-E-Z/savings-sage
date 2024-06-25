@@ -1,11 +1,10 @@
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 
-namespace SavingsSage;
+namespace savings_sage.Controller;
 
 [ApiController]
 [Route("[controller]")]
-public class DummyController : Controller
+public class DummyController : Microsoft.AspNetCore.Mvc.Controller
 {
     [HttpGet]
     public IActionResult SimpleGetRequest()
