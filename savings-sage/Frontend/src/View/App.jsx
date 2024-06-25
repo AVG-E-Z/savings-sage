@@ -1,5 +1,5 @@
-import {useEffect} from 'react'
-import '../Styles/App.css'
+import {useEffect} from 'react';
+import Logo from "./Components/Logo.jsx";
 //this is a test push
 function App() {
 
@@ -17,9 +17,14 @@ function App() {
     }, []);
   
     return (
-    <>
-     <h1>My React app</h1>
-    </>
+    <div className={"main"}>
+        <div className={"logoNavbarResize"}>
+            <Logo/>
+        </div>
+        <div>
+            <h1>My React app</h1>
+        </div>
+    </div>
   )
 }
 
