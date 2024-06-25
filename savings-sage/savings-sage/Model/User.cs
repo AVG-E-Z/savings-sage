@@ -1,3 +1,5 @@
+using savings_sage.Model.Accounts;
+
 namespace savings_sage.Model;
 
 public class User
