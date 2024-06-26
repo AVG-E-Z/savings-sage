@@ -48,14 +48,14 @@ public class SavingsSageContext : DbContext
             .ValueGeneratedOnAdd();
         
         modelBuilder.Entity<BankAccount>()
-            .HasIndex(b => new { b.UserId, b.Name })
+            .HasIndex(b => new { b.OwnerId, b.Name })
             .IsUnique()
             .HasDatabaseName("IX_User_BankAccountName_Unique");
         
         modelBuilder.Entity<BankAccount>()
             .HasOne(ba => ba.Owner)
             .WithMany(u => u.BankAccounts)
-            .HasForeignKey(b => b.UserId)
+            .HasForeignKey(b => b.OwnerId)
             .OnDelete(DeleteBehavior.Restrict);
         
         #endregion
@@ -67,14 +67,14 @@ public class SavingsSageContext : DbContext
             .ValueGeneratedOnAdd();
         
         modelBuilder.Entity<Budget>()
-            .HasIndex(b => new { b.UserId, b.Name })
+            .HasIndex(b => new { b.OwnerId, b.Name })
             .IsUnique()
             .HasDatabaseName("IX_User_BudgetName_Unique");
         
         modelBuilder.Entity<Budget>()
             .HasOne(b => b.Owner)
             .WithMany(u => u.Budgets)
-            .HasForeignKey(b => b.UserId)
+            .HasForeignKey(b => b.OwnerId)
             .OnDelete(DeleteBehavior.Restrict);
         
         #endregion
@@ -86,14 +86,14 @@ public class SavingsSageContext : DbContext
             .ValueGeneratedOnAdd();
 
         modelBuilder.Entity<Category>()
-            .HasIndex(b => new { b.UserId, b.Name })
+            .HasIndex(b => new { b.OwnerId, b.Name })
             .IsUnique()
             .HasDatabaseName("IX_User_CategoryName_Unique");
         
         modelBuilder.Entity<Category>()
             .HasOne(c => c.Owner)
             .WithMany(u => u.Categories)
-            .HasForeignKey(b => b.UserId)
+            .HasForeignKey(b => b.OwnerId)
             .OnDelete(DeleteBehavior.Restrict);
         
         #endregion
@@ -127,11 +127,11 @@ public class SavingsSageContext : DbContext
         modelBuilder.Entity<Group>()
             .HasOne(c => c.Owner)
             .WithMany(u => u.Groups)
-            .HasForeignKey(b => b.UserId)
+            .HasForeignKey(b => b.OwnerId)
             .OnDelete(DeleteBehavior.Restrict);
         
         modelBuilder.Entity<Group>()
-            .HasIndex(g => new { g.UserId, g.Name })
+            .HasIndex(g => new { g.OwnerId, g.Name })
             .IsUnique()
             .HasDatabaseName("IX_User_GroupyName_Unique");
         
@@ -146,7 +146,7 @@ public class SavingsSageContext : DbContext
         modelBuilder.Entity<SavingsGoal>()
             .HasOne(s => s.Owner)
             .WithMany(u => u.SavingsGoals)
-            .HasForeignKey(s => s.UserId)
+            .HasForeignKey(s => s.OwnerId)
             .OnDelete(DeleteBehavior.Restrict);
         
         //If id is not the connection comment out this and add ICOllection<SavingsGoal> to Category
@@ -167,7 +167,7 @@ public class SavingsSageContext : DbContext
         modelBuilder.Entity<Transaction>()
             .HasOne(t => t.Owner)
             .WithMany(u => u.Transactions)
-            .HasForeignKey(t => t.UserId)
+            .HasForeignKey(t => t.OwnerId)
             .OnDelete(DeleteBehavior.Restrict);
         
         #endregion

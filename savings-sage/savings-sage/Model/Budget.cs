@@ -9,7 +9,7 @@ public class Budget
     public double Amount { get; set; } //current spending
     public double Threshold { get; set; } 
     
-    public int UserId { get; set; } //ensuring the foreign key is the UserId
+    public int OwnerId { get; set; } //ensuring the foreign key is the UserId
     public User Owner { get; init; }
     public int CategoryId { get; set; } //ensuring the foreign key
     public Category Category { get; init; }

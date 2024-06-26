@@ -5,7 +5,7 @@ public class Transaction
     public int Id { get; init; }
     public string Name { get; set; }
     public Currency Currency { get; init; }
-    public int UserId { get; set; } //ensuring the foreign key is the UserId
+    public int OwnerId { get; set; } //ensuring the foreign key is the UserId
     public User Owner { get; init; }
     public int AccountId { get; init; }
     public DateTime Date { get; init; }

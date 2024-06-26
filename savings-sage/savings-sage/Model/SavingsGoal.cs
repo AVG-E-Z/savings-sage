@@ -8,7 +8,7 @@ public class SavingsGoal
     public string Name { get; set; }
     public double Amount { get; set; }
     
-    public int UserId { get; set; } //ensuring the foreign key is the UserId
+    public int OwnerId { get; set; } //ensuring the foreign key is the UserId
     public User Owner { get; init; }
     //public int CategoryId { get; set; } //ensuring the foreign key
     public Category Category { get; init; }
