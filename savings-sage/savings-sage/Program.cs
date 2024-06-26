@@ -1,8 +1,10 @@
 using System.Text.Json.Serialization;
 using savings_sage.Context;
+using savings_sage.Service.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
@@ -14,6 +16,8 @@ builder.Services.AddMvc()
     });
 
 builder.Services.AddDbContext<SavingsSageContext>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddLogging();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
