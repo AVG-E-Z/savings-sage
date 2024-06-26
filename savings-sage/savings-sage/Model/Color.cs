@@ -7,5 +7,4 @@ public class Color
     public string HexadecimalCode { get; set; }
     public string ClassNameColor { get; set; }
     
-    public int CategoryId { get; set; } //ensuring the foreign key
-    public Category Category { get; set; } }
+}

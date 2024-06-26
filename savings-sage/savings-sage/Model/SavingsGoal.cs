@@ -10,7 +10,7 @@ public class SavingsGoal
     
     public int UserId { get; set; } //ensuring the foreign key is the UserId
     public User Owner { get; init; }
-    public int CategoryId { get; set; } //ensuring the foreign key
+    //public int CategoryId { get; set; } //ensuring the foreign key
     public Category Category { get; init; }
     
     public Currency Currency { get; init; }
