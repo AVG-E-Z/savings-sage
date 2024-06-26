@@ -5,9 +5,11 @@ public class Transaction
     public int Id { get; init; }
     public string Name { get; set; }
     public Currency Currency { get; init; }
+    public int UserId { get; set; } //ensuring the foreign key is the UserId
     public User Owner { get; init; }
     public int AccountId { get; init; }
     public DateTime Date { get; init; }
+    public int CategoryId { get; set; } //ensuring the foreign key
     public Category Category { get; set; }
     public double Amount { get; set; }
     public Direction Direction { get; set; }

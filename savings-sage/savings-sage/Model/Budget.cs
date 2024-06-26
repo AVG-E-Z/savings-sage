@@ -5,7 +5,9 @@ public class Budget
     public int Id { get; init; }
     public string Name { get; set; }
     public double Amount { get; set; }
+    public int UserId { get; set; } //ensuring the foreign key is the UserId
     public User Owner { get; init; }
+    public int CategoryId { get; set; } //ensuring the foreign key is the UserId
     public Category Category { get; init; }
     public Currency Currency { get; init; }
     public bool GroupSharing { get; set; } = false;
