@@ -2,12 +2,14 @@ using Microsoft.EntityFrameworkCore;
 using savings_sage.Model;
 using savings_sage.Model.Accounts;
 using savings_sage.Model.UserJoins;
+using DotNetEnv;
 
 namespace savings_sage.Context;
 
 public class SavingsSageContext : DbContext
 {
     private IConfiguration _configuration;
+    private string _password;
     
     public DbSet<BankAccount> Accounts { get; set; }
     public DbSet<Budget> Budgets { get; set; }
@@ -26,11 +28,13 @@ public class SavingsSageContext : DbContext
     public SavingsSageContext(IConfiguration configuration)
     {
         _configuration = configuration;
+        Env.Load();
+        _password = Environment.GetEnvironmentVariable("MSSQL_SA_PASSWORD");
     }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("Server=localhost,1433;Database=SolarWatch;User Id=sa;Password=Ant34teR;Encrypt=false;");
+        optionsBuilder.UseSqlServer($"Server=localhost,1433;Database=SolarWatch;User Id=sa;Password={_password};Encrypt=false;");
         //var connectionString = _configuration.GetConnectionString("Default");
         //optionsBuilder.UseSqlServer(connectionString);
     }
