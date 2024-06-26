@@ -1,3 +1,5 @@
+using savings_sage.Model.UserJoins;
+
 namespace savings_sage.Model;
 
 public class SavingsGoal
@@ -15,6 +17,6 @@ public class SavingsGoal
     public double Goal { get; set; }
     
     public bool GroupSharing { get; set; } = false;
-    public ICollection<User>? Writers { get; set; } = null;
-    public ICollection<User>? Readers { get; set; } = null;
+    //connector table
+    public ICollection<UserSavingsGoal> UserSavingsGoal { get; set; }
 }
