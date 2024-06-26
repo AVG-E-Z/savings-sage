@@ -6,7 +6,8 @@ public class Budget
 { 
     public int Id { get; init; }
     public string Name { get; set; }
-    public double Amount { get; set; }
+    public double Amount { get; set; } //current spending
+    public double Threshold { get; set; } 
     
     public int UserId { get; set; } //ensuring the foreign key is the UserId
     public User Owner { get; init; }

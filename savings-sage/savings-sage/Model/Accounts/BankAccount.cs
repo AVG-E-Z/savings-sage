@@ -10,6 +10,7 @@ public class BankAccount
     public Currency Currency { get; init; }
     public int UserId { get; set; } //ensuring the foreign key is the UserId
     public User Owner { get; init; }
+    public double Amount { get; set; }
     public int? ParentAccountId { get; init; }
     public bool GroupSharingOption { get; set; }
 
