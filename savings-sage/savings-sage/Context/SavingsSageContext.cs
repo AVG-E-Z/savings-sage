@@ -48,6 +48,14 @@ public class SavingsSageContext : DbContext
             .ValueGeneratedOnAdd();
         
         modelBuilder.Entity<BankAccount>()
+            .Property(x => x.Type)
+            .HasConversion<string>();
+        
+        modelBuilder.Entity<BankAccount>()
+            .Property(x => x.Currency)
+            .HasConversion<string>();
+        
+        modelBuilder.Entity<BankAccount>()
             .HasIndex(b => new { b.OwnerId, b.Name })
             .IsUnique()
             .HasDatabaseName("IX_User_BankAccountName_Unique");
@@ -65,6 +73,10 @@ public class SavingsSageContext : DbContext
         modelBuilder.Entity<Budget>()
             .Property(x => x.Id)
             .ValueGeneratedOnAdd();
+        
+        modelBuilder.Entity<Budget>()
+            .Property(x => x.Currency)
+            .HasConversion<string>();
         
         modelBuilder.Entity<Budget>()
             .HasIndex(b => new { b.OwnerId, b.Name })
@@ -144,6 +156,10 @@ public class SavingsSageContext : DbContext
             .ValueGeneratedOnAdd();
         
         modelBuilder.Entity<SavingsGoal>()
+            .Property(x => x.Currency)
+            .HasConversion<string>();
+        
+        modelBuilder.Entity<SavingsGoal>()
             .HasOne(s => s.Owner)
             .WithMany(u => u.SavingsGoals)
             .HasForeignKey(s => s.OwnerId)
@@ -164,6 +180,18 @@ public class SavingsSageContext : DbContext
             .Property(x => x.Id)
             .ValueGeneratedOnAdd();
         
+        modelBuilder.Entity<Transaction>()
+            .Property(x => x.Currency)
+            .HasConversion<string>();
+        
+        modelBuilder.Entity<Transaction>()
+            .Property(x => x.Direction)
+            .HasConversion<string>();
+        
+        modelBuilder.Entity<Transaction>()
+            .Property(x => x.Type)
+            .HasConversion<string>();
+
         modelBuilder.Entity<Transaction>()
             .HasOne(t => t.Owner)
             .WithMany(u => u.Transactions)
