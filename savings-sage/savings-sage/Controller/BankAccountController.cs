@@ -50,11 +50,11 @@ public class BankAccountController : ControllerBase
     }
     
     [HttpGet("BankAccounts/User/{userId:int}")]
-    public async Task<ActionResult<IEnumerable<BankAccount>>> GetByUserId(int userId)
+    public async Task<ActionResult<IEnumerable<BankAccount>>> GetByOwnerId(int userId)
     {
         try
         {
-            var userAccounts = await _bankAccountRepository.GetAllByUser(userId);
+            var userAccounts = await _bankAccountRepository.GetAllByOwner(userId);
             return Ok(userAccounts);
         }
         catch (Exception e)
@@ -66,11 +66,11 @@ public class BankAccountController : ControllerBase
     }
     
     [HttpGet("BankAccounts/User/{userId:int}/type/{type}")]
-    public async Task<ActionResult<IEnumerable<BankAccount>>> GetByUserIdByType(int userId, AccountType type)
+    public async Task<ActionResult<IEnumerable<BankAccount>>> GetByOwnerIdByType(int userId, AccountType type)
     {
         try
         {
-            var userAccounts = await _bankAccountRepository.GetAllByUserByType(userId, type);
+            var userAccounts = await _bankAccountRepository.GetAllByOwnerByType(userId, type);
             return Ok(userAccounts);
         }
         catch (Exception e)

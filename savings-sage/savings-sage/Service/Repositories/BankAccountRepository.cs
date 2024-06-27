@@ -16,12 +16,12 @@ public class BankAccountRepository(SavingsSageContext context) : IBankAccountRep
         return await context.Accounts.FindAsync(id);
     }
     
-    public async Task<IEnumerable<BankAccount>> GetAllByUser(int userId)
+    public async Task<IEnumerable<BankAccount>> GetAllByOwner(int userId)
     {
         return await context.Accounts.Where(a => a.OwnerId == userId).ToListAsync();
     }
     
-    public async Task<IEnumerable<BankAccount>> GetAllByUserByType(int userId, AccountType type)
+    public async Task<IEnumerable<BankAccount>> GetAllByOwnerByType(int userId, AccountType type)
     {
         return await context.Accounts.Where(a => a.OwnerId == userId && a.Type == type).ToListAsync();
     }
