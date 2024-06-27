@@ -1,0 +1,42 @@
+using Microsoft.EntityFrameworkCore;
+using savings_sage.Model;
+using Microsoft.Identity.Client;
+using savings_sage.Context;
+
+namespace savings_sage.Service.Repositories;
+
+public class TransactionRepository(SavingsSageContext context) : ITransactionRepository
+{
+    public async Task<IEnumerable<Transaction>> GetAll(int loggedInUserId)
+    {
+        var allTransactions = await context.Transactions.Where(transaction => transaction.OwnerId == loggedInUserId).ToListAsync();
+
+        return allTransactions;
+    }
+    
+    
+    public async Task<IEnumerable<Transaction>> GetAllByAccount(int accountId)
+    {
+        var allTransactionsByAccount = await context.Transactions.Where(transaction => transaction.AccountId == accountId).ToListAsync();
+
+        return allTransactionsByAccount;
+    }
+
+    public async Task AddNewTransaction(Transaction transaction)
+    {
+        Console.WriteLine("Saving new transaction to db...");
+       await context.Transactions.AddAsync(transaction);
+       await context.SaveChangesAsync();
+    }
+
+    public async Task<int?> DeleteTransaction(int id)
+    {
+        var transactionToRemove = await context.Transactions.FirstOrDefaultAsync(transaction => transaction.Id == id);
+
+        if (transactionToRemove == null) return null;
+        Console.WriteLine($"Removing transaction no. {id} from database...");
+        context.Transactions.Remove(transactionToRemove);
+        await context.SaveChangesAsync();
+        return transactionToRemove.Id;
+    }
+}
