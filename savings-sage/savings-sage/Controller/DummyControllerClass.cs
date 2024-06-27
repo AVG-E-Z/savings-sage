@@ -3,13 +3,21 @@ using Microsoft.AspNetCore.Mvc;
 namespace savings_sage.Controller;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class DummyController : Microsoft.AspNetCore.Mvc.Controller
 {
     [HttpGet]
     public IActionResult SimpleGetRequest()
     {
-        var response = new { hi = "Hello!" };
-        return new JsonResult(response);
+        try
+        {
+            var response = new { hi = "Hello!" };
+            return new JsonResult(response);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e + " backend error");
+            throw;
+        }
     }
 }

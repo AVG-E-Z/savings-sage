@@ -5,9 +5,7 @@ using savings_sage.Service.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-
+// Configure JSON options
 builder.Services.AddMvc()
     .AddJsonOptions(opts =>
     {
@@ -16,30 +14,32 @@ builder.Services.AddMvc()
         opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
     });
 
+// Add DbContext and repositories
 builder.Services.AddDbContext<SavingsSageContext>();
+builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddLogging();
 
+// Add Swagger for API documentation
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
 
 var provider = builder.Services.BuildServiceProvider();
 var configuration = provider.GetRequiredService<IConfiguration>();
-//
-// builder.Services.AddCors(options =>
-// {
-//     var frontendURL = configuration.GetValue<string>("frontend_url");
-//     
-//     options.AddDefaultPolicy(builder =>
-//     {
-//         builder.WithOrigins(frontendURL).AllowAnyMethod().AllowAnyHeader();
-//     });
-// });
+
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    var frontendURL = configuration.GetValue<string>("frontend_url");
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins(frontendURL).AllowAnyMethod().AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -49,6 +49,5 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors();
 app.UseAuthorization();
-
 app.MapControllers();
 app.Run();

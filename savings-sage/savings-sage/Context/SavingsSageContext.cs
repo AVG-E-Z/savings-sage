@@ -34,9 +34,9 @@ public class SavingsSageContext : DbContext
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer($"Server=localhost,1433;Database=SavingsSage;User Id=sa;Password={_password};Encrypt=false;");
-        //var connectionString = _configuration.GetConnectionString("Default");
-        //optionsBuilder.UseSqlServer(connectionString);
+        //optionsBuilder.UseSqlServer($"Server=localhost,1433;Database=SavingsSage;User Id=sa;Password={_password};Encrypt=false;");
+        var connectionString = _configuration.GetConnectionString("Default");
+        optionsBuilder.UseSqlServer(connectionString);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
