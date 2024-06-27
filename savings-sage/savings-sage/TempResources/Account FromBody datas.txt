@@ -57,3 +57,18 @@
   "expirationDate": "2024-09-28",
   "type": "Savings"
 }
+
+{
+  "name": "string",
+  "currency": "HUF",
+  "ownerId": 1,
+  "accountId": 1,
+  "date": "2024-06-27T11:56:07.474Z",
+  "categoryId": 1,
+  "amount": 1000,
+  "direction": "Out",
+  "isRecurring": false,
+  "refreshDays": null,
+  "type": "Payment",
+  "siblingTransactionId": null
+}

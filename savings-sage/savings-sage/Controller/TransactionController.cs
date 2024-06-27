@@ -65,6 +65,7 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
                 Amount = transactionBody.Amount,
                 CategoryId = transactionBody.CategoryId,
                 Currency = transactionBody.Currency,
+                OwnerId = transactionBody.OwnerId,
                 Date = transactionBody.Date,
                 Direction = transactionBody.Direction,
                 IsRecurring = transactionBody.IsRecurring,

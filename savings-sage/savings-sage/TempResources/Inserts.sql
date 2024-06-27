@@ -12,3 +12,8 @@ INSERT INTO [SavingsSage].[dbo].[Categories]
 ([Name],[OwnerId], [ColorId])
 VALUES
 ('Self love', 1, 1);
+
+INSERT INTO [SavingsSage].[dbo].[Accounts]
+([Name],[Currency],[OwnerId],[Amount],[ParentAccountId],[GroupSharingOption],[CanGoMinus],[ExpirationDate],[Type])
+VALUES
+( 'Account', 'HUF', 1, 1000, null, 0, 0, null, 'Cash');
