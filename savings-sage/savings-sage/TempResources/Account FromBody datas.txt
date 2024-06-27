@@ -1,0 +1,59 @@
+{
+  "name": "myFirstDebitAcc",
+  "currency": "HUF",
+  "amount": 1000,
+  "amountInterest": null,
+  "amountCapital": null,
+  "parentAccountId": null,
+  "groupSharingOption": false,
+  "expirationDate": null,
+  "type": "Debit"
+}
+
+{
+  "name": "myFirstCreditAcc",
+  "currency": "HUF",
+  "amount": 2000,
+  "amountInterest": null,
+  "amountCapital": null,
+  "parentAccountId": null,
+  "groupSharingOption": true,
+  "expirationDate": null,
+  "type": "Credit"
+}
+
+{
+  "name": "myFirstLoanAcc",
+  "currency": "HUF",
+  "amount": 1000000,
+  "amountInterest": 300000,
+  "amountCapital": 600000,
+  "parentAccountId": 1,
+  "groupSharingOption": false,
+  "expirationDate": "2030-01-01",
+  "type": "Loan"
+}
+
+{
+  "name": "myFirstCashAcc",
+  "currency": "EUR",
+  "amount": 420,
+  "amountInterest": null,
+  "amountCapital": null,
+  "parentAccountId": null,
+  "groupSharingOption": false,
+  "expirationDate": null,
+  "type": "Cash"
+}
+
+{
+  "name": "myFirstSavingsAcc",
+  "currency": "HUF",
+  "amount": 10000,
+  "amountInterest": null,
+  "amountCapital": null,
+  "parentAccountId": null,
+  "groupSharingOption": false,
+  "expirationDate": "2024-09-28",
+  "type": "Savings"
+}

@@ -12,6 +12,8 @@ public class BankAccount
     public User Owner { get; init; }
     public double Amount { get; set; }
     public int? ParentAccountId { get; init; }
+    public BankAccount ParentAccount { get; init; }
+    public ICollection<BankAccount> SubAccounts { get; set; } = new List<BankAccount>();
     public bool GroupSharingOption { get; set; }
 
     public bool CanGoMinus { get; set; } = false;

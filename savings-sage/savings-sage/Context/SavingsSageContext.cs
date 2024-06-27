@@ -48,6 +48,9 @@ public class SavingsSageContext : DbContext
             .ValueGeneratedOnAdd();
         
         modelBuilder.Entity<BankAccount>()
+            .HasKey(ba => ba.Id);
+        
+        modelBuilder.Entity<BankAccount>()
             .Property(x => x.Type)
             .HasConversion<string>();
         
@@ -66,6 +69,11 @@ public class SavingsSageContext : DbContext
             .HasForeignKey(b => b.OwnerId)
             .OnDelete(DeleteBehavior.Restrict);
         
+        modelBuilder.Entity<BankAccount>()
+            .HasOne(ba => ba.ParentAccount)
+            .WithMany(ba => ba.SubAccounts)
+            .HasForeignKey(ba => ba.ParentAccountId)
+            .OnDelete(DeleteBehavior.Restrict);
         #endregion
 
         #region Budgets

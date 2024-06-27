@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using savings_sage.Context;
+using savings_sage.Service.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -11,25 +12,27 @@ builder.Services.AddMvc()
     {
         var enumConverter = new JsonStringEnumConverter();
         opts.JsonSerializerOptions.Converters.Add(enumConverter);
+        opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
     });
 
 builder.Services.AddDbContext<SavingsSageContext>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
 
 var provider = builder.Services.BuildServiceProvider();
 var configuration = provider.GetRequiredService<IConfiguration>();
-
-builder.Services.AddCors(options =>
-{
-    var frontendURL = configuration.GetValue<string>("frontend_url");
-    
-    options.AddDefaultPolicy(builder =>
-    {
-        builder.WithOrigins(frontendURL).AllowAnyMethod().AllowAnyHeader();
-    });
-});
+//
+// builder.Services.AddCors(options =>
+// {
+//     var frontendURL = configuration.GetValue<string>("frontend_url");
+//     
+//     options.AddDefaultPolicy(builder =>
+//     {
+//         builder.WithOrigins(frontendURL).AllowAnyMethod().AllowAnyHeader();
+//     });
+// });
 
 var app = builder.Build();
 
