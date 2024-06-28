@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -25,6 +26,8 @@ public class BankAccountController_Test
             _mockBankAccountRepository.Object);
     }
 
+    #region GET
+    
     [Test]
     public async Task GetAllAccountsReturnsNotFoundIfDatabaseIsEmpty()
     {
@@ -169,4 +172,258 @@ public class BankAccountController_Test
         //Assert
         Assert.IsInstanceOf(typeof(NotFoundObjectResult), result.Result);
     }
+    
+    [Test]
+    public async Task GetByIdAllChildrenReturnsNotFoundIfDataIsInvalid()
+    {
+        //Arrange
+        _mockBankAccountRepository.Setup(x => x.GetAllSubAccounts(It.IsAny<int>()))
+            .ThrowsAsync(new Exception());
+        
+        //Act
+        var result = await _controller.GetByIdAllChildren(100);
+        
+        //Assert
+        Assert.IsInstanceOf(typeof(NotFoundObjectResult), result.Result);
+    }
+
+    #endregion
+    
+    #region POST
+
+    
+    [Test]
+    public async Task Post_CreateNewAccountReturnsNotFoundIfDataIsInvalid()
+    {
+        //Arrange
+        var accountDTO = new BankAccountDataBody
+        {
+            Name = "name",
+            Amount = 1000,
+            Currency = Currency.HUF,
+            GroupSharingOption = false,
+            Type = AccountType.Cash
+        };
+        
+        _mockBankAccountRepository.Setup(x => x.AddAsync(It.IsAny<BankAccount>()))
+            .ThrowsAsync(new Exception());
+        
+        //Act
+        var result = await _controller.CreateNewAccount(accountDTO,1);
+        
+        //Assert
+        Assert.IsInstanceOf<ObjectResult>(result.Result);
+        
+        var objectResult = result.Result as ObjectResult;
+        Assert.IsNotNull(objectResult);
+        Assert.That(objectResult.StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));
+        
+        Assert.IsInstanceOf<ProblemDetails>(objectResult.Value); 
+        
+        var problemDetails = objectResult.Value as ProblemDetails;
+        Assert.IsNotNull(problemDetails);
+        Assert.That(problemDetails.Detail, Is.EqualTo("An error occurred while processing your request."));
+    }
+    [Test]
+public async Task CreateNewAccount_ReturnsCreatedAtAction_WhenDebitAccountCreatedSuccessfully()
+{
+    // Arrange
+    int ownerId = 1;
+    var accountDataBody = new BankAccountDataBody
+    {
+        Name = "Test Debit Account",
+        Currency = Currency.USD,
+        Amount = 100,
+        Type = AccountType.Debit
+    };
+    var createdAccount = new BankAccount
+    {
+        Id = 1,
+        Name = "Test Debit Account",
+        Currency = Currency.USD,
+        Amount = 100,
+        OwnerId = ownerId,
+        Type = AccountType.Debit
+    };
+
+    _mockBankAccountRepository.Setup(repo => repo.AddAsync(It.IsAny<BankAccount>())).ReturnsAsync(createdAccount);
+
+    // Act
+    var result = await _controller.CreateNewAccount(accountDataBody, ownerId);
+
+    // Assert
+    Assert.IsInstanceOf<CreatedAtActionResult>(result.Result);
+    var createdAtActionResult = result.Result as CreatedAtActionResult;
+    Assert.IsNotNull(createdAtActionResult);
+    Assert.That(createdAtActionResult.ActionName, Is.EqualTo(nameof(_controller.GetById)));
+    Assert.That(((BankAccount)createdAtActionResult.Value).Id, Is.EqualTo(createdAccount.Id));
+}
+
+[Test]
+public async Task CreateNewAccount_ReturnsCreatedAtAction_WhenCreditAccountCreatedSuccessfully()
+{
+    // Arrange
+    int ownerId = 1;
+    var accountDataBody = new BankAccountDataBody
+    {
+        Name = "Test Credit Account",
+        Currency = Currency.USD,
+        Amount = 200,
+        Type = AccountType.Credit
+    };
+    var createdAccount = new BankAccount
+    {
+        Id = 2,
+        Name = "Test Credit Account",
+        Currency = Currency.USD,
+        Amount = 200,
+        OwnerId = ownerId,
+        Type = AccountType.Credit
+    };
+
+    _mockBankAccountRepository.Setup(repo => repo.AddAsync(It.IsAny<BankAccount>())).ReturnsAsync(createdAccount);
+
+    // Act
+    var result = await _controller.CreateNewAccount(accountDataBody, ownerId);
+
+    // Assert
+    Assert.IsInstanceOf<CreatedAtActionResult>(result.Result);
+    var createdAtActionResult = result.Result as CreatedAtActionResult;
+    Assert.IsNotNull(createdAtActionResult);
+    Assert.That(createdAtActionResult.ActionName, Is.EqualTo(nameof(_controller.GetById)));
+    Assert.That(((BankAccount)createdAtActionResult.Value).Id, Is.EqualTo(createdAccount.Id));
+}
+
+[Test]
+public async Task CreateNewAccount_ReturnsCreatedAtAction_WhenLoanAccountCreatedSuccessfully()
+{
+    // Arrange
+    int ownerId = 1;
+    var accountDataBody = new BankAccountDataBody
+    {
+        Name = "Test Loan Account",
+        Currency = Currency.USD,
+        Amount = 300,
+        AmountInterest = 50,
+        AmountCapital = 250,
+        Type = AccountType.Loan
+    };
+    var createdAccount = new BankAccount
+    {
+        Id = 3,
+        Name = "Test Loan Account",
+        Currency = Currency.USD,
+        Amount = 300,
+        OwnerId = ownerId,
+        Type = AccountType.Loan
+    };
+
+    _mockBankAccountRepository.Setup(repo => repo.AddAsync(It.IsAny<BankAccount>())).ReturnsAsync(createdAccount);
+
+    // Act
+    var result = await _controller.CreateNewAccount(accountDataBody, ownerId);
+
+    // Assert
+    Assert.IsInstanceOf<CreatedAtActionResult>(result.Result);
+    var createdAtActionResult = result.Result as CreatedAtActionResult;
+    Assert.IsNotNull(createdAtActionResult);
+    Assert.That(createdAtActionResult.ActionName, Is.EqualTo(nameof(_controller.GetById)));
+    Assert.That(((BankAccount)createdAtActionResult.Value).Id, Is.EqualTo(createdAccount.Id));
+}
+    
+    #endregion
+    
+    #region DELETE
+
+    
+    [Test]
+    public async Task DeleteAccountAndSubAccounts_ReturnsNotFound_WhenAccountDoesNotExist()
+    {
+        // Arrange
+        int userId = 1;
+        int accountId = 1;
+        _mockBankAccountRepository.Setup(repo => repo.GetById(accountId)).ReturnsAsync((BankAccount)null);
+
+        // Act
+        var result = await _controller.DeleteAccountAndSubAccounts(userId, accountId);
+
+        // Assert
+        Assert.IsInstanceOf<NotFoundObjectResult>(result.Result);
+        var notFoundResult = result.Result as NotFoundObjectResult;
+        Assert.That(notFoundResult.Value, Is.EqualTo($"Account with {accountId} not found."));
+    }
+    
+    
+    [Test]
+    public async Task DeleteAccountAndSubAccounts_ReturnsForbid_WhenUserIsNotOwner()
+    {
+        // Arrange
+        int userId = 1;
+        int accountId = 1;
+        var account = new BankAccount { Id = accountId, OwnerId = 2 };
+        _mockBankAccountRepository.Setup(repo => repo.GetById(accountId)).ReturnsAsync(account);
+
+        // Act
+        var result = await _controller.DeleteAccountAndSubAccounts(userId, accountId);
+
+        // Assert
+        Assert.IsInstanceOf<ForbidResult>(result.Result);
+    }
+    
+    [Test]
+    public async Task DeleteAccountAndSubAccounts_ReturnsNotFound_WhenExceptionThrown()
+    {
+        // Arrange
+        int userId = 1;
+        int accountId = 1;
+        _mockBankAccountRepository.Setup(repo => repo.GetById(accountId)).ThrowsAsync(new Exception());
+
+        // Act
+        var result = await _controller.DeleteAccountAndSubAccounts(userId, accountId);
+
+        // Assert
+        Assert.IsInstanceOf<NotFoundObjectResult>(result.Result);
+        var notFoundResult = result.Result as NotFoundObjectResult;
+        Assert.That(notFoundResult.Value, Is.EqualTo("Error deleting account"));
+    }
+    
+    #endregion
+    
+    #region PUT
+
+    [Test]
+    public async Task UpdateAccount_ReturnsNotFound_WhenAccountDoesNotExist()
+    {
+        // Arrange
+        int userId = 1;
+        int accountId = 1;
+        var accountDataBody = new BankAccountDataBody { /* Populate properties */ };
+        _mockBankAccountRepository.Setup(repo => repo.GetById(accountId)).ReturnsAsync((BankAccount)null);
+
+        // Act
+        var result = await _controller.UpdateAccount(accountDataBody, userId, accountId);
+
+        // Assert
+        Assert.IsInstanceOf<NotFoundObjectResult>(result.Result);
+        var notFoundResult = result.Result as NotFoundObjectResult;
+        Assert.That(notFoundResult.Value, Is.EqualTo($"Account with {accountId} not found."));
+    }
+
+    [Test]
+    public async Task UpdateAccount_ReturnsForbid_WhenUserIsNotOwner()
+    {
+        // Arrange
+        int userId = 1;
+        int accountId = 1;
+        var accountDataBody = new BankAccountDataBody { /* Populate properties */ };
+        var account = new BankAccount { Id = accountId, OwnerId = 2 };
+        _mockBankAccountRepository.Setup(repo => repo.GetById(accountId)).ReturnsAsync(account);
+
+        // Act
+        var result = await _controller.UpdateAccount(accountDataBody, userId, accountId);
+
+        // Assert
+        Assert.IsInstanceOf<ForbidResult>(result.Result);
+    }
+    #endregion
 }

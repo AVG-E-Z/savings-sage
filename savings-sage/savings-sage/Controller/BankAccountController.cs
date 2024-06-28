@@ -8,8 +8,8 @@ namespace savings_sage.Controller;
 [Route("api/[controller]")]
 public class BankAccountController : ControllerBase
 {
-    private readonly ILogger<BankAccountController> _logger;
     private readonly IBankAccountRepository _bankAccountRepository;
+    private readonly ILogger<BankAccountController> _logger;
 
     public BankAccountController(ILogger<BankAccountController> logger, IBankAccountRepository bankAccountRepository)
     {
@@ -32,7 +32,7 @@ public class BankAccountController : ControllerBase
             return NotFound(message);
         }
     }
-    
+
     [HttpGet("BankAccounts/{id:int}")]
     public async Task<ActionResult<BankAccount>> GetById(int id)
     {
@@ -48,7 +48,7 @@ public class BankAccountController : ControllerBase
             return NotFound(message);
         }
     }
-    
+
     [HttpGet("BankAccounts/User/{userId:int}")]
     public async Task<ActionResult<IEnumerable<BankAccount>>> GetByOwnerId(int userId)
     {
@@ -64,7 +64,7 @@ public class BankAccountController : ControllerBase
             return NotFound(message);
         }
     }
-    
+
     [HttpGet("BankAccounts/User/{userId:int}/type/{type}")]
     public async Task<ActionResult<IEnumerable<BankAccount>>> GetByOwnerIdByType(int userId, AccountType type)
     {
@@ -75,12 +75,12 @@ public class BankAccountController : ControllerBase
         }
         catch (Exception e)
         {
-            string message = $"Error getting {type} accounts of user";
+            var message = $"Error getting {type} accounts of user";
             _logger.LogError(e, message);
             return NotFound(message);
         }
     }
-    
+
     [HttpGet("BankAccounts/{id:int}/children")]
     public async Task<ActionResult<IEnumerable<BankAccount>>> GetByIdAllChildren(int id)
     {
@@ -91,18 +91,19 @@ public class BankAccountController : ControllerBase
         }
         catch (Exception e)
         {
-            string message = "Error getting sub accounts";
+            var message = "Error getting sub accounts";
             _logger.LogError(e, message);
             return NotFound(message);
         }
     }
-    
+
     [HttpPost("BankAccounts/User/{ownerId:int}/Create")]
-    public async Task<ActionResult<BankAccount>> CreateNewAccount([FromBody] BankAccountDataBody accountDataBody, int ownerId)
+    public async Task<ActionResult<BankAccount>> CreateNewAccount([FromBody] BankAccountDataBody accountDataBody,
+        int ownerId)
     {
         try
         {
-            BankAccount userAccount = accountDataBody.Type switch
+            var userAccount = accountDataBody.Type switch
             {
                 AccountType.Debit => AddDebitAccount(accountDataBody, ownerId),
                 AccountType.Credit => AddCreditAccount(accountDataBody, ownerId),
@@ -113,72 +114,62 @@ public class BankAccountController : ControllerBase
             };
 
             var newAccount = await _bankAccountRepository.AddAsync(userAccount);
-            
+
 
             // Assuming AddAsync method returns the added accounts
             if (newAccount != null)
-            {
                 // Use the first account to create the URI for CreatedAtAction
                 return CreatedAtAction(nameof(GetById), new { id = newAccount.Id }, newAccount);
-            }
-            else
-            {
-                return BadRequest("Failed to create accounts");
-            }
+            return BadRequest("Failed to create accounts");
         }
         catch (Exception e)
         {
-            const string message = "Error creating account";
+            const string message = "An error occurred while processing your request.";
             _logger.LogError(e, message);
-            return NotFound(message);
+            return Problem(detail: message, statusCode: StatusCodes.Status500InternalServerError);
         }
     }
 
     [HttpDelete("BankAccounts/User/{userId:int}/Account/{id:int}")]
     public async Task<ActionResult<BankAccount>> DeleteAccountAndSubAccounts(int userId, int id)
     {
-         try
-         {
-             var account = await _bankAccountRepository.GetById(id);
-             if (account == null)
-             {
-                 return NotFound($"Account with {id} not found.");
-             }
+        try
+        {
+            var account = await _bankAccountRepository.GetById(id);
+            if (account == null) return NotFound($"Account with {id} not found.");
 
-             if (account.OwnerId != userId)
-             {
-                 _logger.LogError($"Deletion attempt by {userId} - not account owner.");
-                 return Forbid();
-             }
+            if (account.OwnerId != userId)
+            {
+                _logger.LogError($"Deletion attempt by {userId} - not account owner.");
+                return Forbid();
+            }
 
-             await _bankAccountRepository.DeleteWithSubAccounts(account);
-             return Ok(account);
-         }
-         catch (Exception e)
-         {
-             const string message = "Error deleting account";
-             _logger.LogError(e, message);
-             return NotFound(message);
-         }
+            await _bankAccountRepository.DeleteWithSubAccounts(account);
+            return Ok(account);
+        }
+        catch (Exception e)
+        {
+            const string message = "Error deleting account";
+            _logger.LogError(e, message);
+            return NotFound(message);
+        }
     }
-    
+
     [HttpPut("BankAccounts/User/{userId:int}/Account/{id:int}")]
-    public async Task<ActionResult<BankAccount>> UpdateAccount([FromBody] BankAccountDataBody accountDataBody, int userId, int id)
+    public async Task<ActionResult<BankAccount>> UpdateAccount([FromBody] BankAccountDataBody accountDataBody,
+        int userId, int id)
     {
         try
         {
             var account = await _bankAccountRepository.GetById(id);
-            if (account == null)
-            {
-                return NotFound($"Account with {id} not found.");
-            }
+            if (account == null) return NotFound($"Account with {id} not found.");
 
             if (account.OwnerId != userId)
             {
                 _logger.LogError($"Update attempt by {userId} - not account owner.");
                 return Forbid();
             }
-            
+
             await _bankAccountRepository.Update(account);
             return Ok(account);
         }
@@ -189,12 +180,12 @@ public class BankAccountController : ControllerBase
             return NotFound(message);
         }
     }
-    
+
     #region CreateAccounts
-    
+
     private BankAccount AddDebitAccount(BankAccountDataBody accountData, int ownerId)
     {
-        BankAccount account = new BankAccount
+        var account = new BankAccount
         {
             Name = accountData.Name,
             Currency = accountData.Currency,
@@ -207,10 +198,10 @@ public class BankAccountController : ControllerBase
         };
         return account;
     }
-    
+
     private BankAccount AddCreditAccount(BankAccountDataBody accountData, int ownerId)
     {
-        BankAccount account = new BankAccount
+        var account = new BankAccount
         {
             Name = accountData.Name,
             Currency = accountData.Currency,
@@ -223,10 +214,10 @@ public class BankAccountController : ControllerBase
         };
         return account;
     }
-    
+
     private BankAccount AddLoanAccount(BankAccountDataBody accountData, int ownerId)
     {
-        BankAccount accountMain = new BankAccount
+        var accountMain = new BankAccount
         {
             Name = $"{accountData.Name}",
             Currency = accountData.Currency,
@@ -237,19 +228,20 @@ public class BankAccountController : ControllerBase
             CanGoMinus = false,
             ExpirationDate = accountData.ExpirationDate,
             Type = AccountType.Loan,
-            SubAccounts = new List<BankAccount>{ 
-                new BankAccount
+            SubAccounts = new List<BankAccount>
             {
-                Name = $"{accountData.Name} (Kamat)",
-                Currency = accountData.Currency,
-                OwnerId = ownerId,
-                Amount = accountData.AmountInterest ?? 0,
-                GroupSharingOption = accountData.GroupSharingOption,
-                CanGoMinus = false,
-                ExpirationDate = accountData.ExpirationDate,
-                Type = AccountType.Loan
-            },
-                new BankAccount
+                new()
+                {
+                    Name = $"{accountData.Name} (Kamat)",
+                    Currency = accountData.Currency,
+                    OwnerId = ownerId,
+                    Amount = accountData.AmountInterest ?? 0,
+                    GroupSharingOption = accountData.GroupSharingOption,
+                    CanGoMinus = false,
+                    ExpirationDate = accountData.ExpirationDate,
+                    Type = AccountType.Loan
+                },
+                new()
                 {
                     Name = $"{accountData.Name} (Tőke)",
                     Currency = accountData.Currency,
@@ -264,10 +256,10 @@ public class BankAccountController : ControllerBase
         };
         return accountMain;
     }
-    
+
     private BankAccount AddCashAccount(BankAccountDataBody accountData, int ownerId)
     {
-        BankAccount account = new BankAccount
+        var account = new BankAccount
         {
             Name = accountData.Name,
             Currency = accountData.Currency,
@@ -280,10 +272,10 @@ public class BankAccountController : ControllerBase
         };
         return account;
     }
-    
+
     private BankAccount AddSavingsAccount(BankAccountDataBody accountData, int ownerId)
     {
-        BankAccount account = new BankAccount
+        var account = new BankAccount
         {
             Name = accountData.Name,
             Currency = accountData.Currency,
