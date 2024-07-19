@@ -1,0 +1,1 @@
+//list of bankaccounts (from mapping BankAccountOverview.jsx) with the option to create new ones (AddNewBankAccount.jsx), edit or remove existing ones (overview gonna have icons to switch to EditBankAccount.jsx)

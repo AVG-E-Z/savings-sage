@@ -1,6 +1,7 @@
 * {
   margin: 0;
   box-sizing: border-box;
+  width: 80vw;
 }
 
 :root {
@@ -21,11 +22,11 @@
 body {
   margin: 0;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 320px;
+  min-width: 100vw;
   min-height: 100vh;
 }
+
+
 .main{
   margin: 0;
   display: flex;
@@ -35,19 +36,23 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  
 }
 
 .logoDefault{
   flex: auto;
   font-family: Inspiration;
+  align-items: center;
 }
 
 .logoNavbarResize{
    width: 150px;
-   text-align: center;
+  margin: 40px;
+  margin-top: 30px;
 }
 .logoNavbarResize img {
-  width: 150px;
+  width: 100px;
+  margin-left: 12px
 }
 
 /*@media (prefers-color-scheme: light) {*/
