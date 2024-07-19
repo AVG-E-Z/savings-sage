@@ -1,6 +1,11 @@
+.navbarContainer{
+    margin-top:0px;
+    width: fit-content;
+}
+
 .navbarDiv{
     background-color: #BEEDD1;
-    margin: 15px;
+    margin: 10px;
     height: 55px;
     width: 200px;
     display: flex;

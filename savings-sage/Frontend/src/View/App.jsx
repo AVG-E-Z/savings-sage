@@ -9,6 +9,9 @@ import Settings from "./Pages/Settings/Settings.jsx";
 import Transactions from "./Pages/Transactions/Transactions.jsx";
 import HomePage from "./Pages/HomePage/HomePage.jsx";
 import AboutUs from "./Pages/AboutUs/AboutUs.jsx";
+import Statistics from "./Pages/Statistics/Statistics.jsx";
+import Savings from "./Pages/Savings/Savings.jsx";
+import BudgetManagement from "./Pages/BudgetManagement/BudgetManagement.jsx";
 
 export default function App() {
   
@@ -23,7 +26,9 @@ export default function App() {
                 <Route path='/transactions' element={<Transactions />}></Route>
                 <Route path='/settings' element={<Settings />}></Route>
                 <Route path='/homepage' element={<HomePage />}></Route>
-            
+                <Route path='/statistics' element={<Statistics />}></Route>
+                <Route path='/savings' element={<Savings />}></Route>
+                <Route path='/budgets' element={<BudgetManagement />}></Route>
             </Route>
         </Routes>
     </BrowserRouter>

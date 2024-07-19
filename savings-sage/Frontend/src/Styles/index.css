@@ -8,6 +8,7 @@
   font-family: Comfortaa, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  margin-bottom: 0;
 
   color: #112226;
   background: #beedd1;
@@ -22,7 +23,7 @@
 body {
   margin: 0;
   display: flex;
-  min-width: 100vw;
+  min-width: 80vw;
   min-height: 100vh;
 }
 
