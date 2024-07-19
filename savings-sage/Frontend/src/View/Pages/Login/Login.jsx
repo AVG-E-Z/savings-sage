@@ -43,12 +43,12 @@ export default function Login() {
             <div className="formContainerDiv">
                 <form className="form" onSubmit={(e) => handleLogin(e, email, password)}>
                     <label className="formLabel" htmlFor="email">
-                        E-mail:
+                        E-mail: </label>
                         <input className="formInput" type="email" name="email" required onChange={(e) => setEmail(e.target.value)}></input>
-                    </label>
-                    <label className="formLabel" htmlFor="pswd">Password:
+                   
+                    <label className="formLabel" htmlFor="pswd">Password:</label>
                         <input className="formInput" type="password" name="password" required
-                                   onChange={(e) => setPassword(e.target.value)}></input> </label>
+                                   onChange={(e) => setPassword(e.target.value)}></input> 
                     <button className="formSubmitButton" key="logIn" type="submit">Log in</button>
                 </form></div>
             <div className="transferDiv"><p className="transferText">Need an account?</p>
