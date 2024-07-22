@@ -36,6 +36,7 @@ public class BankAccountController : ControllerBase
     [HttpGet("BankAccounts/{id:int}")]
     public async Task<ActionResult<BankAccount>> GetById(int id)
     {
+        
         try
         {
             var account = await _bankAccountRepository.GetById(id);

@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using savings_sage.Model;
 
 namespace savings_sage.Context;
 
-public class UsersContext : IdentityDbContext<IdentityUser, IdentityRole, string>
+public class UsersContext : IdentityDbContext<User, IdentityRole, string>
 {
     private readonly IConfiguration _configuration;
 
@@ -23,5 +24,6 @@ public class UsersContext : IdentityDbContext<IdentityUser, IdentityRole, string
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        
     }
 }

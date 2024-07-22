@@ -18,7 +18,7 @@ public class SavingsSageContext : DbContext
     public DbSet<Group> Groups { get; set; }
     public DbSet<SavingsGoal> SavingsGoals { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
-    public DbSet<User> User { get; set; }
+    public DbSet<User> Users { get; set; }
     
     public DbSet<UserBankAccount> UserBankAccounts { get; set; }
     public DbSet<UserBudget> UserBudgets { get; set; }
