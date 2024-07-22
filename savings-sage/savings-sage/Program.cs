@@ -103,6 +103,7 @@ var configuration = provider.GetRequiredService<IConfiguration>();
 var connectionString = builder.Configuration.GetConnectionString("Default");
 //builder.Services.AddDbContext<SavingsSageContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddDbContext<UsersContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();

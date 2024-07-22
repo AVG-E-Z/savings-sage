@@ -7,9 +7,9 @@ namespace savings_sage.Model;
 
 public class User : IdentityUser
 {
-    public string Name { get; set; }
+    public string UserName { get; set; }
     public DateTime Birthday { get; init; }
-    public string EmailAddress { get; set; }
+    public string Email { get; set; }
         
     // Custom relationships
     public ICollection<Group> Groups { get; set; }

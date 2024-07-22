@@ -49,7 +49,7 @@ public class AuthenticationSeeder
         var adminInDb = await userManager.FindByEmailAsync("admin@admin.com");
         if (adminInDb == null)
         {
-            var admin = new User { UserName = "admin", EmailAddress = "admin@admin.com" };
+            var admin = new User { UserName = "admin", Email = "admin@admin.com" };
             var adminCreated = await userManager.CreateAsync(admin, "admin123");
 
             if (adminCreated.Succeeded)
