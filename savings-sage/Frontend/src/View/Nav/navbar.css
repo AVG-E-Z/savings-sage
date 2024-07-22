@@ -1,0 +1,28 @@
+.navbarContainer{
+    margin-top:0px;
+    width: fit-content;
+}
+
+.navbarDiv{
+    background-color: #BEEDD1;
+    margin: 10px;
+    height: 55px;
+    width: 200px;
+    display: flex;
+}
+
+.navbarDiv:hover{
+    transform: scale(1.05);
+}
+
+.navbarDiv img{
+    margin: 10px;
+    width: 30px;
+    height: 30px;
+    
+}
+
+.navbarDivText{
+    margin: 10px;
+    align-content: center;
+}
