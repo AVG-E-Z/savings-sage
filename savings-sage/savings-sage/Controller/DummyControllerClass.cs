@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace savings_sage.Controller;
@@ -7,6 +8,9 @@ namespace savings_sage.Controller;
 public class DummyController : Microsoft.AspNetCore.Mvc.Controller
 {
     [HttpGet]
+    //[Authorize(Policy = "RequiredUserOrAdminRole")]
+    //[Authorize(Policy = "RequiredUserRole")]
+    //[Authorize(Policy = "RequiredAdminRole")]
     public IActionResult SimpleGetRequest()
     {
         try

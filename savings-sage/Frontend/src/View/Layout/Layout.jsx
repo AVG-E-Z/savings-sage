@@ -25,8 +25,8 @@ const ContainerOfContent= styled.div`
 export default function Layout(){
     return (
         <><ContainerOfEverything>
-           <Header/> 
-        <NavbarSide/>
+            <Header/> 
+            <NavbarSide/>
             <ContainerOfContent><Outlet/></ContainerOfContent>
             <Footer/>
         </ContainerOfEverything>

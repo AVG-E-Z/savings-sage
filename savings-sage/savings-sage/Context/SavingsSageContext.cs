@@ -32,12 +32,12 @@ public class SavingsSageContext : DbContext
         _password = Environment.GetEnvironmentVariable("MSSQL_SA_PASSWORD");
     }
     
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        //optionsBuilder.UseSqlServer($"Server=localhost,1433;Database=SavingsSage;User Id=sa;Password={_password};Encrypt=false;");
-        var connectionString = _configuration.GetConnectionString("Default");
-        optionsBuilder.UseSqlServer(connectionString);
-    }
+    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    // {
+    //     //optionsBuilder.UseSqlServer($"Server=localhost,1433;Database=SavingsSage;User Id=sa;Password={_password};Encrypt=false;");
+    //     var connectionString = _configuration.GetConnectionString("Default");
+    //     optionsBuilder.UseSqlServer(connectionString);
+    // }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
