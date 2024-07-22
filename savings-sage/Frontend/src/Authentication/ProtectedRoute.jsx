@@ -1,15 +1,20 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
 import { useAuth } from "./AuthProvider.jsx";
+import {Navigate, Route} from "react-router-dom";
 
-export default function ProtectedRoute({children}){
+export default function ProtectedRoute ({ component: Component, ...rest }){
+    const { user } = useAuth();
 
-    const { auth } = useAuth();
-
-    if (!auth.isAuthenticated) {
-        return <Navigate to="/login" />;
-    }
-
-    return children;
-
-}
+    return (
+        <Route
+            {...rest}
+            render={props =>
+                user ? (
+                    <Component {...props} />
+                ) : (
+                    <Navigate to="/login" />
+                )
+            }
+        />
+    );
+};
