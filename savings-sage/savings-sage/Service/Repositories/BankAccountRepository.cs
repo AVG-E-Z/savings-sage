@@ -4,7 +4,7 @@ using savings_sage.Model.Accounts;
 
 namespace savings_sage.Service.Repositories;
 
-public class BankAccountRepository(SavingsSageContext context) : IBankAccountRepository
+public class BankAccountRepository(UsersContext context) : IBankAccountRepository
 {
     public async Task<IEnumerable<BankAccount>> GetAll()
     {
@@ -16,12 +16,12 @@ public class BankAccountRepository(SavingsSageContext context) : IBankAccountRep
         return await context.Accounts.FindAsync(id);
     }
     
-    public async Task<IEnumerable<BankAccount>> GetAllByOwner(int userId)
+    public async Task<IEnumerable<BankAccount>> GetAllByOwner(string userId)
     {
         return await context.Accounts.Where(a => a.OwnerId == userId).ToListAsync();
     }
     
-    public async Task<IEnumerable<BankAccount>> GetAllByOwnerByType(int userId, AccountType type)
+    public async Task<IEnumerable<BankAccount>> GetAllByOwnerByType(string userId, AccountType type)
     {
         return await context.Accounts.Where(a => a.OwnerId == userId && a.Type == type).ToListAsync();
     }

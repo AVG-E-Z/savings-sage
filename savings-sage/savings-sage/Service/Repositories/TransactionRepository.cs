@@ -5,9 +5,9 @@ using savings_sage.Context;
 
 namespace savings_sage.Service.Repositories;
 
-public class TransactionRepository(SavingsSageContext context) : ITransactionRepository
+public class TransactionRepository(UsersContext context) : ITransactionRepository
 {
-    public async Task<IEnumerable<Transaction>> GetAll(int loggedInUserId)
+    public async Task<IEnumerable<Transaction>> GetAll(string loggedInUserId)
     {
         var allTransactions = await context.Transactions.Where(transaction => transaction.OwnerId == loggedInUserId).ToListAsync();
 

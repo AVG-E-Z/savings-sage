@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using savings_sage.Context;
+using savings_sage.Model;
 using savings_sage.Service.Authentication;
 using savings_sage.Service.Repositories;
 
@@ -73,7 +74,7 @@ builder.Services
     });
 
 builder.Services
-    .AddIdentityCore<IdentityUser>(options =>
+    .AddIdentityCore<User>(options =>
     {
         options.SignIn.RequireConfirmedAccount = false;
         options.User.RequireUniqueEmail = true;
@@ -100,7 +101,7 @@ var configuration = provider.GetRequiredService<IConfiguration>();
 
 // Add DbContext and repositories
 var connectionString = builder.Configuration.GetConnectionString("Default");
-builder.Services.AddDbContext<SavingsSageContext>(options => options.UseSqlServer(connectionString));
+//builder.Services.AddDbContext<SavingsSageContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddDbContext<UsersContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();

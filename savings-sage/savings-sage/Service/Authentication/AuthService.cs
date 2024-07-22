@@ -1,13 +1,14 @@
 using Microsoft.AspNetCore.Identity;
+using savings_sage.Model;
 
 namespace savings_sage.Service.Authentication;
 
 public class AuthService : IAuthService
 {
     private readonly ITokenService _tokenService;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<User> _userManager;
 
-    public AuthService(UserManager<IdentityUser> userManager, ITokenService tokenService)
+    public AuthService(UserManager<User> userManager, ITokenService tokenService)
     {
         _userManager = userManager;
         _tokenService = tokenService;
@@ -15,7 +16,7 @@ public class AuthService : IAuthService
 
     public async Task<AuthResult> RegisterAsync(string email, string username, string password, string role)
     {
-        var user = new IdentityUser { UserName = username, Email = email };
+        var user = new User { UserName = username, Email = email };
         var result = await _userManager.CreateAsync(user, password);
 
         if (!result.Succeeded) return FailedRegistration(result, email, username);

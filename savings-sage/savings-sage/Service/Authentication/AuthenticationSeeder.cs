@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using savings_sage.Model;
 
 namespace savings_sage.Service.Authentication;
 
@@ -6,9 +7,9 @@ public class AuthenticationSeeder
 {
     private readonly IConfiguration _configuration;
     private readonly RoleManager<IdentityRole> roleManager;
-    private readonly UserManager<IdentityUser> userManager;
+    private readonly UserManager<User> userManager;
 
-    public AuthenticationSeeder(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager,
+    public AuthenticationSeeder(RoleManager<IdentityRole> roleManager, UserManager<User> userManager,
         IConfiguration configuration)
     {
         this.roleManager = roleManager;
@@ -48,7 +49,7 @@ public class AuthenticationSeeder
         var adminInDb = await userManager.FindByEmailAsync("admin@admin.com");
         if (adminInDb == null)
         {
-            var admin = new IdentityUser { UserName = "admin", Email = "admin@admin.com" };
+            var admin = new User { UserName = "admin", EmailAddress = "admin@admin.com" };
             var adminCreated = await userManager.CreateAsync(admin, "admin123");
 
             if (adminCreated.Succeeded)

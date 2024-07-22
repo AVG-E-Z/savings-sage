@@ -8,7 +8,7 @@ public class BankAccount
     public int Id { get; init; }
     public string Name { get; set; }
     public Currency Currency { get; init; }
-    public int OwnerId { get; set; } //ensuring the foreign key is the UserId
+    public string OwnerId { get; set; } //ensuring the foreign key is the UserId
     public User Owner { get; init; }
     public double Amount { get; set; }
     public int? ParentAccountId { get; init; }

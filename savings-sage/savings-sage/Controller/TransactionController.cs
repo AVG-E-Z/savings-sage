@@ -12,7 +12,7 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
 {
     
     [HttpGet("GetAll")]
-    public async Task<ActionResult<IEnumerable<Transaction>>> GetAllTransactions([Required] int loggedInUserId)
+    public async Task<ActionResult<IEnumerable<Transaction>>> GetAllTransactions([Required] string loggedInUserId)
     {
         try
         {

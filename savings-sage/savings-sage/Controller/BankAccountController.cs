@@ -50,8 +50,8 @@ public class BankAccountController : ControllerBase
         }
     }
 
-    [HttpGet("BankAccounts/User/{userId:int}")]
-    public async Task<ActionResult<IEnumerable<BankAccount>>> GetByOwnerId(int userId)
+    [HttpGet("BankAccounts/User/{userId}")]
+    public async Task<ActionResult<IEnumerable<BankAccount>>> GetByOwnerId(string userId)
     {
         try
         {
@@ -66,8 +66,8 @@ public class BankAccountController : ControllerBase
         }
     }
 
-    [HttpGet("BankAccounts/User/{userId:int}/type/{type}")]
-    public async Task<ActionResult<IEnumerable<BankAccount>>> GetByOwnerIdByType(int userId, AccountType type)
+    [HttpGet("BankAccounts/User/{userId}/type/{type}")]
+    public async Task<ActionResult<IEnumerable<BankAccount>>> GetByOwnerIdByType(string userId, AccountType type)
     {
         try
         {
@@ -98,9 +98,9 @@ public class BankAccountController : ControllerBase
         }
     }
 
-    [HttpPost("BankAccounts/User/{ownerId:int}/Create")]
+    [HttpPost("BankAccounts/User/{ownerId}/Create")]
     public async Task<ActionResult<BankAccount>> CreateNewAccount([FromBody] BankAccountDataBody accountDataBody,
-        int ownerId)
+        string ownerId)
     {
         try
         {
@@ -131,8 +131,8 @@ public class BankAccountController : ControllerBase
         }
     }
 
-    [HttpDelete("BankAccounts/User/{userId:int}/Account/{id:int}")]
-    public async Task<ActionResult<BankAccount>> DeleteAccountAndSubAccounts(int userId, int id)
+    [HttpDelete("BankAccounts/User/{userId}/Account/{id:int}")]
+    public async Task<ActionResult<BankAccount>> DeleteAccountAndSubAccounts(string userId, int id)
     {
         try
         {
@@ -156,9 +156,9 @@ public class BankAccountController : ControllerBase
         }
     }
 
-    [HttpPut("BankAccounts/User/{userId:int}/Account/{id:int}")]
+    [HttpPut("BankAccounts/User/{userId}/Account/{id:int}")]
     public async Task<ActionResult<BankAccount>> UpdateAccount([FromBody] BankAccountDataBody accountDataBody,
-        int userId, int id)
+        string userId, int id)
     {
         try
         {
@@ -184,7 +184,7 @@ public class BankAccountController : ControllerBase
 
     #region CreateAccounts
 
-    private BankAccount AddDebitAccount(BankAccountDataBody accountData, int ownerId)
+    private BankAccount AddDebitAccount(BankAccountDataBody accountData, string ownerId)
     {
         var account = new BankAccount
         {
@@ -200,7 +200,7 @@ public class BankAccountController : ControllerBase
         return account;
     }
 
-    private BankAccount AddCreditAccount(BankAccountDataBody accountData, int ownerId)
+    private BankAccount AddCreditAccount(BankAccountDataBody accountData, string ownerId)
     {
         var account = new BankAccount
         {
@@ -216,7 +216,7 @@ public class BankAccountController : ControllerBase
         return account;
     }
 
-    private BankAccount AddLoanAccount(BankAccountDataBody accountData, int ownerId)
+    private BankAccount AddLoanAccount(BankAccountDataBody accountData, string ownerId)
     {
         var accountMain = new BankAccount
         {
@@ -258,7 +258,7 @@ public class BankAccountController : ControllerBase
         return accountMain;
     }
 
-    private BankAccount AddCashAccount(BankAccountDataBody accountData, int ownerId)
+    private BankAccount AddCashAccount(BankAccountDataBody accountData, string ownerId)
     {
         var account = new BankAccount
         {
@@ -274,7 +274,7 @@ public class BankAccountController : ControllerBase
         return account;
     }
 
-    private BankAccount AddSavingsAccount(BankAccountDataBody accountData, int ownerId)
+    private BankAccount AddSavingsAccount(BankAccountDataBody accountData, string ownerId)
     {
         var account = new BankAccount
         {

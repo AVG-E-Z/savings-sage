@@ -4,7 +4,7 @@ namespace savings_sage.Model.UserJoins;
 
 public class UserBankAccount
 {
-    public int UserId { get; set; }
+    public string UserId { get; set; }
     public User User { get; set; }
     
     public int BackAccountId { get; set; }
