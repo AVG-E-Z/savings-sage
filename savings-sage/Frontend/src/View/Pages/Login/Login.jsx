@@ -12,29 +12,19 @@ export default function Login() {
     const [password, setPassword] = useState('');
 
     async function HandleLogin(e, email, password){
-        // e.preventDefault();
-        //
-        // const data = {
-        //     email: email,
-        //     password: password,
-        // };
-        //
-        // try {
-        //     const response = await fetch("api/Login", {method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
-        //
-        //     const incoming = await response.json();
-        //
-        //     console.log(incoming);
-        //
-        //     if(incoming.success){
-        //         console.log("Successfully logged in!");
-        //         login(incoming.token);
-        //         navigate("/homepage");
-        //     }
-        //
-        // } catch(err){
-        //     console.error("Error while logging in:", err);
-        // }
+        e.preventDefault();
+        
+        try {
+            const incoming = await login(email, password);
+
+            if(incoming.success){
+                console.log("Successfully logged in!");
+                navigate("/homepage");
+            }
+
+        } catch(err){
+            console.error("Error while logging in:", err);
+        }
     }
     
     return (

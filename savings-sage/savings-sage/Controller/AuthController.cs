@@ -1,5 +1,5 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using savings_sage.Contracts;
 using savings_sage.Contracts;
 using savings_sage.Service.Authentication;
 
@@ -52,7 +52,32 @@ public class AuthController : ControllerBase
             AddErrors(result);
             return BadRequest(ModelState);
         }
+        
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true, 
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTime.UtcNow.AddHours(1)
+        };
+        
+        Response.Cookies.Append("jwt", result.Token, cookieOptions);
 
         return Ok(new AuthResponse(result.Email, result.UserName, result.Token));
+    }
+    
+    [HttpPost("logout")]
+    public IActionResult Logout()
+    {
+        Response.Cookies.Delete("jwt");
+        return Ok(new { message = "Logged out" });
+    }
+    
+    [HttpGet("me")]
+    [Authorize]
+    public IActionResult Me()
+    {
+        var username = User.Identity.Name;
+        return Ok(new { username });
     }
 }

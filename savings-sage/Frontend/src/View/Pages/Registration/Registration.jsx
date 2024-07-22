@@ -10,32 +10,33 @@ export default function Registration() {
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
 
-    // async function HandleSubmit(e, username, email, password){
-    //     e.preventDefault();
-    //
-    //     const data = {
-    //         email: email,
-    //         username: username,
-    //         password: password,
-    //     };
-    //
-    //     try {
-    //         const response = await fetch("api/Register", {method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
-    //
-    //         const incoming = await response.json();
-    //
-    //         console.log(incoming);
-    //
-    //         if(incoming.success){
-    //             console.log("Successfully registered an account!");
-    //             setSuccess(true);
-    //
-    //         }
-    //
-    //     } catch(err){
-    //         console.error("Error while logging in:", err);
-    //     }
-    // }
+    async function HandleSubmit(e, username, email, password){
+        
+        e.preventDefault();
+
+        const data = {
+            email: email,
+            username: username,
+            password: password,
+        };
+
+        try {
+            const response = await fetch("api/auth/Register", {method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
+
+            const incoming = await response.json();
+
+            console.log(incoming);
+
+            if(incoming.success){
+                console.log("Successfully registered an account!");
+                setSuccess(true);
+
+            }
+
+        } catch(err){
+            console.error("Error while logging in:", err);
+        }
+    }
 
     useEffect(() => {
         if (success === true) {
@@ -49,7 +50,7 @@ export default function Registration() {
         <>
             <h2>Welcome to our community!</h2>
             <div className="formContainerDiv">
-                <form className="form" onSubmit={(e) => handleSubmit(e, username, email, password)}>
+                <form className="form" onSubmit={(e) => HandleSubmit(e, username, email, password)}>
                     <label className="formLabel" htmlFor="username">Username:</label>
                     <input className="formInput" type="text" name="username" required
                            onChange={(e) => setUsername(e.target.value)}></input>
