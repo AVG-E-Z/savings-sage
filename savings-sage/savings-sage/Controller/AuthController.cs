@@ -40,7 +40,7 @@ public class AuthController : ControllerBase
         foreach (var error in result.ErrorMessages) ModelState.AddModelError(error.Key, error.Value);
     }
 
-    [HttpPost("Login")]
+    [HttpPost("login")]
     public async Task<ActionResult<AuthResponse>> Authenticate([FromBody] AuthRequest request)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -63,7 +63,7 @@ public class AuthController : ControllerBase
         
         Response.Cookies.Append("jwt", result.Token, cookieOptions);
 
-        return Ok(new AuthResponse(result.Email, result.UserName, result.Token));
+        return Ok(new AuthResponse(true,result.Email, result.UserName, result.Token));
     }
     
     [HttpPost("logout")]
@@ -74,7 +74,7 @@ public class AuthController : ControllerBase
     }
     
     [HttpGet("me")]
-    [Authorize]
+    //[Authorize(Policy = "RequiredUserOrAdminRole")]
     public IActionResult Me()
     {
         var username = User.Identity.Name;

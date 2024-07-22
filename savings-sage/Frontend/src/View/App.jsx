@@ -19,7 +19,7 @@ export default function App() {
     <BrowserRouter>
         <Routes>
             <Route path='/' element={<Layout/>}>
-                <ProtectedRoute path='/dummy-route' element={<DummyRoute />}></ProtectedRoute>
+                <Route path='/dummy-route' element={<ProtectedRoute><DummyRoute /></ProtectedRoute>}></Route>
                 <Route path='/about-us' element={<AboutUs />}></Route>
                 <Route path='/login' element={<Login />}></Route>
                 <Route path='/register' element={<Registration />}></Route>

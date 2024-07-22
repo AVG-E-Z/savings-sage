@@ -17,7 +17,13 @@ public class AuthService : IAuthService
     public async Task<AuthResult> RegisterAsync(string email, string username, string password, string role)
     {
         var user = new User { UserName = username, Email = email };
+        Console.WriteLine("HI");
+        Console.WriteLine(user.UserName);
+        Console.WriteLine(user.Email);
+        
         var result = await _userManager.CreateAsync(user, password);
+        
+        Console.WriteLine(result);
 
         if (!result.Succeeded) return FailedRegistration(result, email, username);
 

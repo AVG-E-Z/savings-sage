@@ -1,5 +1,5 @@
 INSERT INTO [SavingsSage].[dbo].[User]
-([Name],[UserName], [EmailAddress], [Birthday])
+([Name],[UserName], [Email], [Birthday])
 VALUES
 ('Teszt Elek', 'tesztelek', 'telek@teszt.com', '1990.01.01');
 

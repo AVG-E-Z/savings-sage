@@ -16,8 +16,9 @@ export default function Login() {
         
         try {
             const incoming = await login(email, password);
+            console.log(incoming);
 
-            if(incoming.success){
+            if(incoming.ok){
                 console.log("Successfully logged in!");
                 navigate("/homepage");
             }

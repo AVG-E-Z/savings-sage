@@ -219,7 +219,7 @@ public class UsersContext : IdentityDbContext<User, IdentityRole, string>
         //     .ValueGeneratedOnAdd();
         //
         // modelBuilder.Entity<User>()
-        //     .HasIndex(x => x.EmailAddress)
+        //     .HasIndex(x => x.Email)
         //     .IsUnique();
         //
         // modelBuilder.Entity<User>()

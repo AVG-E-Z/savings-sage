@@ -1,5 +1,5 @@
-import React, {createContext, useState, useEffect, useContext} from 'react';
-import axios from 'axios';
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import {useNavigate} from "react-router-dom";
 
 const AuthContext = createContext();
 
@@ -7,21 +7,68 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        axios.get('api/auth/me', { withCredentials: true })
-            .then(response => setUser(response.data))
-            .catch(() => setUser(null));
+        const fetchUser = async () => {
+            try {
+                const response = await fetch('api/auth/me', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    setUser(data);
+                } else {
+                    setUser(null);
+                    console.error('Error fetching user:', response.statusText);
+                }
+            } catch (error) {
+                setUser(null);
+                console.error('Error fetching user:', error);
+            }
+        };
+        fetchUser();
     }, []);
 
     const login = async (email, password) => {
-        await axios.post('api/auth/login', { email, password }, { withCredentials: true });
-        
-        const response = await axios.get('/api/auth/me', { withCredentials: true });
-        setUser(response.data);
+        try {
+            const response = await fetch('api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password }),
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error('Login failed');
+            }
+
+            const userResponse = await fetch('/api/auth/me', { credentials: 'include' });
+            if (userResponse.ok) {
+                const data = await userResponse.json();
+                setUser(data);
+                return response;
+            } else {
+                setUser(null);
+                console.error('Error fetching user after login:', userResponse.statusText);
+            }
+        } catch (error) {
+            console.error('Error during login:', error);
+        }
     };
 
     const logout = async () => {
-        await axios.post('api/auth/logout', {}, { withCredentials: true });
-        setUser(null);
+        try {
+            const response = await fetch('api/auth/logout', {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                setUser(null);
+            } else {
+                console.error('Logout failed:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error during logout:', error);
+        }
     };
 
     return (
@@ -30,4 +77,5 @@ export const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
     );
 };
+
 export const useAuth = () => useContext(AuthContext);
