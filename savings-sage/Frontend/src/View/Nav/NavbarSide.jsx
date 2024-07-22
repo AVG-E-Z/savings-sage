@@ -11,7 +11,7 @@ export default function NavbarSide() {
     
     return <><div className="navBarContainer">
         <div className={"logoNavbarResize"}><Logo/></div>
-        {true
+        {auth.isAuthenticated
             ? <>
                 <div id="homeDiv" className="navbarDiv" onClick={() => navigate("/homepage")}>
                     <img src={"/icons/home.svg"}/>
