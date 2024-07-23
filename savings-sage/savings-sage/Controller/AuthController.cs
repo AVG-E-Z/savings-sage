@@ -81,7 +81,7 @@ public class AuthController : ControllerBase
     }
     
     [HttpGet("me")]
-    //[Authorize(Policy = "RequiredUserOrAdminRole")]
+    [Authorize(Policy = "RequiredUserOrAdminRole")]
     public IActionResult Me()
     {
         var username = User.Identity.Name;

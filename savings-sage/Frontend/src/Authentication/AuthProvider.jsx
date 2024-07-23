@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
         const fetchUser = async () => {
             try {
                 const response = await fetch('api/auth/me', { credentials: 'include' });
+            //headers: {Authorization: `Bearer ${}`}
                 if (response.ok) {
                     const data = await response.json();
                     setUser(data);
@@ -33,16 +34,23 @@ export const AuthProvider = ({ children }) => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ email, password }),
-                credentials: 'include'
+                //credentials: 'include' //kérdés, h ez ide kell e
             });
+           const data = await response.json();
+           
+            console.log(data.token)
 
             if (!response.ok) {
                 throw new Error('Login failed');
             }
-
-            const userResponse = await fetch('/api/auth/me', { credentials: 'include' });
+            
+            const userResponse = await fetch('api/auth/me', { credentials: 'include' });
+            //headers: {Authorization: `Bearer ${data.token}`}, 
+            console.log(userResponse);
+            
             if (userResponse.ok) {
                 const data = await userResponse.json();
+                console.log(data);
                 setUser(data);
                 return response;
             } else {
