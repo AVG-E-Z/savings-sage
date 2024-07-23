@@ -60,15 +60,6 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
         
-        var cookieOptions = new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = true, 
-            SameSite = SameSiteMode.Strict,
-            Expires = DateTime.UtcNow.AddHours(1)
-        };
-        
-        Response.Cookies.Append("jwt", result.Token, cookieOptions);
 
         return Ok(new AuthResponse(true,result.Email, result.UserName, result.Token));
     }
@@ -80,11 +71,4 @@ public class AuthController : ControllerBase
         return Ok(new { message = "Logged out" });
     }
     
-    [HttpGet("me")]
-    //[Authorize(Policy = "RequiredUserOrAdminRole")]
-    public IActionResult Me()
-    {
-        var username = User.Identity.Name;
-        return Ok(new { username });
-    }
 }

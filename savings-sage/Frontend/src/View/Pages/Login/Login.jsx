@@ -13,13 +13,22 @@ export default function Login() {
 
     async function HandleLogin(e, email, password){
         e.preventDefault();
-        
+
+        const data = {
+            email: email,
+            password: password,
+        };
+
         try {
-            const incoming = await login(email, password);
+            const response = await fetch("api/auth/Login", {method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
+
+            const incoming = await response.json();
+
             console.log(incoming);
 
-            if(incoming.ok){
+            if(incoming.success){
                 console.log("Successfully logged in!");
+                login(incoming.token);
                 navigate("/homepage");
             }
 
