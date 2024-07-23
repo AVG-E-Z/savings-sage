@@ -4,7 +4,7 @@ public class Category
 {
     public int Id { get; init; }
     
-    public string OwnerId { get; set; } //ensuring the foreign key is the UserId
+    public string OwnerUserName { get; set; }
     public User Owner { get; init; }
     public string Name { get; set; }
     

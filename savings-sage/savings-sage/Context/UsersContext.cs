@@ -110,14 +110,14 @@ public class UsersContext : IdentityDbContext<User, IdentityRole, string>
             .ValueGeneratedOnAdd();
 
         modelBuilder.Entity<Category>()
-            .HasIndex(b => new { b.OwnerId, b.Name })
+            .HasIndex(b => new { b.OwnerUserName, b.Name })
             .IsUnique()
             .HasDatabaseName("IX_User_CategoryName_Unique");
         
         modelBuilder.Entity<Category>()
             .HasOne(c => c.Owner)
             .WithMany(u => u.Categories)
-            .HasForeignKey(b => b.OwnerId)
+            .HasForeignKey(b => b.OwnerUserName)
             .OnDelete(DeleteBehavior.Restrict);
         
         #endregion
@@ -279,6 +279,27 @@ public class UsersContext : IdentityDbContext<User, IdentityRole, string>
             .OnDelete(DeleteBehavior.Restrict);
         
         #endregion
+
+        #region data seeding
+
+        modelBuilder.Entity<Color>().HasData(
+            new Color {Id = 1, Name = "donatelloPurple", ClassNameColor = "purpleColor", HexadecimalCode = "A568CB"},
+            new Color {Id = 2, Name = "pantherPink", ClassNameColor = "lightpinkColor", HexadecimalCode = "FF96B0"},
+            new Color {Id = 3, Name = "flakyRed", ClassNameColor = "redColor", HexadecimalCode = "D3265D"},
+            new Color {Id = 4, Name = "dextersHairOrange", ClassNameColor = "orangeColor", HexadecimalCode = "EA7417"},
+            new Color {Id = 5, Name = "topCatYellow", ClassNameColor = "yellowColor", HexadecimalCode = "FEE411"},
+            new Color {Id = 6, Name = "buttercupGreen", ClassNameColor = "lightGreenColor", HexadecimalCode = "66CE3C"},
+            new Color {Id = 7, Name = "tophGreen", ClassNameColor = "greenColor", HexadecimalCode = "2AA168"},
+            new Color {Id = 8, Name = "bubblesBlue", ClassNameColor = "lightBlueColor", HexadecimalCode = "56DBEF"},
+            new Color {Id = 9, Name = "johhnysJeansBlue", ClassNameColor = "blueColor", HexadecimalCode = "3598FE"},
+            new Color {Id = 10, Name = "sailorMercuryBlue", ClassNameColor = "navyBlueColor", HexadecimalCode = "5662CB"},
+            new Color {Id = 11, Name = "scoobyDooBrown", ClassNameColor = "brownColor", HexadecimalCode = "98755B"},
+            new Color {Id = 12, Name = "astroGray", ClassNameColor = "grayColor", HexadecimalCode = "979C98"}
+            );
         
+
+        #endregion
+
+
         }
 }
