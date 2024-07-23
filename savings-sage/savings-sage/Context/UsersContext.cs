@@ -110,14 +110,14 @@ public class UsersContext : IdentityDbContext<User, IdentityRole, string>
             .ValueGeneratedOnAdd();
 
         modelBuilder.Entity<Category>()
-            .HasIndex(b => new { b.OwnerUserName, b.Name })
+            .HasIndex(b => new { b.OwnerId, b.Name })
             .IsUnique()
             .HasDatabaseName("IX_User_CategoryName_Unique");
         
         modelBuilder.Entity<Category>()
             .HasOne(c => c.Owner)
             .WithMany(u => u.Categories)
-            .HasForeignKey(b => b.OwnerUserName)
+            .HasForeignKey(b => b.OwnerId)
             .OnDelete(DeleteBehavior.Restrict);
         
         #endregion

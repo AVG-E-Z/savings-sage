@@ -12,23 +12,23 @@ public class CategoryService : ICategoryService
         _context = context;
     }
     
-    public async Task CreateDefaultCategoriesAsync(string userName)
+    public async Task CreateDefaultCategoriesAsync(string userId)
     {
     
         var baseCategories = new List<Category>
         {
-            new Category { Name = "Rezsi", OwnerUserName = userName, ColorId = 1},
-            new Category { Name = "Élelmiszer", OwnerUserName = userName, ColorId = 2 },
-            new Category { Name = "Ruha", OwnerUserName = userName, ColorId = 3 },
-            new Category { Name = "Egészség", OwnerUserName = userName, ColorId = 4 },
-            new Category { Name = "Szépségápolás", OwnerUserName = userName, ColorId = 5 },
-            new Category { Name = "Autó", OwnerUserName = userName, ColorId = 6 },
-            new Category { Name = "Közlekedés", OwnerUserName = userName, ColorId = 7 },
-            new Category { Name = "Lakbér", OwnerUserName = userName, ColorId = 8 },
-            new Category { Name = "Ajándék", OwnerUserName = userName, ColorId = 9 },
-            new Category { Name = "Elektronika", OwnerUserName = userName, ColorId = 10 },
-            new Category { Name = "Háztartás", OwnerUserName = userName, ColorId = 11 },
-            new Category { Name = "Háziállat", OwnerUserName = userName, ColorId = 12 }
+            new Category { Name = "Rezsi", OwnerId = userId, ColorId = 1},
+            new Category { Name = "Élelmiszer", OwnerId = userId, ColorId = 2 },
+            new Category { Name = "Ruha", OwnerId = userId, ColorId = 3 },
+            new Category { Name = "Egészség", OwnerId = userId, ColorId = 4 },
+            new Category { Name = "Szépségápolás", OwnerId = userId, ColorId = 5 },
+            new Category { Name = "Autó", OwnerId = userId, ColorId = 6 },
+            new Category { Name = "Közlekedés", OwnerId = userId, ColorId = 7 },
+            new Category { Name = "Lakbér", OwnerId = userId, ColorId = 8 },
+            new Category { Name = "Ajándék", OwnerId = userId, ColorId = 9 },
+            new Category { Name = "Elektronika", OwnerId = userId, ColorId = 10 },
+            new Category { Name = "Háztartás", OwnerId = userId, ColorId = 11 },
+            new Category { Name = "Háziállat", OwnerId = userId, ColorId = 12 }
         };
 
         _context.Categories.AddRange(baseCategories);

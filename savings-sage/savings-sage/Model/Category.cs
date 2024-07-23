@@ -4,7 +4,7 @@ public class Category
 {
     public int Id { get; init; }
     
-    public string OwnerUserName { get; set; }
+    public string OwnerId { get; set; }
     public User Owner { get; init; }
     public string Name { get; set; }
     
