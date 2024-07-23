@@ -4,31 +4,31 @@ using savings_sage.Model.Accounts;
 
 namespace savings_sage.Service.Repositories;
 
-public class BankAccountRepository(UsersContext context) : IBankAccountRepository
+public class AccountRepository(UsersContext context) : IAccountRepository
 {
-    public async Task<IEnumerable<BankAccount>> GetAll()
+    public async Task<IEnumerable<Account>> GetAll()
     {
         return await context.Accounts.ToListAsync();
     }
     
-    public async Task<BankAccount?> GetById(int id)
+    public async Task<Account?> GetById(int id)
     {
         return await context.Accounts.FindAsync(id);
     }
     
-    public async Task<IEnumerable<BankAccount>> GetAllByOwner(string userId)
+    public async Task<IEnumerable<Account>> GetAllByOwner(string userId)
     {
         return await context.Accounts.Where(a => a.OwnerId == userId).ToListAsync();
     }
     
-    public async Task<IEnumerable<BankAccount>> GetAllByOwnerByType(string userId, AccountType type)
+    public async Task<IEnumerable<Account>> GetAllByOwnerByType(string userId, AccountType type)
     {
         return await context.Accounts.Where(a => a.OwnerId == userId && a.Type == type).ToListAsync();
     }
 
-    public async Task<IEnumerable<BankAccount>> GetAllSubAccounts(int accountId)
+    public async Task<IEnumerable<Account>> GetAllSubAccounts(int accountId)
     {
-        var allSubAccounts = new List<BankAccount>();
+        var allSubAccounts = new List<Account>();
         var visited = new HashSet<int>();
 
         await GetSubAccountsRecursive(accountId, allSubAccounts, visited);
@@ -36,7 +36,7 @@ public class BankAccountRepository(UsersContext context) : IBankAccountRepositor
         return allSubAccounts;
     }
 
-    private async Task GetSubAccountsRecursive(int accountId, List<BankAccount> allSubAccounts, HashSet<int> visited)
+    private async Task GetSubAccountsRecursive(int accountId, List<Account> allSubAccounts, HashSet<int> visited)
     {
         // Base case: if the account is already visited, return
         if (visited.Contains(accountId))
@@ -60,16 +60,16 @@ public class BankAccountRepository(UsersContext context) : IBankAccountRepositor
         }
     }
 
-    public async Task<BankAccount> AddAsync(BankAccount account)
+    public async Task<Account> AddAsync(Account account)
     {
         await context.AddAsync(account);
         await context.SaveChangesAsync();
         return account;
     }
 
-    public async Task DeleteWithSubAccounts(BankAccount account)
+    public async Task DeleteWithSubAccounts(Account account)
     {
-        var allSubAccounts = new List<BankAccount>();
+        var allSubAccounts = new List<Account>();
         var visited = new HashSet<int>();
 
         await GetSubAccountsRecursive(account.Id, allSubAccounts, visited);
@@ -83,7 +83,7 @@ public class BankAccountRepository(UsersContext context) : IBankAccountRepositor
         await context.SaveChangesAsync();
     }
     
-    public async Task Update(BankAccount account)
+    public async Task Update(Account account)
     {
         context.Update(account);
         await context.SaveChangesAsync();

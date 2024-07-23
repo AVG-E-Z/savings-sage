@@ -6,23 +6,23 @@ namespace savings_sage.Controller;
 
 [ApiController]
 [Route("api/[controller]")]
-public class BankAccountController : ControllerBase
+public class AccountController : ControllerBase
 {
-    private readonly IBankAccountRepository _bankAccountRepository;
-    private readonly ILogger<BankAccountController> _logger;
+    private readonly IAccountRepository _accountRepository;
+    private readonly ILogger<AccountController> _logger;
 
-    public BankAccountController(ILogger<BankAccountController> logger, IBankAccountRepository bankAccountRepository)
+    public AccountController(ILogger<AccountController> logger, IAccountRepository accountRepository)
     {
         _logger = logger;
-        _bankAccountRepository = bankAccountRepository;
+        _accountRepository = accountRepository;
     }
 
-    [HttpGet("BankAccounts/all")]
-    public async Task<ActionResult<IEnumerable<BankAccount>>> GetAllAccounts()
+    [HttpGet("Accounts/all")]
+    public async Task<ActionResult<IEnumerable<Account>>> GetAllAccounts()
     {
         try
         {
-            var allAccounts = await _bankAccountRepository.GetAll();
+            var allAccounts = await _accountRepository.GetAll();
             return Ok(allAccounts);
         }
         catch (Exception e)
@@ -33,13 +33,13 @@ public class BankAccountController : ControllerBase
         }
     }
 
-    [HttpGet("BankAccounts/{id:int}")]
-    public async Task<ActionResult<BankAccount>> GetById(int id)
+    [HttpGet("Accounts/{id:int}")]
+    public async Task<ActionResult<Account>> GetById(int id)
     {
         
         try
         {
-            var account = await _bankAccountRepository.GetById(id);
+            var account = await _accountRepository.GetById(id);
             return Ok(account);
         }
         catch (Exception e)
@@ -50,12 +50,12 @@ public class BankAccountController : ControllerBase
         }
     }
 
-    [HttpGet("BankAccounts/User/{userId}")]
-    public async Task<ActionResult<IEnumerable<BankAccount>>> GetByOwnerId(string userId)
+    [HttpGet("Accounts/User/{userId}")]
+    public async Task<ActionResult<IEnumerable<Account>>> GetByOwnerId(string userId)
     {
         try
         {
-            var userAccounts = await _bankAccountRepository.GetAllByOwner(userId);
+            var userAccounts = await _accountRepository.GetAllByOwner(userId);
             return Ok(userAccounts);
         }
         catch (Exception e)
@@ -66,12 +66,12 @@ public class BankAccountController : ControllerBase
         }
     }
 
-    [HttpGet("BankAccounts/User/{userId}/type/{type}")]
-    public async Task<ActionResult<IEnumerable<BankAccount>>> GetByOwnerIdByType(string userId, AccountType type)
+    [HttpGet("Accounts/User/{userId}/type/{type}")]
+    public async Task<ActionResult<IEnumerable<Account>>> GetByOwnerIdByType(string userId, AccountType type)
     {
         try
         {
-            var userAccounts = await _bankAccountRepository.GetAllByOwnerByType(userId, type);
+            var userAccounts = await _accountRepository.GetAllByOwnerByType(userId, type);
             return Ok(userAccounts);
         }
         catch (Exception e)
@@ -82,12 +82,12 @@ public class BankAccountController : ControllerBase
         }
     }
 
-    [HttpGet("BankAccounts/{id:int}/children")]
-    public async Task<ActionResult<IEnumerable<BankAccount>>> GetByIdAllChildren(int id)
+    [HttpGet("Accounts/{id:int}/children")]
+    public async Task<ActionResult<IEnumerable<Account>>> GetByIdAllChildren(int id)
     {
         try
         {
-            var userAccounts = await _bankAccountRepository.GetAllSubAccounts(id);
+            var userAccounts = await _accountRepository.GetAllSubAccounts(id);
             return Ok(userAccounts);
         }
         catch (Exception e)
@@ -98,8 +98,8 @@ public class BankAccountController : ControllerBase
         }
     }
 
-    [HttpPost("BankAccounts/User/{ownerId}/Create")]
-    public async Task<ActionResult<BankAccount>> CreateNewAccount([FromBody] BankAccountDataBody accountDataBody,
+    [HttpPost("Accounts/User/{ownerId}/Create")]
+    public async Task<ActionResult<Account>> CreateNewAccount([FromBody] AccountDataBody accountDataBody,
         string ownerId)
     {
         try
@@ -114,7 +114,7 @@ public class BankAccountController : ControllerBase
                 _ => throw new Exception("Invalid account type")
             };
 
-            var newAccount = await _bankAccountRepository.AddAsync(userAccount);
+            var newAccount = await _accountRepository.AddAsync(userAccount);
 
 
             // Assuming AddAsync method returns the added accounts
@@ -131,12 +131,12 @@ public class BankAccountController : ControllerBase
         }
     }
 
-    [HttpDelete("BankAccounts/User/{userId}/Account/{id:int}")]
-    public async Task<ActionResult<BankAccount>> DeleteAccountAndSubAccounts(string userId, int id)
+    [HttpDelete("Accounts/User/{userId}/Account/{id:int}")]
+    public async Task<ActionResult<Account>> DeleteAccountAndSubAccounts(string userId, int id)
     {
         try
         {
-            var account = await _bankAccountRepository.GetById(id);
+            var account = await _accountRepository.GetById(id);
             if (account == null) return NotFound($"Account with {id} not found.");
 
             if (account.OwnerId != userId)
@@ -145,7 +145,7 @@ public class BankAccountController : ControllerBase
                 return Forbid();
             }
 
-            await _bankAccountRepository.DeleteWithSubAccounts(account);
+            await _accountRepository.DeleteWithSubAccounts(account);
             return Ok(account);
         }
         catch (Exception e)
@@ -156,13 +156,13 @@ public class BankAccountController : ControllerBase
         }
     }
 
-    [HttpPut("BankAccounts/User/{userId}/Account/{id:int}")]
-    public async Task<ActionResult<BankAccount>> UpdateAccount([FromBody] BankAccountDataBody accountDataBody,
+    [HttpPut("Accounts/User/{userId}/Account/{id:int}")]
+    public async Task<ActionResult<Account>> UpdateAccount([FromBody] AccountDataBody accountDataBody,
         string userId, int id)
     {
         try
         {
-            var account = await _bankAccountRepository.GetById(id);
+            var account = await _accountRepository.GetById(id);
             if (account == null) return NotFound($"Account with {id} not found.");
 
             if (account.OwnerId != userId)
@@ -171,7 +171,7 @@ public class BankAccountController : ControllerBase
                 return Forbid();
             }
 
-            await _bankAccountRepository.Update(account);
+            await _accountRepository.Update(account);
             return Ok(account);
         }
         catch (Exception e)
@@ -184,9 +184,9 @@ public class BankAccountController : ControllerBase
 
     #region CreateAccounts
 
-    private BankAccount AddDebitAccount(BankAccountDataBody accountData, string ownerId)
+    private Account AddDebitAccount(AccountDataBody accountData, string ownerId)
     {
-        var account = new BankAccount
+        var account = new Account
         {
             Name = accountData.Name,
             Currency = accountData.Currency,
@@ -200,9 +200,9 @@ public class BankAccountController : ControllerBase
         return account;
     }
 
-    private BankAccount AddCreditAccount(BankAccountDataBody accountData, string ownerId)
+    private Account AddCreditAccount(AccountDataBody accountData, string ownerId)
     {
-        var account = new BankAccount
+        var account = new Account
         {
             Name = accountData.Name,
             Currency = accountData.Currency,
@@ -216,9 +216,9 @@ public class BankAccountController : ControllerBase
         return account;
     }
 
-    private BankAccount AddLoanAccount(BankAccountDataBody accountData, string ownerId)
+    private Account AddLoanAccount(AccountDataBody accountData, string ownerId)
     {
-        var accountMain = new BankAccount
+        var accountMain = new Account
         {
             Name = $"{accountData.Name}",
             Currency = accountData.Currency,
@@ -229,7 +229,7 @@ public class BankAccountController : ControllerBase
             CanGoMinus = false,
             ExpirationDate = accountData.ExpirationDate,
             Type = AccountType.Loan,
-            SubAccounts = new List<BankAccount>
+            SubAccounts = new List<Account>
             {
                 new()
                 {
@@ -258,9 +258,9 @@ public class BankAccountController : ControllerBase
         return accountMain;
     }
 
-    private BankAccount AddCashAccount(BankAccountDataBody accountData, string ownerId)
+    private Account AddCashAccount(AccountDataBody accountData, string ownerId)
     {
-        var account = new BankAccount
+        var account = new Account
         {
             Name = accountData.Name,
             Currency = accountData.Currency,
@@ -274,9 +274,9 @@ public class BankAccountController : ControllerBase
         return account;
     }
 
-    private BankAccount AddSavingsAccount(BankAccountDataBody accountData, string ownerId)
+    private Account AddSavingsAccount(AccountDataBody accountData, string ownerId)
     {
-        var account = new BankAccount
+        var account = new Account
         {
             Name = accountData.Name,
             Currency = accountData.Currency,

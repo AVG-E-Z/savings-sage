@@ -105,7 +105,7 @@ var connectionString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<UsersContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 
-builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddLogging();
 builder.Services.AddScoped<IAuthService, AuthService>();
