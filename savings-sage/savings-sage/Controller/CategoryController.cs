@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using savings_sage.Model;
 using savings_sage.Service.Repositories;
 
@@ -12,20 +14,36 @@ public class CategoryController : ControllerBase
     private readonly ILogger<CategoryController> _logger;
     private readonly ICategoryRepository _categoryRepository;
     private readonly IConfiguration _configuration;
+    private readonly UserManager<User> _userManager;
 
-    public CategoryController(ILogger<CategoryController> logger, ICategoryRepository categoryRepository, IConfiguration configuration)
+    public CategoryController(ILogger<CategoryController> logger, ICategoryRepository categoryRepository, IConfiguration configuration, UserManager<User> userManager)
     {
         _logger = logger;
         _categoryRepository = categoryRepository;
         _configuration = configuration;
+        _userManager = userManager;
     }
 
-    [HttpGet("all")]
+    [HttpGet("GetAll/{userName}")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
-    public async Task<ActionResult<IEnumerable<Category>>> GetAllByUser([FromQuery]string userId)
+    public async Task<ActionResult<IEnumerable<Category>>> GetAllByUser([FromRoute]string userName, [FromQuery]string userId)
     {
         try
         {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+
+            var adminRole = _configuration["Roles:Admin"];
+            var isAdmin = User.IsInRole(adminRole);
+
+            if (user.Id != userId && !isAdmin)
+            {
+                return Unauthorized("You do not have access.");
+            }
+
             var categories = await _categoryRepository.GetCategoriesByUser(userId);
             return Ok(categories);
         }
@@ -37,7 +55,7 @@ public class CategoryController : ControllerBase
         }
     }
     
-    [HttpPost("new")]
+    [HttpPost("Add")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
     public async Task<ActionResult<Category>> CreateNewCategory(
         [FromQuery]string userId,
@@ -67,13 +85,21 @@ public class CategoryController : ControllerBase
         try
         {
             var adminRole = _configuration["Roles:Admin"];
+            var isAdmin = User.IsInRole(adminRole);
+
             var category = await _categoryRepository.GetByIdAsync(catId);
-            if (category.OwnerId != userId || !User.IsInRole(adminRole))
+            if (category == null)
+            {
+                return NotFound("Category not found.");
+            }
+
+            if (category.OwnerId != userId && !isAdmin)
             {
                 return Unauthorized("You do not have access.");
             }
-            var result = _categoryRepository.DeleteCategory(catId);
-            return Ok(result);
+
+            await _categoryRepository.DeleteCategory(catId);
+            return NoContent();
         }
         catch (Exception e)
         {

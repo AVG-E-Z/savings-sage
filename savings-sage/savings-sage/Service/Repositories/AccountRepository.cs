@@ -11,7 +11,7 @@ public class AccountRepository(UsersContext context) : IAccountRepository
         return await context.Accounts.ToListAsync();
     }
     
-    public async Task<Account?> GetById(int id)
+    public async Task<Account?> GetByIdAsync(int id)
     {
         return await context.Accounts.FindAsync(id);
     }

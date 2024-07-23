@@ -5,7 +5,7 @@ namespace savings_sage.Service.Repositories;
 public interface IAccountRepository
 {
     Task<IEnumerable<Account>> GetAll();
-    Task<Account?> GetById(int id);
+    Task<Account?> GetByIdAsync(int id);
     Task<IEnumerable<Account>> GetAllByOwner(string userId);
     Task<IEnumerable<Account>> GetAllByOwnerByType(string userId, AccountType type);
     Task<IEnumerable<Account>> GetAllSubAccounts(int accountId);

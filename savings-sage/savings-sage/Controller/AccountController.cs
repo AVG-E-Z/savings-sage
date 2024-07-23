@@ -1,4 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using savings_sage.Model;
 using savings_sage.Model.Accounts;
 using savings_sage.Service.Repositories;
 
@@ -10,51 +14,43 @@ public class AccountController : ControllerBase
 {
     private readonly IAccountRepository _accountRepository;
     private readonly ILogger<AccountController> _logger;
+    private readonly IConfiguration _configuration;
+    private readonly UserManager<User> _userManager;
 
-    public AccountController(ILogger<AccountController> logger, IAccountRepository accountRepository)
+    public AccountController(ILogger<AccountController> logger, IAccountRepository accountRepository, IConfiguration configuration, UserManager<User> userManager)
     {
         _logger = logger;
         _accountRepository = accountRepository;
+        _configuration = configuration;
+        _userManager = userManager;
     }
 
-    [HttpGet("Accounts/all")]
-    public async Task<ActionResult<IEnumerable<Account>>> GetAllAccounts()
+    [HttpGet("All/u/{userName}")]
+    [Authorize(Policy = "RequiredUserOrAdminRole")]
+    public async Task<ActionResult<IEnumerable<Account>>> GetByOwnerId(
+        [FromRoute]string userName,
+        [FromQuery]string userId)
     {
         try
         {
-            var allAccounts = await _accountRepository.GetAll();
-            return Ok(allAccounts);
-        }
-        catch (Exception e)
-        {
-            const string message = "Error getting accounts";
-            _logger.LogError(e, message);
-            return NotFound(message);
-        }
-    }
+            var user = await _userManager.Users.Include(u => u.UserAccounts).FirstOrDefaultAsync(x => x.UserName == userName);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
 
-    [HttpGet("Accounts/{id:int}")]
-    public async Task<ActionResult<Account>> GetById(int id)
-    {
-        
-        try
-        {
-            var account = await _accountRepository.GetById(id);
-            return Ok(account);
-        }
-        catch (Exception e)
-        {
-            const string message = "Error getting account";
-            _logger.LogError(e, message);
-            return NotFound(message);
-        }
-    }
+            var adminRole = _configuration["Roles:Admin"];
+            var isAdmin = User.IsInRole(adminRole);
 
-    [HttpGet("Accounts/User/{userId}")]
-    public async Task<ActionResult<IEnumerable<Account>>> GetByOwnerId(string userId)
-    {
-        try
-        {
+            if (user.Id != userId && !isAdmin)
+            {
+                var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId && (ua.IsReader || ua.IsWriter));
+                if (!hasAccess)
+                {
+                    return Unauthorized("You do not have access.");
+                }
+            }
+
             var userAccounts = await _accountRepository.GetAllByOwner(userId);
             return Ok(userAccounts);
         }
@@ -66,11 +62,33 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpGet("Accounts/User/{userId}/type/{type}")]
-    public async Task<ActionResult<IEnumerable<Account>>> GetByOwnerIdByType(string userId, AccountType type)
+    [HttpGet("All/u/{userName}/Type/{type}")]
+    [Authorize(Policy = "RequiredUserOrAdminRole")]
+    public async Task<ActionResult<IEnumerable<Account>>> GetByOwnerIdByType(
+        [FromRoute]string userName,
+        [FromRoute]AccountType type,
+        [FromQuery]string userId)
     {
         try
         {
+            var user = await _userManager.Users.Include(u => u.UserAccounts).FirstOrDefaultAsync(x => x.UserName == userName);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+
+            var adminRole = _configuration["Roles:Admin"];
+            var isAdmin = User.IsInRole(adminRole);
+
+            if (user.Id != userId && !isAdmin)
+            {
+                var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId && (ua.IsReader || ua.IsWriter));
+                if (!hasAccess)
+                {
+                    return Unauthorized("You do not have access.");
+                }
+            }
+            
             var userAccounts = await _accountRepository.GetAllByOwnerByType(userId, type);
             return Ok(userAccounts);
         }
@@ -82,12 +100,35 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpGet("Accounts/{id:int}/children")]
-    public async Task<ActionResult<IEnumerable<Account>>> GetByIdAllChildren(int id)
+    [HttpGet("{id:int}")]
+    [Authorize(Policy = "RequiredUserOrAdminRole")]
+    public async Task<ActionResult<IEnumerable<Account>>> GetById(
+        [FromRoute]int id,
+        [FromQuery]string userName,
+        [FromQuery]string userId)
     {
         try
         {
-            var userAccounts = await _accountRepository.GetAllSubAccounts(id);
+            var user = await _userManager.Users.Include(u => u.UserAccounts).FirstOrDefaultAsync(x => x.UserName == userName);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+
+            var adminRole = _configuration["Roles:Admin"];
+            var isAdmin = User.IsInRole(adminRole);
+
+            if (user.Id != userId && !isAdmin)
+            {
+                var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId && (ua.IsReader || ua.IsWriter));
+                if (!hasAccess)
+                {
+                    return Unauthorized("You do not have access.");
+                }
+            }
+
+            var userAccounts = await _accountRepository.GetByIdAsync(id);
+            
             return Ok(userAccounts);
         }
         catch (Exception e)
@@ -98,9 +139,50 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpPost("Accounts/User/{ownerId}/Create")]
-    public async Task<ActionResult<Account>> CreateNewAccount([FromBody] AccountDataBody accountDataBody,
-        string ownerId)
+    [HttpGet("{id:int}/children")]
+    [Authorize(Policy = "RequiredUserOrAdminRole")]
+    public async Task<ActionResult<IEnumerable<Account>>> GetByIdAllChildren(
+        [FromRoute]int id,
+        [FromQuery]string userName,
+        [FromQuery]string userId)
+    {
+        try
+        {
+            var user = await _userManager.Users.Include(u => u.UserAccounts).FirstOrDefaultAsync(x => x.UserName == userName);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+
+            var adminRole = _configuration["Roles:Admin"];
+            var isAdmin = User.IsInRole(adminRole);
+
+            if (user.Id != userId && !isAdmin)
+            {
+                var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId && (ua.IsReader || ua.IsWriter));
+                if (!hasAccess)
+                {
+                    return Unauthorized("You do not have access.");
+                }
+            }
+
+            var userAccounts = await _accountRepository.GetAllSubAccounts(id);
+            
+            return Ok(userAccounts);
+        }
+        catch (Exception e)
+        {
+            var message = "Error getting sub accounts";
+            _logger.LogError(e, message);
+            return NotFound(message);
+        }
+    }
+
+    [HttpPost("u/{userName}/Add")]
+    [Authorize(Policy = "RequiredUserOrAdminRole")]
+    public async Task<ActionResult<Account>> CreateNewAccount(
+        [FromQuery]string ownerId,
+        [FromBody] AccountDataBody accountDataBody)
     {
         try
         {
@@ -131,12 +213,34 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpDelete("Accounts/User/{userId}/Account/{id:int}")]
-    public async Task<ActionResult<Account>> DeleteAccountAndSubAccounts(string userId, int id)
+    [HttpDelete("u/{userName}/Account/{id:int}")]
+    [Authorize(Policy = "RequiredUserOrAdminRole")]
+    public async Task<ActionResult<Account>> DeleteAccountAndSubAccounts(
+        [FromRoute]string userName,
+        [FromRoute]int id,
+        [FromQuery]string userId)
     {
         try
         {
-            var account = await _accountRepository.GetById(id);
+            var user = await _userManager.Users.Include(u => u.UserAccounts).FirstOrDefaultAsync(x => x.UserName == userName);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+
+            var adminRole = _configuration["Roles:Admin"];
+            var isAdmin = User.IsInRole(adminRole);
+
+            if (user.Id != userId && !isAdmin)
+            {
+                var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId &&  ua.IsWriter);
+                if (!hasAccess)
+                {
+                    return Unauthorized("You do not have access.");
+                }
+            }
+            
+            var account = await _accountRepository.GetByIdAsync(id);
             if (account == null) return NotFound($"Account with {id} not found.");
 
             if (account.OwnerId != userId)
@@ -156,21 +260,44 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpPut("Accounts/User/{userId}/Account/{id:int}")]
-    public async Task<ActionResult<Account>> UpdateAccount([FromBody] AccountDataBody accountDataBody,
-        string userId, int id)
+    [HttpPut("u/{userName}/Account/{id:int}")]
+    [Authorize(Policy = "RequiredUserOrAdminRole")]
+    public async Task<ActionResult<Account>> UpdateAccount(
+        [FromRoute]string userName,
+        [FromRoute]int id,
+        [FromQuery]string userId,
+        [FromBody] AccountDataBody accountDataBody)
     {
         try
         {
-            var account = await _accountRepository.GetById(id);
-            if (account == null) return NotFound($"Account with {id} not found.");
-
-            if (account.OwnerId != userId)
+            var user = await _userManager.Users.Include(u => u.UserAccounts).FirstOrDefaultAsync(x => x.UserName == userName);
+            if (user == null)
             {
-                _logger.LogError($"Update attempt by {userId} - not account owner.");
-                return Forbid();
+                return BadRequest("User not found.");
             }
 
+            var adminRole = _configuration["Roles:Admin"];
+            var isAdmin = User.IsInRole(adminRole);
+
+            if (user.Id != userId && !isAdmin)
+            {
+                var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId &&  ua.IsWriter);
+                if (!hasAccess)
+                {
+                    return Unauthorized("You do not have access.");
+                }
+            }
+            
+            var account = await _accountRepository.GetByIdAsync(id);
+            if (account == null) return NotFound($"Account with {id} not found.");
+
+            //todo amount adjusting transaction front or backend
+            account.Name = accountDataBody.Name;
+            account.GroupSharingOption = accountDataBody.GroupSharingOption;
+            account.CanGoMinus = accountDataBody.CanGoMinus;
+            account.ExpirationDate = accountDataBody.ExpirationDate;
+            
+            
             await _accountRepository.Update(account);
             return Ok(account);
         }
