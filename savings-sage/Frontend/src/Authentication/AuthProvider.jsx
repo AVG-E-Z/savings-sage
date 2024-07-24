@@ -17,10 +17,12 @@ export const AuthProvider = ({ children }) => {
                     setLoading(false);
                 } else {
                     setUser(null);
+                    setLoading(false);
                     console.error('Error fetching user:', response.statusText);
                 }
             } catch (error) {
                 setUser(null);
+                setLoading(false);
                 console.error('Error fetching user:', error);
             }
         };
