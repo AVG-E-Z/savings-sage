@@ -20,15 +20,10 @@ export default function Login() {
         };
 
         try {
-            const response = await fetch("api/auth/Login", {method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
+            const incoming = await login(email, password);
 
-            const incoming = await response.json();
-
-            console.log(incoming);
-
-            if(incoming.success){
+            if(incoming.ok){
                 console.log("Successfully logged in!");
-                login(incoming.token);
                 navigate("/homepage");
             }
 

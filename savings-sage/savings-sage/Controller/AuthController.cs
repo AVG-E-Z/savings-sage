@@ -72,7 +72,6 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
         
-
         var cookieOptions = new CookieOptions
         {
             HttpOnly = true,
@@ -89,7 +88,7 @@ public class AuthController : ControllerBase
     [HttpPost("logout")]
     public IActionResult Logout()
     {
-        Response.Cookies.Delete("jwt");
+        Response.Cookies.Delete("access_token");
         return Ok(new { message = "Logged out" });
     }
     
