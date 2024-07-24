@@ -25,6 +25,29 @@ public class AccountController : ControllerBase
         _userManager = userManager;
     }
 
+    [HttpGet("All/u/{userName}/ha/IdList")]
+    [Authorize(Policy = "RequiredUserOrAdminRole")]
+    public async Task<ActionResult<IEnumerable<int>>> GetByUserId(
+        [FromRoute]string userName)
+    {
+        try
+        {
+            var user = await _userManager.Users.Include(u => u.UserAccounts).FirstOrDefaultAsync(x => x.UserName == userName);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+
+            var userAccounts = await _accountRepository.GetAllIdsByUser(user);
+            return Ok(userAccounts);
+        }
+        catch (Exception e)
+        {
+            const string message = "Error getting accounts of user";
+            _logger.LogError(e, message);
+            return NotFound(message);
+        }
+    }
     [HttpGet("All/u/{userName}")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
     public async Task<ActionResult<IEnumerable<Account>>> GetByOwnerId(

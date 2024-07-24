@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using savings_sage.Context;
+using savings_sage.Model;
 using savings_sage.Model.Accounts;
 
 namespace savings_sage.Service.Repositories;
@@ -14,6 +15,21 @@ public class AccountRepository(UsersContext context) : IAccountRepository
     public async Task<Account?> GetByIdAsync(int id)
     {
         return await context.Accounts.FindAsync(id);
+    }
+
+    public async Task<IEnumerable<int>> GetAllIdsByUser(User user)
+    {
+        List<int> idList = new List<int>();
+        var ownedAccounts = await context.Accounts
+            .Where(a => a.OwnerId == user.Id)
+            .Select(a => a.Id)
+            .ToListAsync();
+        var readerAndWriterAccessAccounts = await context.UserAccounts.Where(ua => ua.UserId == user.Id && (ua.IsReader || ua.IsReaderAndWriter))
+            .Select(a => a.BackAccountId)
+            .ToListAsync();
+        idList.AddRange(ownedAccounts);
+        idList.AddRange(readerAndWriterAccessAccounts);
+        return idList;
     }
     
     public async Task<IEnumerable<Account>> GetAllByOwner(string userId)
