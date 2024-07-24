@@ -28,8 +28,7 @@ public class AccountController : ControllerBase
     [HttpGet("All/u/{userName}")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
     public async Task<ActionResult<IEnumerable<Account>>> GetByOwnerId(
-        [FromRoute]string userName,
-        [FromQuery]string userId)
+        [FromRoute]string userName)
     {
         try
         {
@@ -39,12 +38,46 @@ public class AccountController : ControllerBase
                 return BadRequest("User not found.");
             }
 
-            var adminRole = _configuration["Roles:Admin"];
-            var isAdmin = User.IsInRole(adminRole);
+            var userId = user.Id;
 
-            if (user.Id != userId && !isAdmin)
+            // if (user.Id != userId && !isAdmin)
+            // {
+            //     var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId && (ua.IsReader || ua.IsWriter));
+            //     if (!hasAccess)
+            //     {
+            //         return Unauthorized("You do not have access.");
+            //     }
+            // }
+
+            var userAccounts = await _accountRepository.GetAllByOwner(userId);
+            return Ok(userAccounts);
+        }
+        catch (Exception e)
+        {
+            const string message = "Error getting accounts of user";
+            _logger.LogError(e, message);
+            return NotFound(message);
+        }
+    }
+
+    [HttpGet("All/u/w/{userName}")]
+    [Authorize(Policy = "RequiredUserOrAdminRole")]
+    public async Task<ActionResult<IEnumerable<Account>>> GetByWriterId(
+        [FromRoute]string userName)
+    {
+        try
+        {
+            var user = await _userManager.Users.Include(u => u.UserAccounts).FirstOrDefaultAsync(x => x.UserName == userName);
+            if (user == null)
             {
-                var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId && (ua.IsReader || ua.IsWriter));
+                return BadRequest("User not found.");
+            }
+
+            var userId = user.Id;
+
+            if (user.Id != userId)
+            {
+                var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId && (ua.IsReader || ua.IsReaderAndWriter));
                 if (!hasAccess)
                 {
                     return Unauthorized("You do not have access.");
@@ -61,7 +94,8 @@ public class AccountController : ControllerBase
             return NotFound(message);
         }
     }
-
+    
+    
     [HttpGet("All/u/{userName}/Type/{type}")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
     public async Task<ActionResult<IEnumerable<Account>>> GetByOwnerIdByType(
@@ -82,7 +116,7 @@ public class AccountController : ControllerBase
 
             if (user.Id != userId && !isAdmin)
             {
-                var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId && (ua.IsReader || ua.IsWriter));
+                var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId && (ua.IsReader || ua.IsReaderAndWriter));
                 if (!hasAccess)
                 {
                     return Unauthorized("You do not have access.");
@@ -120,7 +154,7 @@ public class AccountController : ControllerBase
 
             if (user.Id != userId && !isAdmin)
             {
-                var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId && (ua.IsReader || ua.IsWriter));
+                var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId && (ua.IsReader || ua.IsReaderAndWriter));
                 if (!hasAccess)
                 {
                     return Unauthorized("You do not have access.");
@@ -159,7 +193,7 @@ public class AccountController : ControllerBase
 
             if (user.Id != userId && !isAdmin)
             {
-                var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId && (ua.IsReader || ua.IsWriter));
+                var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId && (ua.IsReader || ua.IsReaderAndWriter));
                 if (!hasAccess)
                 {
                     return Unauthorized("You do not have access.");
@@ -233,7 +267,7 @@ public class AccountController : ControllerBase
 
             if (user.Id != userId && !isAdmin)
             {
-                var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId &&  ua.IsWriter);
+                var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId &&  ua.IsReaderAndWriter);
                 if (!hasAccess)
                 {
                     return Unauthorized("You do not have access.");
@@ -281,7 +315,7 @@ public class AccountController : ControllerBase
 
             if (user.Id != userId && !isAdmin)
             {
-                var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId &&  ua.IsWriter);
+                var hasAccess = user.UserAccounts.Any(ua => ua.UserId == userId &&  ua.IsReaderAndWriter);
                 if (!hasAccess)
                 {
                     return Unauthorized("You do not have access.");

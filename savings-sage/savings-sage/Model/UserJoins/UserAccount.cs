@@ -11,5 +11,5 @@ public class UserAccount
     public Account Account { get; set; }
 
     public bool IsReader { get; set; } = false;
-    public bool IsWriter { get; set; } = false;
+    public bool IsReaderAndWriter { get; set; } = false;
 }
