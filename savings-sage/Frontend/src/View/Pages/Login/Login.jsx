@@ -11,7 +11,7 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    async function HandleLogin(e, email, password){
+    async function HandleLogin(e){
         e.preventDefault();
 
         const data = {
@@ -20,15 +20,10 @@ export default function Login() {
         };
 
         try {
-            const response = await fetch("api/auth/Login", {method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
+            const incoming = await login(email, password);
 
-            const incoming = await response.json();
-
-            console.log(incoming);
-
-            if(incoming.success){
+            if(incoming.ok){
                 console.log("Successfully logged in!");
-                login(incoming.token);
                 navigate("/homepage");
             }
 
@@ -41,7 +36,7 @@ export default function Login() {
         <>
             <h2>Welcome back!</h2>
             <div className="formContainerDiv">
-                <form className="form" onSubmit={(e) => HandleLogin(e, email, password)}>
+                <form className="form" onSubmit={(e) => HandleLogin(e)}>
                     <label className="formLabel" htmlFor="email">
                         E-mail: </label>
                         <input className="formInput" type="email" name="email" required onChange={(e) => setEmail(e.target.value)}></input>

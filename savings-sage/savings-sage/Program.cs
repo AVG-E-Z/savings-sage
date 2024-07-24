@@ -71,6 +71,14 @@ builder.Services
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:IssuerSigningKey"])
             )
         };
+        options.Events = new JwtBearerEvents()
+        {
+            OnMessageReceived = context =>
+            {
+                context.Token = context.Request.Cookies["access_token"];
+                return Task.CompletedTask;
+            } 
+        };
     });
 
 builder.Services
