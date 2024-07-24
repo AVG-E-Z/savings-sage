@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using savings_sage.Context;
 using savings_sage.Model;
 using savings_sage.Model.Accounts;
+using savings_sage.Model.UserJoins;
 
 namespace savings_sage.Service.Repositories;
 
@@ -17,6 +18,11 @@ public class AccountRepository(UsersContext context) : IAccountRepository
         return await context.Accounts.FindAsync(id);
     }
 
+    public async Task<IEnumerable<Account>> GetAllByOwner(string userId)
+    {
+        return await context.Accounts.Where(a => a.OwnerId == userId).ToListAsync();
+    }
+    
     public async Task<IEnumerable<int>> GetAllIdsByUser(User user)
     {
         List<int> idList = new List<int>();
@@ -24,17 +30,46 @@ public class AccountRepository(UsersContext context) : IAccountRepository
             .Where(a => a.OwnerId == user.Id)
             .Select(a => a.Id)
             .ToListAsync();
-        var readerAndWriterAccessAccounts = await context.UserAccounts.Where(ua => ua.UserId == user.Id && (ua.IsReader || ua.IsReaderAndWriter))
+        var readerAndWriterAccessUserAccounts = await context.UserAccounts.Where(ua => ua.UserId == user.Id && (ua.IsReader || ua.IsReaderAndWriter))
             .Select(a => a.BackAccountId)
             .ToListAsync();
         idList.AddRange(ownedAccounts);
-        idList.AddRange(readerAndWriterAccessAccounts);
+        idList.AddRange(readerAndWriterAccessUserAccounts);
         return idList;
     }
-    
-    public async Task<IEnumerable<Account>> GetAllByOwner(string userId)
+
+    public async Task<IEnumerable<Account>> GetAllByReader(User user)
     {
-        return await context.Accounts.Where(a => a.OwnerId == userId).ToListAsync();
+        var readerAccessUserAccounts = await context.UserAccounts.Where(ua => ua.UserId == user.Id && ua.IsReader)
+            .Select(a => a.BackAccountId)
+            .ToListAsync();
+        
+        List<Account> accountList = new List<Account>();
+        
+        foreach (var ua_AccountId in readerAccessUserAccounts)
+        {
+            var accountToAdd = await context.Accounts.FirstOrDefaultAsync(x => x.Id == ua_AccountId);
+            accountList.Add(accountToAdd);
+        }
+
+        return accountList;
+    }
+
+    public async Task<IEnumerable<Account>> GetAllByWriter(User user)
+    {
+        var writerAccessUserAccounts = await context.UserAccounts.Where(ua => ua.UserId == user.Id && ua.IsReaderAndWriter)
+            .Select(a => a.BackAccountId)
+            .ToListAsync();
+        
+        List<Account> accountList = new List<Account>();
+        
+        foreach (var ua_AccountId in writerAccessUserAccounts)
+        {
+            var accountToAdd = await context.Accounts.FirstOrDefaultAsync(x => x.Id == ua_AccountId);
+            accountList.Add(accountToAdd);
+        }
+
+        return accountList;
     }
     
     public async Task<IEnumerable<Account>> GetAllByOwnerByType(string userId, AccountType type)
@@ -105,4 +140,35 @@ public class AccountRepository(UsersContext context) : IAccountRepository
         await context.SaveChangesAsync();
     }
 
+    public async Task ManageMembers(Account account, User userToManage, UserAccountDataBody dataBody)
+    {
+        var updatedUserAccount = new UserAccount
+        {
+            Account = account,
+            BackAccountId = account.Id,
+            User = userToManage,
+            UserId = userToManage.Id,
+            IsReader = dataBody.IsReader,
+            IsReaderAndWriter = dataBody.IsReaderAndWriter
+        };
+        var userAccountToManage = await context.UserAccounts.FirstOrDefaultAsync(ua => ua.UserId == userToManage.Id);
+        if (userAccountToManage == null)
+        {
+            await context.UserAccounts.AddAsync(updatedUserAccount);
+            await context.SaveChangesAsync();
+        }
+        var userAccountInAccount = account.UserAccounts.FirstOrDefault(ua => ua.UserId == userToManage.Id);
+        if (userAccountInAccount == null)
+        {
+            account.UserAccounts.Add(updatedUserAccount);
+        }
+
+        userAccountInAccount = updatedUserAccount;
+        
+        context.Update(account);
+        await context.SaveChangesAsync();
+        
+        context.Update(userAccountToManage);
+        await context.SaveChangesAsync();
+    }
 }

@@ -11,19 +11,20 @@ public class CategoryRepository(UsersContext context) : ICategoryRepository
     
         var baseCategories = new List<Category>
         {
-            new Category { Name = "Rezsi", OwnerId = userId, ColorId = 1},
-            new Category { Name = "Élelmiszer", OwnerId = userId, ColorId = 2 },
-            new Category { Name = "Ruha", OwnerId = userId, ColorId = 3 },
-            new Category { Name = "Egészség", OwnerId = userId, ColorId = 4 },
-            new Category { Name = "Szépségápolás", OwnerId = userId, ColorId = 5 },
-            new Category { Name = "Autó", OwnerId = userId, ColorId = 6 },
-            new Category { Name = "Közlekedés", OwnerId = userId, ColorId = 7 },
-            new Category { Name = "Lakbér", OwnerId = userId, ColorId = 8 },
-            new Category { Name = "Ajándék", OwnerId = userId, ColorId = 9 },
-            new Category { Name = "Elektronika", OwnerId = userId, ColorId = 10 },
-            new Category { Name = "Háztartás", OwnerId = userId, ColorId = 11 },
-            new Category { Name = "Háziállat", OwnerId = userId, ColorId = 12 }
+            new() { Name = "Utilities", OwnerId = userId, ColorId = 1, IconURL = "/icons/lightbulb.svg"},
+            new() { Name = "Food", OwnerId = userId, ColorId = 2, IconURL = "/icons/utensils.svg"},
+            new() { Name = "Clothing", OwnerId = userId, ColorId = 3, IconURL = "/icons/hanger.svg"},
+            new() { Name = "Health", OwnerId = userId, ColorId = 4, IconURL = "/icons/heart-medical.svg" },
+            new() { Name = "Beauty", OwnerId = userId, ColorId = 5, IconURL = "/icons/sanitizer.svg"},
+            new() { Name = "Car", OwnerId = userId, ColorId = 6, IconURL = "/icons/car-sideview.svg"},
+            new() { Name = "Transportation", OwnerId = userId, ColorId = 7, IconURL = "/icons/subway.svg"},
+            new() { Name = "Rent", OwnerId = userId, ColorId = 8, IconURL = "/icons/key.svg"},
+            new() { Name = "Gifts", OwnerId = userId, ColorId = 9, IconURL = "/icons/gift.svg"},
+            new() { Name = "Electronics", OwnerId = userId, ColorId = 10, IconURL = "/icons/desktop-alt.svg"},
+            new() { Name = "Household", OwnerId = userId, ColorId = 11, IconURL = "/icons/house.svg"},
+            new() { Name = "Pet", OwnerId = userId, ColorId = 12, IconURL = "/icons/paw.svg"}
         };
+
 
         context.Categories.AddRange(baseCategories);
         await context.SaveChangesAsync();
