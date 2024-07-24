@@ -1,11 +1,17 @@
-import React from 'react';
-import { useAuth } from './AuthProvider';
-import { Navigate, Outlet } from 'react-router-dom';
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "./AuthProvider.jsx";
 
-const ProtectedRoute = ({ element, ...rest }) => {
-    const { user } = useAuth();
+export default function ProtectedRoute({ children }) {
+    const { auth, loading } = useAuth();
 
-    return user ? element : <Navigate to="/login" />;
-};
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
-export default ProtectedRoute;
+    if (!auth.isAuthenticated) {
+        return <Navigate to="/login" />;
+    }
+
+    return children;
+}

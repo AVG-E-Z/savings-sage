@@ -21,14 +21,14 @@ public class UsersContext : IdentityDbContext<User, IdentityRole, string>
             _password = Environment.GetEnvironmentVariable("MSSQL_SA_PASSWORD");
         }
 
-        public DbSet<BankAccount> Accounts { get; set; }
+        public DbSet<Account> Accounts { get; set; }
         public DbSet<Budget> Budgets { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Color> Colors { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<SavingsGoal> SavingsGoals { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<UserBankAccount> UserBankAccounts { get; set; }
+        public DbSet<UserAccount> UserAccounts { get; set; }
         public DbSet<UserBudget> UserBudgets { get; set; }
         public DbSet<UserSavingsGoal> UserSavingsGoals { get; set; }
 
@@ -47,33 +47,33 @@ public class UsersContext : IdentityDbContext<User, IdentityRole, string>
 
         #region Accounts
         
-        modelBuilder.Entity<BankAccount>()
+        modelBuilder.Entity<Account>()
             .Property(x => x.Id)
             .ValueGeneratedOnAdd();
         
-        modelBuilder.Entity<BankAccount>()
+        modelBuilder.Entity<Account>()
             .HasKey(ba => ba.Id);
         
-        modelBuilder.Entity<BankAccount>()
+        modelBuilder.Entity<Account>()
             .Property(x => x.Type)
             .HasConversion<string>();
         
-        modelBuilder.Entity<BankAccount>()
+        modelBuilder.Entity<Account>()
             .Property(x => x.Currency)
             .HasConversion<string>();
         
-        modelBuilder.Entity<BankAccount>()
+        modelBuilder.Entity<Account>()
             .HasIndex(b => new { b.OwnerId, b.Name })
             .IsUnique()
-            .HasDatabaseName("IX_User_BankAccountName_Unique");
+            .HasDatabaseName("IX_User_AccountName_Unique");
         
-        modelBuilder.Entity<BankAccount>()
+        modelBuilder.Entity<Account>()
             .HasOne(ba => ba.Owner)
-            .WithMany(u => u.BankAccounts)
+            .WithMany(u => u.Accounts)
             .HasForeignKey(b => b.OwnerId)
             .OnDelete(DeleteBehavior.Restrict);
         
-        modelBuilder.Entity<BankAccount>()
+        modelBuilder.Entity<Account>()
             .HasOne(ba => ba.ParentAccount)
             .WithMany(ba => ba.SubAccounts)
             .HasForeignKey(ba => ba.ParentAccountId)
@@ -110,14 +110,14 @@ public class UsersContext : IdentityDbContext<User, IdentityRole, string>
             .ValueGeneratedOnAdd();
 
         modelBuilder.Entity<Category>()
-            .HasIndex(b => new { b.OwnerUserName, b.Name })
+            .HasIndex(b => new { b.OwnerId, b.Name })
             .IsUnique()
             .HasDatabaseName("IX_User_CategoryName_Unique");
         
         modelBuilder.Entity<Category>()
             .HasOne(c => c.Owner)
             .WithMany(u => u.Categories)
-            .HasForeignKey(b => b.OwnerUserName)
+            .HasForeignKey(b => b.OwnerId)
             .OnDelete(DeleteBehavior.Restrict);
         
         #endregion
@@ -231,18 +231,18 @@ public class UsersContext : IdentityDbContext<User, IdentityRole, string>
         #region Connector tables
 
         //Bank account
-        modelBuilder.Entity<UserBankAccount>()
+        modelBuilder.Entity<UserAccount>()
             .HasKey(uba => new { uba.UserId, uba.BackAccountId });
 
-        modelBuilder.Entity<UserBankAccount>()
+        modelBuilder.Entity<UserAccount>()
             .HasOne(uba => uba.User)
-            .WithMany(u => u.UserBankAccount)
+            .WithMany(u => u.UserAccounts)
             .HasForeignKey(uba => uba.UserId)
             .OnDelete(DeleteBehavior.Restrict);
         
-        modelBuilder.Entity<UserBankAccount>()
-            .HasOne(uba => uba.BankAccount)
-            .WithMany(ba => ba.UserBankAccount)
+        modelBuilder.Entity<UserAccount>()
+            .HasOne(uba => uba.Account)
+            .WithMany(ba => ba.UserAccounts)
             .HasForeignKey(uba => uba.BackAccountId)
             .OnDelete(DeleteBehavior.Restrict);
 

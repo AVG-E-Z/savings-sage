@@ -3,7 +3,7 @@ using savings_sage.Model.UserJoins;
 
 namespace savings_sage.Model.Accounts;
 
-public class BankAccount
+public class Account
 {
     public int Id { get; init; }
     public string Name { get; set; }
@@ -12,8 +12,8 @@ public class BankAccount
     public User Owner { get; init; }
     public double Amount { get; set; }
     public int? ParentAccountId { get; init; }
-    public BankAccount ParentAccount { get; init; }
-    public ICollection<BankAccount> SubAccounts { get; set; } = new List<BankAccount>();
+    public Account ParentAccount { get; init; }
+    public ICollection<Account> SubAccounts { get; set; } = new List<Account>();
     public bool GroupSharingOption { get; set; }
 
     public bool CanGoMinus { get; set; } = false;
@@ -21,5 +21,5 @@ public class BankAccount
     public AccountType Type { get; set; }
     
     //connector table
-    public ICollection<UserBankAccount> UserBankAccount { get; set; } 
+    public ICollection<UserAccount> UserAccounts { get; set; } 
 }

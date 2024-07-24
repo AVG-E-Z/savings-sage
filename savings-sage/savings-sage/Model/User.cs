@@ -14,12 +14,12 @@ public class User : IdentityUser
     // Custom relationships
     public ICollection<Group> Groups { get; set; }
     public ICollection<SavingsGoal> SavingsGoals { get; set; }
-    public ICollection<BankAccount> BankAccounts { get; set; }
+    public ICollection<Account> Accounts { get; set; }
     public ICollection<Budget> Budgets { get; set; }
     public ICollection<Transaction> Transactions { get; set; }
 
     // Connector table relationships
-    public ICollection<UserBankAccount> UserBankAccount { get; set; } 
+    public ICollection<UserAccount> UserAccounts { get; set; } 
     public ICollection<UserSavingsGoal> UserSavingsGoal { get; set; }
     public ICollection<UserBudget> UserBudget { get; set; }
     public ICollection<Category> Categories { get; set; }

@@ -4,14 +4,14 @@ import {useNavigate} from "react-router-dom";
 import "./navbar.css";
 
 export default function NavbarSide() {
-    const { logout, user} = useAuth();
+    const { logout, auth} = useAuth();
     const navigate = useNavigate();
     
     
     
     return <><div className="navBarContainer">
         <div className={"logoNavbarResize"}><Logo/></div>
-        {user
+        {auth.isAuthenticated
             ? <>
                 <div id="homeDiv" className="navbarDiv" onClick={() => navigate("/homepage")}>
                     <img src={"/icons/home.svg"}/>

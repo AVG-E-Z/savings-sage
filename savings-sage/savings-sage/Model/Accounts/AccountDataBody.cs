@@ -1,6 +1,6 @@
 namespace savings_sage.Model.Accounts;
 
-public class BankAccountDataBody
+public class AccountDataBody
 {
     public string Name { get; set; }
     public Currency Currency { get; set; }

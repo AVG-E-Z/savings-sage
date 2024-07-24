@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using savings_sage.Contracts;
+using savings_sage.Model;
 using savings_sage.Service.Authentication;
 using savings_sage.Service.Repositories;
 
@@ -12,12 +15,14 @@ public class AuthController : ControllerBase
 {
     private readonly IAuthService _authenticationService;
     private readonly IConfiguration _configuration;
+    private readonly UserManager<User> _userManager;
     private readonly ICategoryService _categoryService;
 
-    public AuthController(IAuthService authenticationService, IConfiguration configuration, ICategoryService categoryService)
+    public AuthController(IAuthService authenticationService, IConfiguration configuration, UserManager<User> userManager, ICategoryService categoryService)
     {
         _authenticationService = authenticationService;
         _configuration = configuration;
+        _userManager = userManager;
         _categoryService = categoryService;
     }
 
@@ -34,9 +39,16 @@ public class AuthController : ControllerBase
             AddErrors(result);
             return BadRequest(ModelState);
         }
+        
+        var userName = result.UserName;
+        var user = await  _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
+        if (user == null)
+        {
+            return BadRequest("User not found after registration");
+        }
 
-        // var userName = request.Username;
-        // await _categoryService.CreateDefaultCategoriesAsync(userName);
+        var userId = user.Id;
+         await _categoryService.CreateDefaultCategoriesAsync(userId);
         
         
         return CreatedAtAction(nameof(Register), new RegistrationResponse(true,result.Email, result.UserName));
@@ -60,6 +72,7 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
         
+
         var cookieOptions = new CookieOptions
         {
             HttpOnly = true,
@@ -87,4 +100,5 @@ public class AuthController : ControllerBase
         var username = User.Identity.Name;
         return Ok(new { username });
     }
+
 }

@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ email, password }),
-                //credentials: 'include' //kérdés, h ez ide kell e
+                credentials: 'include' 
             });
            const data = await response.json();
            
@@ -44,7 +44,6 @@ export const AuthProvider = ({ children }) => {
             }
             
             const userResponse = await fetch('api/auth/me', { credentials: 'include' });
-            //headers: {Authorization: `Bearer ${data.token}`}, 
             console.log(userResponse);
             
             if (userResponse.ok) {

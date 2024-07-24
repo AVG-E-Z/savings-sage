@@ -1,4 +1,4 @@
-http://localhost:5106/api/BankAccount/BankAccounts/1
+http://localhost:5106/api/Account/Accounts/1
 
 {
   "name": "myFirstDebitAcc",

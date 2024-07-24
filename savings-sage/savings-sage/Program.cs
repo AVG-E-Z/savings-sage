@@ -113,7 +113,7 @@ var connectionString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<UsersContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 
-builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddLogging();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -139,7 +139,7 @@ var app = builder.Build();
 
 using var
     scope = app.Services
-        .CreateScope(); // AuthenticationSeeder is a scoped service, therefore we need a scope instance to access it
+        .CreateScope(); 
 var authenticationSeeder = scope.ServiceProvider.GetRequiredService<AuthenticationSeeder>();
 authenticationSeeder.AddRoles();
 authenticationSeeder.AddAdmin();
