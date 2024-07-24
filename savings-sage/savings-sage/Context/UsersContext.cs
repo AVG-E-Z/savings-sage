@@ -119,6 +119,12 @@ public class UsersContext : IdentityDbContext<User, IdentityRole, string>
             .WithMany(u => u.Categories)
             .HasForeignKey(b => b.OwnerId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Category>()
+            .Property(c => c.IconURL)
+            .IsRequired(true)
+            .HasMaxLength(200)
+            .HasColumnName("icon_url");
         
         #endregion
 

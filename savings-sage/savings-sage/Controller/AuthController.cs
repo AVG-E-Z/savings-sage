@@ -16,14 +16,14 @@ public class AuthController : ControllerBase
     private readonly IAuthService _authenticationService;
     private readonly IConfiguration _configuration;
     private readonly UserManager<User> _userManager;
-    private readonly ICategoryService _categoryService;
+    private readonly ICategoryRepository _categoryRepository;
 
-    public AuthController(IAuthService authenticationService, IConfiguration configuration, UserManager<User> userManager, ICategoryService categoryService)
+    public AuthController(IAuthService authenticationService, IConfiguration configuration, UserManager<User> userManager, ICategoryRepository categoryRepository)
     {
         _authenticationService = authenticationService;
         _configuration = configuration;
         _userManager = userManager;
-        _categoryService = categoryService;
+        _categoryRepository = categoryRepository;
     }
 
     [HttpPost("Register")]
@@ -48,7 +48,7 @@ public class AuthController : ControllerBase
         }
 
         var userId = user.Id;
-         await _categoryService.CreateDefaultCategoriesAsync(userId);
+         await _categoryRepository.CreateDefaultCategoriesAsync(userId);
         
         
         return CreatedAtAction(nameof(Register), new RegistrationResponse(true,result.Email, result.UserName));
