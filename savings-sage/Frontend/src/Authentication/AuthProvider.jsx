@@ -5,6 +5,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -13,6 +14,7 @@ export const AuthProvider = ({ children }) => {
                 if (response.ok) {
                     const data = await response.json();
                     setUser(data);
+                    setLoading(false);
                 } else {
                     setUser(null);
                     console.error('Error fetching user:', response.statusText);
@@ -69,6 +71,7 @@ export const AuthProvider = ({ children }) => {
 
             if (response.ok) {
                 setUser(null);
+                
             } else {
                 console.error('Logout failed:', response.statusText);
             }
@@ -78,7 +81,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, login, logout, loading }}>
             {children}
         </AuthContext.Provider>
     );
