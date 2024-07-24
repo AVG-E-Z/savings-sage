@@ -4,7 +4,7 @@ import {useAuth} from "../../../Authentication/AuthProvider.jsx";
 
 export default function Registration() {
     const [success, setSuccess] = useState(false);
-    let seconds = 4;
+    let seconds = 2;
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

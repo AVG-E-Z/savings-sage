@@ -51,7 +51,7 @@ public class AuthController : ControllerBase
          await _categoryService.CreateDefaultCategoriesAsync(userId);
         
         
-        return CreatedAtAction(nameof(Register), new RegistrationResponse(result.Email, result.UserName));
+        return CreatedAtAction(nameof(Register), new RegistrationResponse(true,result.Email, result.UserName));
     }
 
     private void AddErrors(AuthResult result)
@@ -73,6 +73,16 @@ public class AuthController : ControllerBase
         }
         
 
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true, 
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTime.UtcNow.AddHours(1),
+        };
+        
+        Response.Cookies.Append("access_token", result.Token, cookieOptions);
+
         return Ok(new AuthResponse(true,result.Email, result.UserName, result.Token));
     }
     
@@ -83,4 +93,12 @@ public class AuthController : ControllerBase
         return Ok(new { message = "Logged out" });
     }
     
+    [HttpGet("me")]
+    [Authorize(Policy = "RequiredUserOrAdminRole")]
+    public IActionResult Me()
+    {
+        var username = User.Identity.Name;
+        return Ok(new { username });
+    }
+
 }
