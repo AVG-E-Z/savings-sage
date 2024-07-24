@@ -9,6 +9,7 @@ public class AccountDataBody
     public double? AmountCapital { get; set; }
     public int? ParentAccountId { get; init; }
     public bool GroupSharingOption { get; set; }
+    public bool CanGoMinus { get; set; }
     public DateTime? ExpirationDate { get; set; } = null;
     public AccountType Type { get; set; }
 }

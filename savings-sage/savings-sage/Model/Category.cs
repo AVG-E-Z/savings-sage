@@ -10,5 +10,5 @@ public class Category
     
     public int ColorId { get; set; }
     public Color Color { get; set; }
-    //dream: icons public int IconId { get; set; }
+    public string IconURL { get; set; }
 }
