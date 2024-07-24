@@ -39,7 +39,7 @@ public class AuthController : ControllerBase
         // await _categoryService.CreateDefaultCategoriesAsync(userName);
         
         
-        return CreatedAtAction(nameof(Register), new RegistrationResponse(result.Email, result.UserName));
+        return CreatedAtAction(nameof(Register), new RegistrationResponse(true,result.Email, result.UserName));
     }
 
     private void AddErrors(AuthResult result)
@@ -65,10 +65,10 @@ public class AuthController : ControllerBase
             HttpOnly = true,
             Secure = true, 
             SameSite = SameSiteMode.Strict,
-            Expires = DateTime.UtcNow.AddHours(1)
+            Expires = DateTime.UtcNow.AddHours(1),
         };
         
-        Response.Cookies.Append("jwt", result.Token, cookieOptions);
+        Response.Cookies.Append("access_token", result.Token, cookieOptions);
 
         return Ok(new AuthResponse(true,result.Email, result.UserName, result.Token));
     }

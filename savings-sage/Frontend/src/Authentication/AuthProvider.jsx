@@ -10,7 +10,6 @@ export const AuthProvider = ({ children }) => {
         const fetchUser = async () => {
             try {
                 const response = await fetch('api/auth/me', { credentials: 'include' });
-            //headers: {Authorization: `Bearer ${}`}
                 if (response.ok) {
                     const data = await response.json();
                     setUser(data);
