@@ -236,7 +236,7 @@ public class AccountController : ControllerBase
             // Assuming AddAsync method returns the added accounts
             if (newAccount != null)
                 // Use the first account to create the URI for CreatedAtAction
-                return CreatedAtAction(nameof(GetById), new { id = newAccount.Id }, newAccount);
+                return Ok();
             return BadRequest("Failed to create accounts");
         }
         catch (Exception e)

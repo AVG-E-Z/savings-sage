@@ -17,6 +17,10 @@ export default function NavbarSide() {
                     <img src={"/icons/home.svg"}/>
                     <p id="homeDivText" className="navbarDivText">Home</p>
                 </div>
+                <div id="accountBalancesDiv" className="navbarDiv" onClick={() => navigate("/account-balances")}>
+                    <img src={"/icons/money-stack.svg"}/>
+                    <p id="accountBalancesDivText" className="navbarDivText">Accounts</p>
+                </div>
                 <div id="transactionsDiv" className="navbarDiv" onClick={() => navigate("/transactions")}>
                     <img src={"/icons/history.svg"}/>
                     <p id="transactionsDivText" className="navbarDivText">Transactions</p>
