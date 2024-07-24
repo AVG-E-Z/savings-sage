@@ -22,7 +22,7 @@ public class CategoryRepository : ICategoryRepository
             new() { Name = "Food", OwnerId = userId, ColorId = 2, IconURL = "/icons/utensils.svg"},
             new() { Name = "Clothing", OwnerId = userId, ColorId = 3, IconURL = "/icons/hanger.svg"},
             new() { Name = "Health", OwnerId = userId, ColorId = 4, IconURL = "/icons/heart-medical.svg" },
-            new() { Name = "Beauty", OwnerId = userId, ColorId = 5, IconURL = "/icons/sanitizer.svg"},
+            new() { Name = "Beauty", OwnerId = userId, ColorId = 5, IconURL = "/icons/sanitizer-alt.svg"},
             new() { Name = "Car", OwnerId = userId, ColorId = 6, IconURL = "/icons/car-sideview.svg"},
             new() { Name = "Transportation", OwnerId = userId, ColorId = 7, IconURL = "/icons/subway.svg"},
             new() { Name = "Rent", OwnerId = userId, ColorId = 8, IconURL = "/icons/key.svg"},
@@ -36,10 +36,15 @@ public class CategoryRepository : ICategoryRepository
         await _context.SaveChangesAsync();
     }
     
-    public async Task<IEnumerable<Category>> GetCategoriesByUser(string userId)
+    public async Task<IEnumerable<CategoryDto>> GetCategoriesByUser(string userId)
     {
         var categoriesByUser = await _context.Categories.Where(x => x.OwnerId == userId).ToListAsync();
-        return categoriesByUser;
+
+        var categoriesDtos = categoriesByUser.Select(cat => new CategoryDto()
+        { ColorId = cat.ColorId, IconURL = cat.IconURL, Id = cat.Id, Name = cat.Name,
+            OwnerId = cat.OwnerId
+        });
+        return categoriesDtos;
     }
 
     public async Task<Category?> GetByIdAsync(int catId)

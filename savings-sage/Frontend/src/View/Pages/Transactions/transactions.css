@@ -2,6 +2,30 @@
     margin: 10px;
     width: 30px;
     height: 30px;
-
+    margin: 5px 20px;
 }
 
+.iconsDiv{
+    display: flex;
+    flex-direction: row;
+}
+
+
+.categoryDiv{
+    display: flex;
+    flex-direction: column;
+    width: 88px;
+    margin: 5px;
+    align-items: center;
+    border: 2px solid black;
+}
+
+
+.categoryName{
+    font-size: 10px;
+    width: 88px;
+    margin-left: 10px;
+    margin: auto;
+    text-align: center;
+    padding: 3px;
+}
