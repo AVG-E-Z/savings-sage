@@ -1,8 +1,7 @@
 .jointContainer{
     display: flex;
     flex-direction: row;
-    margin-top: 100px;
- 
+    margin-top: 20px;
    justify-content: center;
 }
 
@@ -27,6 +26,23 @@
     width: 200px;
     margin-left: 0px;
     maring-bottom: 10px;
+    font-family: Comfortaa, Arial, sans-serif;
+}
+.nameDiv{
+    height: 40px;
+    width: 300px;
+    border-radius: 30px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.chosenCategory{
+    background-color: #60B879;
+}
+
+hr{
+    margin-top: 25px;
+    margin-bottom: 60px;
 }
 .iconsDiv img{
     margin: 10px;
@@ -111,6 +127,13 @@
     font-weight: 600;
     font-size: 15px;
     display: block;
+}
+
+.nameCont{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 }
 
 .buttonContainer{

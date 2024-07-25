@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from "../../../Authentication/AuthProvider.jsx";
 import '../../Pages/Transactions/transactions.css';
+import {all} from "axios";
 
-function AddNewTransaction() {
+function AddNewTransaction({setIsNewBeingAdded}) {
     const { user } = useAuth();
     const [allCategories, setAllCategories] = useState(null);
     const [allAccounts, setAllAccounts] = useState(null);
@@ -20,7 +21,7 @@ function AddNewTransaction() {
     const [amount, setAmount] = useState();
     const [type, setType] = useState("payment"); //todo: when transfer gets implemented, this needs to be adjustable
     const [currency, setCurrency] = useState("HUF");
-    const [name, setName] = useState("trasnaction");
+    const [name, setName] = useState("New transaction");
     
     //todo: legyen defaultja a választott számlának, hogyha egy van, akkor az legyen
 
@@ -32,9 +33,7 @@ function AddNewTransaction() {
                 setAllCategories(data); 
             } catch (err) {
                 console.error("Error fetching categories: " + err);
-            } finally {
-                setAreCategoriesDone(true); 
-            }
+            } 
         }
         async function fetchAccounts() {
             try {
@@ -43,9 +42,7 @@ function AddNewTransaction() {
                 setAllAccounts(data);
             } catch (err) {
                 console.error("Error fetching accounts: " + err);
-            } finally {
-                setAreAccountsDone(true);
-            }
+            } 
         }
         fetchCategories();
         fetchAccounts();
@@ -62,19 +59,10 @@ function AddNewTransaction() {
         console.log(isRecurring);
     }, [isRecurring]);
 
-    useEffect(() => {
-        console.log(chosenAccountId);
-    }, [chosenAccountId]);
-
     async function SubmitData(){
-        if(subType === "expense"){
-            setDirection("Out")
-        } else if (subType === "income"){
-            setDirection("In")
-        }
         const dataForBody = {
-         Name: name,
-         Currency: currency, 
+            Name: name,
+            Currency: currency,
             AccountId: chosenAccountId,
             Date: date,
             CategoryId: chosenCategoryId,
@@ -89,18 +77,26 @@ function AddNewTransaction() {
         try {
             const response = await fetch(`api/Transaction/Add/${user.username}`, {method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(dataForBody)});
 
-            const incoming = await response.json();
-
-            console.log(incoming);
-
-            if(incoming.success){
+            if(response.ok){
                 console.log("Successfully added a new transaction!");
+                setIsNewBeingAdded(false);
             }
 
         } catch(err){
             console.error("Error while adding transaction:", err);
         }
-        
+        // const chosenBankAccountsCurrency = allAccounts.find(acc => acc.id === chosenAccountId).Currency;
+        // setCurrency(chosenBankAccountsCurrency);
+        //todo: fix this
+    }
+    
+    function setTypeAndDirection(subtype){
+        setSubType(subtype);
+        if(subtype === "expense"){
+            setDirection("Out");
+        }else if(subtype === "income"){
+            setDirection("In");
+        }
     }
     
     if (isLoading) {
@@ -111,10 +107,12 @@ function AddNewTransaction() {
 
     return (
         <>
+            <div className="nameCont"><input className="formInput nameDiv" value={name} onChange={(e)=> setName(e.target.value)}></input></div>
+            <hr/>
             <div className="jointContainer">
                 <div className='iconsDiv'><h2 className="title">Categories:</h2>
                     {categories.map(cat => (
-                        <div key={cat.id + cat.name[0]} id={cat.id} className="categoryDiv"
+                        <div key={cat.id + cat.name[0]} id={cat.id} className={`categoryDiv ${chosenCategoryId === cat.id? 'chosenCategory' : ''}`}
                              onClick={() => setChosenCategoryId(cat.id)}>
                             <img key={cat.id} src={cat.iconURL} alt={cat.name}/>
                             <p className="categoryName">{cat.name}</p>
@@ -131,7 +129,6 @@ function AddNewTransaction() {
                             type="number"
                             className="transFormInput"
                             onChange={(e) => setAmount(e.target.value)}>
-
                         </input>
                         <label htmlFor="date" className="formLabel">Date:</label>
                         <input
@@ -165,19 +162,21 @@ function AddNewTransaction() {
                     <h2>Type:</h2>
                     <button
                         className={`type expenseButton ${subType === "" ? "" : subType === 'expense' ? 'chosen' : 'notChosen'}`}
-                        onClick={() => setSubType("expense")}>
+                        onClick={() => setTypeAndDirection("expense")}>
                         <p className="typeText">Expense</p></button>
                     <button
                         className={`type incomeButton ${subType === "" ? "" : subType === 'income' ? 'chosen' : 'notChosen'}`}
-                        onClick={() => setSubType("income")}
+                        onClick={() => setTypeAndDirection("income")}
                     >
                         <p className="typeText">Income</p></button>
                     <button
-                        className={`type transferButton ${subType === "" ? "" : subType === 'transfer' ? 'chosen' : 'notChosen'}`}>
+                        className={`type transferButton notChosen`}>
                         <p className="typeText">Transfer</p></button>
                 </div>
             </div>
-            <div className="buttonContainer" onClick={()=> SubmitData()}><button className="transFormSubmitButton">Submit</button></div>
+            <div className="buttonContainer" onClick={() => SubmitData()}>
+                <button className="transFormSubmitButton">Submit</button>
+            </div>
         </>
     );
 }

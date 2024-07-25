@@ -58,7 +58,7 @@ export default function Transactions() {
     
     return (
        <> {
-           isNewBeingAdded ?  <AddNewTransaction allAccountIdsForUser={allAccountIdsForUser}/> : isEditModeOn ? <EditTransaction/> : <TransactionOverview allTransactions={FilterRules(allTransactions)} setIsNewBeingAdded={setIsNewBeingAdded} setIsEditModeOn={setIsEditModeOn} setFilterRules={setFilterRules}/>
+           isNewBeingAdded ?  <AddNewTransaction setIsNewBeingAdded={setIsNewBeingAdded}/> : isEditModeOn ? <EditTransaction/> : <TransactionOverview allTransactions={FilterRules(allTransactions)} setIsNewBeingAdded={setIsNewBeingAdded} setIsEditModeOn={setIsEditModeOn} setFilterRules={setFilterRules}/>
        }
        </>
     );

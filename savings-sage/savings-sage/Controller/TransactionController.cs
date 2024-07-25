@@ -89,7 +89,6 @@ public class TransactionController : ControllerBase
     [Authorize(Policy = "RequiredUserOrAdminRole")]
     public async Task<ActionResult<Transaction>> AddNewTransaction([FromBody] TransactionBody transactionBody, [FromRoute]string userName)
     {
-        Console.WriteLine("hi");
         try
         { 
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
