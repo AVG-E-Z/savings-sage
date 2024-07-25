@@ -5,7 +5,7 @@ import {Outlet} from "react-router-dom";
 import styled from "styled-components";
 
 const ContainerOfEverything = styled.div`
-  display: flex;
+    display: flex;
     margin-left: 10px;
     margin-top: 1vh;
     margin-bottom: 2vh;
@@ -25,14 +25,14 @@ const ContainerOfContent= styled.div`
     display: block;
     width: 80vw;
 
-    /* Hide scrollbar for Webkit browsers */
+
     ::-webkit-scrollbar {
         display: none;
     }
 
-    /* Hide scrollbar for IE, Edge and Firefox */
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
 `
 export default function Layout(){
     return (

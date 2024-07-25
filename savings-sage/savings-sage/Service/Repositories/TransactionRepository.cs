@@ -7,12 +7,12 @@ namespace savings_sage.Service.Repositories;
 
 public class TransactionRepository(UsersContext context) : ITransactionRepository
 {
-    public async Task<IEnumerable<Transaction>> GetAll(string loggedInUserId)
-    {
-        var allTransactions = await context.Transactions.Where(transaction => transaction.OwnerId == loggedInUserId).ToListAsync();
-
-        return allTransactions;
-    }
+    // public async Task<IEnumerable<Transaction>> GetAllByOwner(string loggedInUserId)
+    // {
+    //     var allTransactions = await context.Transactions.Where(transaction => transaction.OwnerId == loggedInUserId).ToListAsync();
+    //
+    //     return allTransactions;
+    // }
     
     
     public async Task<IEnumerable<Transaction>> GetAllByAccount(int accountId)
@@ -20,6 +20,13 @@ public class TransactionRepository(UsersContext context) : ITransactionRepositor
         var allTransactionsByAccount = await context.Transactions.Where(transaction => transaction.AccountId == accountId).ToListAsync();
 
         return allTransactionsByAccount;
+    }
+
+    public async Task<IEnumerable<Transaction>> GetAllForAllAccounts(int[] accountIds)
+    {
+        var allTransactionsForAllAccounts = await context.Transactions.Where(transaction => accountIds.Contains(transaction.AccountId)).ToListAsync();
+
+        return allTransactionsForAllAccounts;
     }
 
     public async Task AddNewTransaction(Transaction transaction)

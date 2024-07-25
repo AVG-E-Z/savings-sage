@@ -17,7 +17,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  
+
 }
 
 h1 {
@@ -74,6 +74,7 @@ h1 {
   background-color: #66d385;
 }
 
+
 .accountCards{
   display: flex;
   width: 100%;
@@ -88,3 +89,4 @@ h1 {
 .accountsBalances{
   overflow: hidden;
 }
+

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using savings_sage.Model;
 using savings_sage.Service.Repositories;
@@ -11,22 +12,39 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
     : ControllerBase
 {
     
-    [HttpGet("GetAll")]
-    public async Task<ActionResult<IEnumerable<Transaction>>> GetAllTransactions([Required] string loggedInUserId)
+    // [HttpGet("GetAllByOwner/{userName}")]
+    // public async Task<ActionResult<IEnumerable<Transaction>>> GetAllTransactions([Required] string loggedInUserId)
+    // {
+    //     try
+    //     {
+    //         var allTransactions = await transactionRepository.GetAllByOwner(loggedInUserId);
+    //         return Ok(allTransactions);
+    //     }
+    //     catch (ArgumentException e)
+    //     {
+    //         logger.LogError(e, "An error occured, while fetching transactions for user. Check if there is a valid logged in user.");
+    //         return BadRequest();
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         logger.LogError(e, "An error occured while fetching transactions.");
+    //         return NotFound();
+    //     }
+    // }
+
+    [HttpPost("GetAll/ForAllUserAccounts")]
+    [Authorize(Policy = "RequiredUserOrAdminRole")]
+    public async Task<ActionResult<IEnumerable<Transaction>>> GetAllForAllUserAccounts([Required] int[] accountIds)
     {
         try
         {
-            var allTransactions = await transactionRepository.GetAll(loggedInUserId);
-            return Ok(allTransactions);
-        }
-        catch (ArgumentException e)
-        {
-            logger.LogError(e, "An error occured, while fetching transactions for user. Check if there is a valid logged in user.");
-            return BadRequest();
+            logger.LogInformation("Fetching transactions for all accounts...");
+            var allTransactionForAllAccounts = transactionRepository.GetAllForAllAccounts(accountIds);
+            return Ok(allTransactionForAllAccounts);
         }
         catch (Exception e)
         {
-            logger.LogError(e, "An error occured while fetching transactions.");
+            logger.LogError(e, "An error occured while fetching transactions for account.");
             return NotFound();
         }
     }
@@ -42,7 +60,7 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
         }
         catch (ArgumentException e)
         {
-            logger.LogError(e, "An error occured, while fetching transactions for account. Check if there is a account.");
+            logger.LogError(e, "An error occured, while fetching transactions for account. Check if there is an account.");
             return BadRequest();
         }
         catch (Exception e)
