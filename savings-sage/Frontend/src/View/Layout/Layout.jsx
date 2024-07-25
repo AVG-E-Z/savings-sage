@@ -9,6 +9,7 @@ const ContainerOfEverything = styled.div`
     margin-left: 10px;
     margin-top: 1vh;
     margin-bottom: 2vh;
+    scrollbar-width: none;
 `;
 
 const ContainerOfContent= styled.div`
@@ -16,11 +17,22 @@ const ContainerOfContent= styled.div`
     margin-right:2vw;
     margin-left: 10px;
     margin-top: 2vh;
-    margin-bottom: 1px;
     padding: 20px;
     border-radius: 25px;
     align-items: center;
     height: calc(100vh - 5vh);
+    overflow: auto;
+    display: block;
+    width: 80vw;
+
+    /* Hide scrollbar for Webkit browsers */
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 `
 export default function Layout(){
     return (
