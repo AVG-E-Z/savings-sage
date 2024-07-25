@@ -5,10 +5,11 @@ import {Outlet} from "react-router-dom";
 import styled from "styled-components";
 
 const ContainerOfEverything = styled.div`
-  display: flex;
+    display: flex;
     margin-left: 10px;
     margin-top: 1vh;
     margin-bottom: 2vh;
+    scrollbar-width: none;
 `;
 
 const ContainerOfContent= styled.div`
@@ -16,11 +17,20 @@ const ContainerOfContent= styled.div`
     margin-right:2vw;
     margin-left: 10px;
     margin-top: 2vh;
-    margin-bottom: 1px;
     padding: 20px;
     border-radius: 25px;
     align-items: center;
     height: calc(100vh - 5vh);
+    overflow: auto;
+    display: block;
+    width: 80vw;
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 `
 export default function Layout(){
     return (

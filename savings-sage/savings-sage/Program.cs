@@ -50,6 +50,7 @@ builder.Services.AddMvc()
         var enumConverter = new JsonStringEnumConverter();
         opts.JsonSerializerOptions.Converters.Add(enumConverter);
         opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+        opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
 
 

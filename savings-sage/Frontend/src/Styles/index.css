@@ -1,7 +1,6 @@
 * {
   margin: 0;
   box-sizing: border-box;
-  width: 80vw;
 }
 
 :root {
@@ -18,20 +17,6 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  min-width: 80vw;
-  min-height: 100vh;
-}
-
-
-.main{
-  margin: 0;
-  display: flex;
-  align-items: center;  
 }
 
 h1 {
@@ -69,3 +54,21 @@ h1 {
 /*    background-color: #f9f9f9;*/
 /*  }*/
 /*}*/
+
+.mainButton{
+  margin-left: 20px;
+  margin-top: 20px;
+  background-color: #60B879 ;
+  color:white;
+  border-radius: 25px;
+  width: 200px;
+  height: 35px;
+  font-family:Comfortaa, Arial, sans-serif;
+  border: none;
+  line-height: 1.5;
+  font-weight: 600;
+  font-size: 15px;
+}
+.mainButton:hover{
+  background-color: #66d385;
+}
