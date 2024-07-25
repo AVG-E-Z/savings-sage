@@ -71,3 +71,14 @@
 h2{
     margin: auto;
 }
+
+select,
+option{
+    border-radius: 10px;
+    margin: auto;
+    padding: 5px;
+    display: block;
+    align-content: center;
+    width: 200px;
+    background-color: white;
+}

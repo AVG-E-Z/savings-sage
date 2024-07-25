@@ -26,7 +26,7 @@ public class CategoryController : ControllerBase
 
     [HttpGet("GetAll/{userName}")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
-    public async Task<ActionResult<IEnumerable<Category>>> GetAllByUser([FromRoute]string userName, [FromQuery]string userId)
+    public async Task<ActionResult<IEnumerable<Category>>> GetAllByUser([FromRoute]string userName)
     {
         try
         {
@@ -35,16 +35,8 @@ public class CategoryController : ControllerBase
             {
                 return BadRequest("User not found.");
             }
-
-            var adminRole = _configuration["Roles:Admin"];
-            var isAdmin = User.IsInRole(adminRole);
-
-            if (user.Id != userId && !isAdmin)
-            {
-                return Unauthorized("You do not have access.");
-            }
-
-            var categories = await _categoryRepository.GetCategoriesByUser(userId);
+            
+            var categories = await _categoryRepository.GetCategoriesByUser(user.Id);
             return Ok(categories);
         }
         catch (Exception e)
