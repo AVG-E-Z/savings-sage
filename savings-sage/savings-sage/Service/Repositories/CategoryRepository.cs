@@ -18,7 +18,7 @@ public class CategoryRepository(UsersContext context) : ICategoryRepository
             new() { Name = "Health", OwnerId = userId, ColorId = 4, IconURL = "/icons/heart-medical.svg" },
             new() { Name = "Beauty", OwnerId = userId, ColorId = 5, IconURL = "/icons/sanitizer-alt.svg"},
             new() { Name = "Car", OwnerId = userId, ColorId = 6, IconURL = "/icons/car-sideview.svg"},
-            new() { Name = "Transportation", OwnerId = userId, ColorId = 7, IconURL = "/icons/subway.svg"},
+            new() { Name = "Commute", OwnerId = userId, ColorId = 7, IconURL = "/icons/subway.svg"},
             new() { Name = "Rent", OwnerId = userId, ColorId = 8, IconURL = "/icons/key.svg"},
             new() { Name = "Gifts", OwnerId = userId, ColorId = 9, IconURL = "/icons/gift.svg"},
             new() { Name = "Electronics", OwnerId = userId, ColorId = 10, IconURL = "/icons/desktop-alt.svg"},

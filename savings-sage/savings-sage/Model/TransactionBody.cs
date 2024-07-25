@@ -4,7 +4,7 @@ public class TransactionBody
 {
     public string Name { get; set; }
     public Currency Currency { get; init; }
-    public string OwnerId { get; set; } 
+  
     public int AccountId { get; init; }
     public DateTime Date { get; init; }
     public int? CategoryId { get; set; }

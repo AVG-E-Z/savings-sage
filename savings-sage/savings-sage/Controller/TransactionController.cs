@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using savings_sage.Model;
 using savings_sage.Service.Repositories;
 
@@ -8,9 +10,21 @@ namespace savings_sage.Controller;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TransactionController(ILogger<TransactionController> logger, ITransactionRepository transactionRepository)
-    : ControllerBase
+public class TransactionController : ControllerBase
 {
+    private readonly ILogger<TransactionController> _logger;
+    private readonly ITransactionRepository _transactionRepository;
+    private readonly UserManager<User> _userManager;
+
+    public TransactionController(
+        ILogger<TransactionController> logger, 
+        ITransactionRepository transactionRepository,  
+        UserManager<User> userManager)
+    {
+        _logger = logger;
+        _transactionRepository = transactionRepository;
+        _userManager = userManager;
+    }
     
     // [HttpGet("GetAllByOwner/{userName}")]
     // public async Task<ActionResult<IEnumerable<Transaction>>> GetAllTransactions([Required] string loggedInUserId)
@@ -38,13 +52,13 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
     {
         try
         {
-            logger.LogInformation("Fetching transactions for all accounts...");
-            var allTransactionForAllAccounts = transactionRepository.GetAllForAllAccounts(accountIds);
+            _logger.LogInformation("Fetching transactions for all accounts...");
+            var allTransactionForAllAccounts = _transactionRepository.GetAllForAllAccounts(accountIds);
             return Ok(allTransactionForAllAccounts);
         }
         catch (Exception e)
         {
-            logger.LogError(e, "An error occured while fetching transactions for account.");
+            _logger.LogError(e, "An error occured while fetching transactions for account.");
             return NotFound();
         }
     }
@@ -54,28 +68,38 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
     {
         try
         {
-            logger.LogInformation("Fetching transactions for account...");
-            var allTransactionsForAccount = await transactionRepository.GetAllByAccount(accountId);
+            _logger.LogInformation("Fetching transactions for account...");
+            var allTransactionsForAccount = await _transactionRepository.GetAllByAccount(accountId);
             return Ok(allTransactionsForAccount);
         }
         catch (ArgumentException e)
         {
-            logger.LogError(e, "An error occured, while fetching transactions for account. Check if there is an account.");
+            _logger.LogError(e, "An error occured, while fetching transactions for account. Check if there is an account.");
             return BadRequest();
         }
         catch (Exception e)
         {
-            logger.LogError(e, "An error occured while fetching transactions for account.");
+            _logger.LogError(e, "An error occured while fetching transactions for account.");
             return NotFound();
         }
     }
     
     
-    [HttpPost("Add")]
-    public async Task<ActionResult<Transaction>> AddNewTransaction([FromBody] TransactionBody transactionBody)
+    [HttpPost("Add/{userName}")]
+    [Authorize(Policy = "RequiredUserOrAdminRole")]
+    public async Task<ActionResult<Transaction>> AddNewTransaction([FromBody] TransactionBody transactionBody, [FromRoute]string userName)
     {
+        Console.WriteLine("hi");
         try
-        {
+        { 
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
+            Console.WriteLine(user.UserName);
+            
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+            
             var transactionToAdd = new Transaction
             {
                 Name = transactionBody.Name,
@@ -83,7 +107,7 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
                 Amount = transactionBody.Amount,
                 CategoryId = transactionBody.CategoryId,
                 Currency = transactionBody.Currency,
-                OwnerId = transactionBody.OwnerId,
+                OwnerId = user.Id,
                 Date = transactionBody.Date,
                 Direction = transactionBody.Direction,
                 IsRecurring = transactionBody.IsRecurring,
@@ -92,12 +116,12 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
                 SiblingTransactionId = transactionBody.SiblingTransactionId
             };
 
-            await transactionRepository.AddNewTransaction(transactionToAdd);
+            await _transactionRepository.AddNewTransaction(transactionToAdd);
             return Ok(transactionToAdd);
         }
         catch (Exception e)
         {
-            logger.LogError(e, "An error occured while adding the transaction to the database");
+            _logger.LogError(e, "An error occured while adding the transaction to the database");
             return NotFound();
         }
         
@@ -108,17 +132,17 @@ public class TransactionController(ILogger<TransactionController> logger, ITrans
     {
         try
         {
-            await transactionRepository.DeleteTransaction(transactionId);
+            await _transactionRepository.DeleteTransaction(transactionId);
             return NoContent();
         }
         catch (ArgumentException e)
         {
-            logger.LogError(e, "An error occured while deleting the transaction from the db. Please check transaction id.");
+            _logger.LogError(e, "An error occured while deleting the transaction from the db. Please check transaction id.");
             return BadRequest();
         }
         catch (Exception e)
         {
-            logger.LogError(e, "An error occured while deleting the transaction from the db.");
+            _logger.LogError(e, "An error occured while deleting the transaction from the db.");
             return NotFound();
         }
     }

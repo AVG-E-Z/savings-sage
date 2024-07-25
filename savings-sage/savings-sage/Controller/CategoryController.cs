@@ -26,7 +26,7 @@ public class CategoryController : ControllerBase
 
     [HttpGet("GetAll/{userName}")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
-    public async Task<ActionResult<IEnumerable<Category>>> GetAllByUser([FromRoute]string userName)
+    public async Task<ActionResult<IEnumerable<CategoryDto>>> GetAllByUser([FromRoute]string userName)
     {
         try
         {
