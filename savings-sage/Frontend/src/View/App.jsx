@@ -26,7 +26,7 @@ export default function App() {
                 <Route path='/login' element={<Login />}></Route>
                 <Route path='/register' element={<Registration />}></Route>
                 <Route path='/account-balances' element={<ProtectedRoute><AccountBalances /></ProtectedRoute>}></Route>
-                <Route path='/account-balances/add-new' element={<ProtectedRoute><AddNewAccount /></ProtectedRoute>}></Route>
+                <Route path='/add-new-account' element={<ProtectedRoute><AddNewAccount /></ProtectedRoute>}></Route>
                 <Route path='/transactions' element={<Transactions />}></Route>
                 <Route path='/settings' element={<Settings />}></Route>
                 <Route path='/homepage' element={<HomePage />}></Route>

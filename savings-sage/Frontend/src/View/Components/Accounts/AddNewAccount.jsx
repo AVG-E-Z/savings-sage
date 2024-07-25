@@ -8,15 +8,14 @@ export default function AddNewAccount(){
     const { user } = useAuth();
     const [values, setValues] = useState({
         name: '',
-        currency: '',
+        currency: 'AED',
         amount: 0,
         amountInterest: null,
         amountCapital: null,
         parentAccountId: null,
         expirationDate: null,
-        accountType: ''
+        type: 'Debit'
     });
-    const [ success, setSuccess ] = useState(false);
     let seconds = 2;
     const navigate = useNavigate();
     const location = useLocation();
@@ -45,37 +44,32 @@ export default function AddNewAccount(){
     
     async function HandleSubmit(e){
         e.preventDefault();
-        let data = values;
-        
-        if (values.accountType !== "Loan"){
-            data.amountCapital = null;
-            data.amountInterest = null;
-        }
-        
         try {
-            const response = await fetch(`api/Account/u/${user.username}/Add`, {method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
+            const response = await fetch(`api/Account/u/${user.username}/Add`, {method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(values)});
 
             const incoming = await response.json();
 
-            console.log(incoming);
+            console.log('incoming: '+JSON.stringify(incoming));
 
             if(incoming.ok){
                 console.log("Successfully added an account!");
-                setSuccess(true);
+                setTimeout(() => {
+                                navigate('/account-balances');
+                            }, 1000 * seconds)
             }
 
         } catch(err){
             console.error("Error while adding account:", err);
         }
     }
-    
-    useEffect(() => {
-        if (success === true) {
-            setTimeout(() => {
-                navigate('/account-balances');
-            }, 1000 * seconds);
-        }
-    }, [success]);
+    //
+    // useEffect(() => {
+    //     if (success === true) {
+    //         setTimeout(() => {
+    //             navigate('/account-balances');
+    //         }, 1000 * seconds);
+    //     }
+    // }, [success]);
 
     return (<>
         <h2>Add a new account to keep track of:</h2>
@@ -92,7 +86,7 @@ export default function AddNewAccount(){
                 <select id="typeSelection" name="accountType" onChange={handleInput}>
                     <option value="Debit">Debit</option>
                     <option value="Credit">Credit</option>
-                    <option value="Loan">Loan</option>
+                    {/*<option value="Loan">Loan</option>*/}
                     <option value="Cash">Cash</option>
                     <option value="Savings">Savings</option>
                 </select>

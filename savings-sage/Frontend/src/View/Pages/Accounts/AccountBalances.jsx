@@ -12,39 +12,45 @@ export default function AccountBalances(){
     const [ parentAccount, setParentAccount] = useState({});
     const navigate = useNavigate();
     const location = useLocation();
+    const [ statesInit, setStatesInit ] = useState();
 
     useEffect(() => {
         async function fetchAccounts(){
             try {
                 const response = await fetch(`api/Account/All/u/${user.username}`);
                 const data = await response.json();
-                setAccounts(data.$values);
+                setAccounts(data);
             } catch(err){
                 console.error("Error fetching accounts: " + err)
             } 
         }
        fetchAccounts();
     }, []);
+
     
     function handleAddAccountClick() {
-        navigate('/account-balances/add-new', { state: { parentAccount: null, accounts } });
+        if (!accounts) {
+            navigate('/add-new-account', {state: {parentAccount: null}});
+        } else {
+            navigate('/add-new-account', {state: {parentAccount: null, accounts}});
+        }
     }
 
     function handleAddSubAccountClick(account) {
-        navigate('/account-balances/add-new', { state: { parentAccount: account, accounts } });
+        navigate('/add-new-account', { state: { parentAccount: account, accounts } });
     }
     
-    return(<div>
+    return(<div className={"accountsBalances"}>
         <button className={"mainButton"} onClick={handleAddAccountClick}>Add new account</button>
-        <>{accounts.length === 0 ? 
+        <>{!accounts ? 
             (<div>
                 
                 <p><br/>Seems like you don't have any accounts yet. Click the button to create one.</p>
             </div>)
-            : (<div>                
+            : (<div className={"accountCards"}>                
                 {accounts.map((account, i) => 
                     <AccountOverview key={i} 
-                                     id={`${account.name.replaceAll(' ', '')}-${account.type}-${i}`} 
+                                     id={`${account.type}-${i}`} 
                                      account={account}
                                      onAddSubAccountClick={() => handleAddSubAccountClick(account)}/>)}
             </div>)

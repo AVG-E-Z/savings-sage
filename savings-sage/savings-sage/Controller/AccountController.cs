@@ -203,6 +203,7 @@ public class AccountController : ControllerBase
     {
         try
         {
+            Console.WriteLine(userName);
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
             if (user == null)
             {
@@ -222,22 +223,17 @@ public class AccountController : ControllerBase
             
             var userAccount = accountDataBody.Type switch
             {
-                AccountType.Debit => AddDebitAccount(accountDataBody, ownerId),
-                AccountType.Credit => AddCreditAccount(accountDataBody, ownerId),
-                AccountType.Loan => AddLoanAccount(accountDataBody, ownerId),
-                AccountType.Cash => AddCashAccount(accountDataBody, ownerId),
-                AccountType.Savings => AddSavingsAccount(accountDataBody, ownerId),
+                "Debit" => AddDebitAccount(accountDataBody, ownerId),
+                "Credit" => AddCreditAccount(accountDataBody, ownerId),
+                "Loan" => AddLoanAccount(accountDataBody, ownerId),
+                "Cash" => AddCashAccount(accountDataBody, ownerId),
+                "Savings" => AddSavingsAccount(accountDataBody, ownerId),
                 _ => throw new Exception("Invalid account type")
             };
 
             var newAccount = await _accountRepository.AddAsync(userAccount);
 
-
-            // Assuming AddAsync method returns the added accounts
-            if (newAccount != null)
-                // Use the first account to create the URI for CreatedAtAction
-                return Ok();
-            return BadRequest("Failed to create accounts");
+            return Ok(new { ok = true, account = newAccount });
         }
         catch (Exception e)
         {

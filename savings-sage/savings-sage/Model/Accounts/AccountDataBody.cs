@@ -11,5 +11,5 @@ public class AccountDataBody
     public bool GroupSharingOption { get; set; }
     public bool CanGoMinus { get; set; }
     public DateTime? ExpirationDate { get; set; } = null;
-    public AccountType Type { get; set; }
+    public string Type { get; set; }
 }
