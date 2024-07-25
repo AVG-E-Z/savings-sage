@@ -25,12 +25,14 @@ const ContainerOfContent= styled.div`
     display: block;
     width: 80vw;
 
+
     ::-webkit-scrollbar {
         display: none;
     }
 
     -ms-overflow-style: none;
     scrollbar-width: none;
+
 `
 export default function Layout(){
     return (

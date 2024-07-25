@@ -17,6 +17,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
 }
 
 h1 {
@@ -72,3 +73,20 @@ h1 {
 .mainButton:hover{
   background-color: #66d385;
 }
+
+
+.accountCards{
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.accountCards>* {
+  flex: 1 1 160px;
+}
+
+.accountsBalances{
+  overflow: hidden;
+}
+

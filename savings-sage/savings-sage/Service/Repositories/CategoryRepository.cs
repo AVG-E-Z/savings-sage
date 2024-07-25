@@ -4,15 +4,9 @@ using savings_sage.Model;
 
 namespace savings_sage.Service.Repositories;
 
-public class CategoryRepository : ICategoryRepository
-{
-    private readonly UsersContext _context;
 
-    public CategoryRepository(UsersContext context)
-    {
-        _context = context;
-    }
-    
+public class CategoryRepository(UsersContext context) : ICategoryRepository
+{
     public async Task CreateDefaultCategoriesAsync(string userId)
     {
     
@@ -32,15 +26,17 @@ public class CategoryRepository : ICategoryRepository
             new() { Name = "Pet", OwnerId = userId, ColorId = 12, IconURL = "/icons/paw.svg"}
         };
 
-        _context.Categories.AddRange(baseCategories);
-        await _context.SaveChangesAsync();
+
+
+        context.Categories.AddRange(baseCategories);
+        await context.SaveChangesAsync();
     }
-    
+
     public async Task<IEnumerable<CategoryDto>> GetCategoriesByUser(string userId)
     {
-        var categoriesByUser = await _context.Categories.Where(x => x.OwnerId == userId).ToListAsync();
-
-        var categoriesDtos = categoriesByUser.Select(cat => new CategoryDto()
+        var categoriesByUser = await context.Categories.Where(x => x.OwnerId == userId).ToListAsync();
+        
+         var categoriesDtos = categoriesByUser.Select(cat => new CategoryDto()
         { ColorId = cat.ColorId, IconURL = cat.IconURL, Id = cat.Id, Name = cat.Name,
             OwnerId = cat.OwnerId
         });
@@ -49,32 +45,35 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task<Category?> GetByIdAsync(int catId)
     {
-        return await _context.Categories.FirstOrDefaultAsync(x => x.Id == catId);
+
+        return await context.Categories.FirstOrDefaultAsync(x => x.Id == catId);
     }
 
     public async Task<Category> NewCategoryAsync(string userId, string categoryName, int colorId)
     {
         var newCategory = new Category { Name = categoryName, OwnerId = userId, ColorId = colorId };
-        await _context.Categories.AddAsync(newCategory);
-        await _context.SaveChangesAsync();
+        await context.Categories.AddAsync(newCategory);
+        await context.SaveChangesAsync();
         return newCategory;
     }
 
     public async Task DeleteCategory(int id)
     {
-        var categoryToRemove = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);
-        _context.Categories.Remove(categoryToRemove);
-        await _context.SaveChangesAsync();
+        var categoryToRemove = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
+        context.Categories.Remove(categoryToRemove);
+        await context.SaveChangesAsync();
     }
 
     public async Task UpdateCategory(int id, string categoryName, int colorId)
     {
-        var categoryToUpdate = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);
+        var categoryToUpdate = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
         
         categoryToUpdate.Name = categoryName;
         categoryToUpdate.ColorId = colorId;
-        
-        _context.Categories.Update(categoryToUpdate);
-        await _context.SaveChangesAsync();
+       
+        context.Categories.Update(categoryToUpdate);
+        await context.SaveChangesAsync();
+
+
     }
 }
