@@ -63,8 +63,8 @@ public class TransactionController : ControllerBase
         }
     }
     
-    [HttpGet("GetAll/Account/{accountId}")]
-    public async Task<ActionResult<IEnumerable<Transaction>>> GetAllForAccount([Required] int accountId)
+    [HttpGet("GetAll/Account/{accountId:int}")]
+    public async Task<ActionResult<IEnumerable<Transaction>>> GetAllForAccount([FromRoute] int accountId)
     {
         try
         {

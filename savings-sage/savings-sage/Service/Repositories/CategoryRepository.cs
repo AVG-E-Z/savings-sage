@@ -9,21 +9,22 @@ public class CategoryRepository(UsersContext context) : ICategoryRepository
 {
     public async Task CreateDefaultCategoriesAsync(string userId)
     {
+        var colors = await context.Colors.Where(x => x.Id < 13).ToListAsync();
     
         var baseCategories = new List<Category>
         {
-            new() { Name = "Utilities", OwnerId = userId, ColorId = 1, IconURL = "/icons/lightbulb.svg"},
-            new() { Name = "Food", OwnerId = userId, ColorId = 2, IconURL = "/icons/utensils.svg"},
-            new() { Name = "Clothing", OwnerId = userId, ColorId = 3, IconURL = "/icons/hanger.svg"},
-            new() { Name = "Health", OwnerId = userId, ColorId = 4, IconURL = "/icons/heart-medical.svg" },
-            new() { Name = "Beauty", OwnerId = userId, ColorId = 5, IconURL = "/icons/sanitizer-alt.svg"},
-            new() { Name = "Car", OwnerId = userId, ColorId = 6, IconURL = "/icons/car-sideview.svg"},
-            new() { Name = "Commute", OwnerId = userId, ColorId = 7, IconURL = "/icons/subway.svg"},
-            new() { Name = "Rent", OwnerId = userId, ColorId = 8, IconURL = "/icons/key.svg"},
-            new() { Name = "Gifts", OwnerId = userId, ColorId = 9, IconURL = "/icons/gift.svg"},
-            new() { Name = "Electronics", OwnerId = userId, ColorId = 10, IconURL = "/icons/desktop-alt.svg"},
-            new() { Name = "Household", OwnerId = userId, ColorId = 11, IconURL = "/icons/house.svg"},
-            new() { Name = "Pet", OwnerId = userId, ColorId = 12, IconURL = "/icons/paw.svg"}
+            new() { Name = "Utilities", OwnerId = userId, ColorId = 1, IconURL = "/icons/lightbulb.svg", Color = colors.FirstOrDefault(x => x.Id == 1)},
+            new() { Name = "Food", OwnerId = userId, ColorId = 2, IconURL = "/icons/utensils.svg", Color = colors.FirstOrDefault(x => x.Id == 2)},
+            new() { Name = "Clothing", OwnerId = userId, ColorId = 3, IconURL = "/icons/hanger.svg", Color = colors.FirstOrDefault(x => x.Id == 3)},
+            new() { Name = "Health", OwnerId = userId, ColorId = 4, IconURL = "/icons/heart-medical.svg", Color = colors.FirstOrDefault(x => x.Id == 4) },
+            new() { Name = "Beauty", OwnerId = userId, ColorId = 5, IconURL = "/icons/sanitizer-alt.svg", Color = colors.FirstOrDefault(x => x.Id == 5)},
+            new() { Name = "Car", OwnerId = userId, ColorId = 6, IconURL = "/icons/car-sideview.svg", Color = colors.FirstOrDefault(x => x.Id == 6)},
+            new() { Name = "Commute", OwnerId = userId, ColorId = 7, IconURL = "/icons/subway.svg", Color = colors.FirstOrDefault(x => x.Id == 7)},
+            new() { Name = "Rent", OwnerId = userId, ColorId = 8, IconURL = "/icons/key.svg", Color = colors.FirstOrDefault(x => x.Id == 8)},
+            new() { Name = "Gifts", OwnerId = userId, ColorId = 9, IconURL = "/icons/gift.svg", Color = colors.FirstOrDefault(x => x.Id == 9)},
+            new() { Name = "Electronics", OwnerId = userId, ColorId = 10, IconURL = "/icons/desktop-alt.svg", Color = colors.FirstOrDefault(x => x.Id == 10)},
+            new() { Name = "Household", OwnerId = userId, ColorId = 11, IconURL = "/icons/house.svg", Color = colors.FirstOrDefault(x => x.Id == 11)},
+            new() { Name = "Pet", OwnerId = userId, ColorId = 12, IconURL = "/icons/paw.svg", Color = colors.FirstOrDefault(x => x.Id == 12)}
         };
 
 
@@ -41,6 +42,15 @@ public class CategoryRepository(UsersContext context) : ICategoryRepository
             OwnerId = cat.OwnerId
         });
         return categoriesDtos;
+    }
+
+    public async Task<Category> GetCategoryByUserById(string userId, int id)
+    {
+        var category = await context.Categories.FirstOrDefaultAsync(x => x.OwnerId == userId && x.Id == id);
+        var color = await context.Colors.FirstOrDefaultAsync(x => x.Id == category.ColorId);
+        category.Color = color;
+        await context.SaveChangesAsync();
+        return category;
     }
 
     public async Task<Category?> GetByIdAsync(int catId)
