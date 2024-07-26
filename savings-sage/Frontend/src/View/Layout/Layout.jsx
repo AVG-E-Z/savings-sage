@@ -6,15 +6,12 @@ import styled from "styled-components";
 
 const ContainerOfEverything = styled.div`
     display: flex;
-    margin-left: 10px;
-    margin-top: 1vh;
-    margin-bottom: 2vh;
+    margin: 1vh 10px 2vh;
     scrollbar-width: none;
 `;
 
 const ContainerOfContent= styled.div`
     background-color: rgba(255, 255, 255, 0.67);
-    margin-right:2vw;
     margin-left: 10px;
     margin-top: 2vh;
     padding: 20px;
@@ -23,7 +20,7 @@ const ContainerOfContent= styled.div`
     height: calc(100vh - 5vh);
     overflow: auto;
     display: block;
-    width: 80vw;
+    width: calc(100vw - 260px);
 
 
     ::-webkit-scrollbar {

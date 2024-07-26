@@ -62,13 +62,13 @@ h1 {
   background-color: #60B879 ;
   color:white;
   border-radius: 25px;
-  width: 200px;
+  width: 250px;
   height: 35px;
   font-family:Comfortaa, Arial, sans-serif;
   border: none;
   line-height: 1.5;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 20px;
 }
 .mainButton:hover{
   background-color: #66d385;
