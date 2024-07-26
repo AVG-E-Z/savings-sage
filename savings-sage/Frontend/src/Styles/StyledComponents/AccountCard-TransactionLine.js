@@ -19,9 +19,8 @@ export const CategoryColorDiv = styled.div`
     justify-content: center;
     `
 export const CategorySVG = styled.img`
-    width: 85%;
+    width: 22px;
     margin: auto;
-    filter: invert();
     `
 export const TransactionText = styled.div`
     font-size: 1.2rem;
