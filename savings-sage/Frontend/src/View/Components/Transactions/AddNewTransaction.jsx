@@ -19,7 +19,7 @@ function AddNewTransaction({setIsNewBeingAdded}) {
     const [chosenAccountId, setChosenAccountId] = useState(null);
     const [date, setDate] = useState(Date.now);
     const [amount, setAmount] = useState();
-    const [type, setType] = useState("payment"); //todo: when transfer gets implemented, this needs to be adjustable
+    const [type, setType] = useState("Payment"); //todo: when transfer gets implemented, this needs to be adjustable
     const [currency, setCurrency] = useState("HUF");
     const [name, setName] = useState("New transaction");
     

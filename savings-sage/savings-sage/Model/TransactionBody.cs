@@ -9,9 +9,9 @@ public class TransactionBody
     public DateTime Date { get; init; }
     public int? CategoryId { get; set; }
     public double Amount { get; set; }
-    public Direction Direction { get; set; }
+    public string Direction { get; set; }
     public bool IsRecurring { get; set; }
     public int? RefreshDays { get; set; }
-    public TransactionType Type { get; set; }
+    public string Type { get; set; }
     public int? SiblingTransactionId { get; set; }
 }
