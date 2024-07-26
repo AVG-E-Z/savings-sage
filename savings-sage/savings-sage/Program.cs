@@ -69,7 +69,7 @@ builder.Services
             ValidIssuer = jwtSettings["ValidIssuer"],
             ValidAudience = jwtSettings["ValidAudience"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:IssuerSigningKey"])
+                Encoding.UTF8.GetBytes(jwtSettings["IssuerSigningKey"])
             )
         };
         options.Events = new JwtBearerEvents()

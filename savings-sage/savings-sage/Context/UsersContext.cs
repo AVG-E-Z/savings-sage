@@ -124,7 +124,7 @@ public class UsersContext : IdentityDbContext<User, IdentityRole, string>
             .Property(c => c.IconURL)
             .IsRequired(true)
             .HasMaxLength(200)
-            .HasColumnName("icon_url");
+            .HasColumnName("IconURL");
         
         #endregion
 
