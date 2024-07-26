@@ -15,7 +15,7 @@ import {
 import {useAuth} from "../../../Authentication/AuthProvider.jsx";
 import AccountTransactions from "./AccountTransactions.jsx";
 
-export default function AccountOverview({account}){
+export default function AccountOverview({account, onAddSubAccountClick}){
     const { user } = useAuth();
     const [ transactions, setTransactions ] = useState([]);
     
@@ -65,7 +65,7 @@ export default function AccountOverview({account}){
                 )
             ) : null}
             <CardButtonCont>
-                <CardButton>Add sub</CardButton>
+                <CardButton onClick={onAddSubAccountClick}>Add sub</CardButton> {/*todo fix subAcc addition, parentAcc doesn't get it*/}
                 <CardButton>Edit</CardButton>
                 <CardButtonDngr>Delete</CardButtonDngr>
             </CardButtonCont>

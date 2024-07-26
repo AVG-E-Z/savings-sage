@@ -44,12 +44,14 @@ export default function AccountBalances(){
     return(<div className={"accountsBalances"}>
         <button className={"mainButton"} onClick={handleAddAccountClick}>Add new account</button>
         <>{!accounts ? 
-            (<div>
-                
+            (<div>                
                 <p><br/>Seems like you don't have any accounts yet. Click the button to create one.</p>
             </div>)
             : (<>
-                <AssetsOverview accounts={accounts} />
+
+                {/*todo finish this and the edit - add - delete buttons ? subAccounts view is capped needs solution */}
+                
+                <AssetsOverview accounts={accounts} /> 
                 <div className={"accountCards"}>                
                 {accounts.map((account, i) => 
                     <AccountOverview key={i} 
