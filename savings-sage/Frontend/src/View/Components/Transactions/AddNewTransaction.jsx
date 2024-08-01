@@ -51,6 +51,7 @@ function AddNewTransaction({setIsNewBeingAdded}) {
     useEffect(() => {
         if (allCategories && allAccounts){
             setIsLoading(false);
+            setChosenAccountId(allAccounts[0].id);
             console.log(allAccounts);
         }
     }, [allCategories, allAccounts]);
