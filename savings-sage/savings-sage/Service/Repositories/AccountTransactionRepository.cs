@@ -18,6 +18,7 @@ public class AccountTransactionRepository (UsersContext context) : IAccountTrans
                 if (transaction.Direction == Direction.In)
                 {
                     accountToAmend.Amount =+ transaction.Amount;
+                    break;
                 }
                 accountToAmend.Amount =- transaction.Amount;
                 break;
@@ -31,8 +32,13 @@ public class AccountTransactionRepository (UsersContext context) : IAccountTrans
                     accountToAmend.Amount =+ transaction.Amount;
                     siblingAccToAmend.Amount =- transaction.Amount;
                 }
-                accountToAmend.Amount =- transaction.Amount;
-                siblingAccToAmend.Amount =+ transaction.Amount;
+
+                if (transaction.Direction == Direction.Out)
+                {
+                    accountToAmend.Amount = -transaction.Amount;
+                    siblingAccToAmend.Amount = +transaction.Amount;
+                }
+
                 context.Accounts.Update(siblingAccToAmend);
                 await context.SaveChangesAsync();
                 break;
