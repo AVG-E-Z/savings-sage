@@ -1,28 +1,28 @@
+using System.Data.Common;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using savings_sage.Context;
 using savings_sage.Model;
+using Xunit.Abstractions;
 
 namespace SavingsSage_IntegrationTESTS.Factories;
 
 public class SavingsSageWebApp_FACTORY : WebApplicationFactory<Program>
 {
     private readonly string _dbName = Guid.NewGuid().ToString();
+    private readonly ITestOutputHelper output;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseEnvironment("Testing");
+       builder.UseEnvironment("Testing");
         builder.ConfigureServices(services =>
         {
-            //Get the previous DbContextOptions registrations 
-            var savingsSageContextDescriptor =
-                services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<SavingsSageContext>));
-
-            //Remove the previous DbContextOptions registrations
-            services.Remove(savingsSageContextDescriptor);
+            services.Remove(services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<SavingsSageContext>)));
             
             //Add new DbContextOptions for our two contexts, this time with in-memory db
             services.AddDbContext<SavingsSageContext>(options =>
@@ -36,6 +36,7 @@ public class SavingsSageWebApp_FACTORY : WebApplicationFactory<Program>
               
             //We use this scope to request the registered dbcontexts, and initialize the schemas
             var savingsSageContext = scope.ServiceProvider.GetRequiredService<SavingsSageContext>();
+            
 
             savingsSageContext.Database.EnsureDeleted();
             savingsSageContext.Database.EnsureCreated();

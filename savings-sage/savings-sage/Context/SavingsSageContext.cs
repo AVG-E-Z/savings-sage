@@ -10,15 +10,9 @@ namespace savings_sage.Context;
 
 public class SavingsSageContext : IdentityDbContext<User, IdentityRole, string>
 {
-        private readonly IConfiguration _configuration;
-        private readonly string _password;
-
         public SavingsSageContext(DbContextOptions<SavingsSageContext> options, IConfiguration configuration)
             : base(options)
         {
-            _configuration = configuration;
-            Env.Load();
-            _password = Environment.GetEnvironmentVariable("MSSQL_SA_PASSWORD");
         }
 
         public DbSet<Account> Accounts { get; set; }
@@ -31,15 +25,7 @@ public class SavingsSageContext : IdentityDbContext<User, IdentityRole, string>
         public DbSet<UserAccount> UserAccounts { get; set; }
         public DbSet<UserBudget> UserBudgets { get; set; }
         public DbSet<UserSavingsGoal> UserSavingsGoals { get; set; }
-
-        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        // {
-        //     if (!optionsBuilder.IsConfigured)
-        //     {
-        //         var connectionString = _configuration.GetConnectionString("Default");
-        //         optionsBuilder.UseSqlServer(connectionString);
-        //     }
-        // }
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

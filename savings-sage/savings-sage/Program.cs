@@ -105,8 +105,6 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy("RequiredUserRole", policy => policy.RequireRole(userRole))
     .AddPolicy("RequiredUserOrAdminRole", policy => policy.RequireRole(userRole, adminRole));
 
-var provider = builder.Services.BuildServiceProvider();
-var configuration = provider.GetRequiredService<IConfiguration>();
 
 // Add DbContext and repositories
 var connectionString = builder.Configuration.GetConnectionString("Default");
@@ -134,7 +132,6 @@ builder.Services.AddScoped<AuthenticationSeeder>();
 // Access the configuration directly
 var frontendUrl = builder.Configuration.GetValue<string>("frontend_url");
 
-//todo cookies-t befejezni
 // Configure CORS
 builder.Services.AddCors(options =>
 {
