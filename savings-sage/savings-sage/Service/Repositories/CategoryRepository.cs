@@ -5,7 +5,7 @@ using savings_sage.Model;
 namespace savings_sage.Service.Repositories;
 
 
-public class CategoryRepository(UsersContext context) : ICategoryRepository
+public class CategoryRepository(SavingsSageContext context) : ICategoryRepository
 {
     public async Task CreateDefaultCategoriesAsync(string userId)
     {

@@ -218,7 +218,7 @@ public class AccountController : ControllerBase
                 parentAccount = await _accountRepository.GetByIdAsync(pAId);
                 hasParent = true;
             }
-
+            
             string ownerId = hasParent ? parentAccount.OwnerId : user.Id;
             
             var userAccount = accountDataBody.Type switch

@@ -8,12 +8,12 @@ using savings_sage.Model.UserJoins;
 
 namespace savings_sage.Context;
 
-public class UsersContext : IdentityDbContext<User, IdentityRole, string>
+public class SavingsSageContext : IdentityDbContext<User, IdentityRole, string>
 {
         private readonly IConfiguration _configuration;
         private readonly string _password;
 
-        public UsersContext(DbContextOptions<UsersContext> options, IConfiguration configuration)
+        public SavingsSageContext(DbContextOptions<SavingsSageContext> options, IConfiguration configuration)
             : base(options)
         {
             _configuration = configuration;
@@ -32,14 +32,14 @@ public class UsersContext : IdentityDbContext<User, IdentityRole, string>
         public DbSet<UserBudget> UserBudgets { get; set; }
         public DbSet<UserSavingsGoal> UserSavingsGoals { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                var connectionString = _configuration.GetConnectionString("Default");
-                optionsBuilder.UseSqlServer(connectionString);
-            }
-        }
+        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        // {
+        //     if (!optionsBuilder.IsConfigured)
+        //     {
+        //         var connectionString = _configuration.GetConnectionString("Default");
+        //         optionsBuilder.UseSqlServer(connectionString);
+        //     }
+        // }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

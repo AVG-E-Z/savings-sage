@@ -94,7 +94,7 @@ builder.Services
         options.Password.RequireLowercase = false;
     })
     .AddRoles<IdentityRole>() //Enable Identity roles 
-    .AddEntityFrameworkStores<UsersContext>();
+    .AddEntityFrameworkStores<SavingsSageContext>();
 
 var rolesSection = builder.Configuration.GetSection("Roles");
 var adminRole = rolesSection["Admin"];
@@ -110,8 +110,16 @@ var configuration = provider.GetRequiredService<IConfiguration>();
 
 // Add DbContext and repositories
 var connectionString = builder.Configuration.GetConnectionString("Default");
-//builder.Services.AddDbContext<SavingsSageContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddDbContext<UsersContext>(options => options.UseSqlServer(connectionString));
+
+if (builder.Environment.IsEnvironment("Testing"))
+{
+    builder.Services.AddDbContext<SavingsSageContext>(options => 
+        options.UseInMemoryDatabase("TestingDb"));
+}
+else
+{
+    builder.Services.AddDbContext<SavingsSageContext>(options => options.UseSqlServer(connectionString));
+}
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
@@ -162,3 +170,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

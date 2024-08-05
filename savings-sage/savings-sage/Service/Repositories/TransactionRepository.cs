@@ -5,7 +5,7 @@ using savings_sage.Context;
 
 namespace savings_sage.Service.Repositories;
 
-public class TransactionRepository(UsersContext context) : ITransactionRepository
+public class TransactionRepository(SavingsSageContext context) : ITransactionRepository
 {
     // public async Task<IEnumerable<Transaction>> GetAllByOwner(string loggedInUserId)
     // {

@@ -5,7 +5,7 @@ using savings_sage.Model.Accounts;
 
 namespace savings_sage.Service.Repositories;
 
-public class AccountTransactionRepository (UsersContext context) : IAccountTransactionRepository
+public class AccountTransactionRepository (SavingsSageContext context) : IAccountTransactionRepository
 {
     
     public async Task<Account> UpdateAmount(int accId, Transaction transaction, int? siblingAccId)

@@ -6,7 +6,7 @@ using savings_sage.Model.UserJoins;
 
 namespace savings_sage.Service.Repositories;
 
-public class AccountRepository(UsersContext context) : IAccountRepository
+public class AccountRepository(SavingsSageContext context) : IAccountRepository
 {
     public async Task<IEnumerable<Account>> GetAll()
     {
