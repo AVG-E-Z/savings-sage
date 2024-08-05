@@ -47,6 +47,28 @@ public class CategoryController : ControllerBase
         }
     }
     
+    [HttpGet("{userName}/{cId:int}")]
+    [Authorize(Policy = "RequiredUserOrAdminRole")]
+    public async Task<ActionResult<Category>> GetByUserById([FromRoute]string userName, [FromRoute]int cId)
+    {
+        try
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+            
+            var category = await _categoryRepository.GetCategoryByUserById(user.Id, cId);
+            return Ok(category);
+        }
+        catch (Exception e)
+        {
+            const string message = "Error getting categories";
+            _logger.LogError(e, message);
+            return NotFound(message);
+        }
+    }
     [HttpPost("Add")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
     public async Task<ActionResult<Category>> CreateNewCategory(

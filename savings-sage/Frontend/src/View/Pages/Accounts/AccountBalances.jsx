@@ -5,6 +5,7 @@ import {useAuth} from "../../../Authentication/AuthProvider.jsx";
 import AddNewAccount from "../../Components/Accounts/AddNewAccount.jsx";
 import AccountOverview from "../../Components/Accounts/AccountOverview.jsx";
 import {useLocation, useNavigate} from "react-router-dom";
+import AssetsOverview from "../../Components/Accounts/AssetsOverview.jsx";
 
 export default function AccountBalances(){
     const { user } = useAuth();
@@ -43,17 +44,22 @@ export default function AccountBalances(){
     return(<div className={"accountsBalances"}>
         <button className={"mainButton"} onClick={handleAddAccountClick}>Add new account</button>
         <>{!accounts ? 
-            (<div>
-                
+            (<div>                
                 <p><br/>Seems like you don't have any accounts yet. Click the button to create one.</p>
             </div>)
-            : (<div className={"accountCards"}>                
+            : (<>
+
+                {/*todo finish this and the edit - add - delete buttons ? subAccounts view is capped needs solution */}
+                
+                <AssetsOverview accounts={accounts} /> 
+                <div className={"accountCards"}>                
                 {accounts.map((account, i) => 
                     <AccountOverview key={i} 
                                      id={`${account.type}-${i}`} 
                                      account={account}
                                      onAddSubAccountClick={() => handleAddSubAccountClick(account)}/>)}
-            </div>)
+                </div>
+            </>)
     }</>
     </div>)
 }

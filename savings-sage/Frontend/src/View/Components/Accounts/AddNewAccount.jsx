@@ -82,11 +82,11 @@ export default function AddNewAccount(){
                        required
                        onChange={handleInput}></input>
 
-                <label className="formLabel" htmlFor="accountType">Account type:</label>
-                <select id="typeSelection" name="accountType" onChange={handleInput}>
+                <label className="formLabel" htmlFor="type">Account type:</label>
+                <select id="typeSelection" name="type" onChange={handleInput}>
                     <option value="Debit">Debit</option>
                     <option value="Credit">Credit</option>
-                    {/*<option value="Loan">Loan</option>*/}
+                    <option value="Loan">Loan</option>
                     <option value="Cash">Cash</option>
                     <option value="Savings">Savings</option>
                 </select>
@@ -100,14 +100,14 @@ export default function AddNewAccount(){
                 
                 <label className="formLabel" htmlFor="amount">Current balance:</label>
                 <input className="formInput" type="number" name="amount" required onChange={handleInput}></input>
-                {values.accountType === "Loan" && (<>
+                {values.type === "Loan" && (<>
                     <label className="formLabel" htmlFor="amountCapital">Loan capital:</label>
                     <input className="formInput" type="number" name="amountCapital" required onChange={handleInput}></input>
                     
                     <label className="formLabel" htmlFor="amountInterest">Loan interest:</label>
                     <input className="formInput" type="number" name="amountInterest" required onChange={handleInput}></input>
                 </>)}
-                {(values.accountType === "Loan" || values.accountType === "Savings") && (<>
+                {(values.type === "Loan" || values.type === "Savings") && (<>
                     <label className="formLabel" htmlFor="expirationDate">Expiration date:</label>
                     <input className="formInput" type="date" name="expirationDate" required onChange={handleInput}></input>
                 </>)}

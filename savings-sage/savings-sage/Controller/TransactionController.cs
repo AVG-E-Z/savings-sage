@@ -63,8 +63,8 @@ public class TransactionController : ControllerBase
         }
     }
     
-    [HttpGet("GetAll/Account/{accountId}")]
-    public async Task<ActionResult<IEnumerable<Transaction>>> GetAllForAccount([Required] int accountId)
+    [HttpGet("GetAll/Account/{accountId:int}")]
+    public async Task<ActionResult<IEnumerable<Transaction>>> GetAllForAccount([FromRoute] int accountId)
     {
         try
         {
@@ -108,13 +108,13 @@ public class TransactionController : ControllerBase
                 Currency = transactionBody.Currency,
                 OwnerId = user.Id,
                 Date = transactionBody.Date,
-                Direction = transactionBody.Direction,
+                Direction = (Direction) Enum.Parse(typeof(Direction), transactionBody.Direction),
                 IsRecurring = transactionBody.IsRecurring,
                 RefreshDays = transactionBody.RefreshDays,
-                Type = transactionBody.Type,
+                Type = (TransactionType) Enum.Parse(typeof(TransactionType), transactionBody.Type),
                 SiblingTransactionId = transactionBody.SiblingTransactionId
             };
-
+            Console.WriteLine(transactionToAdd);
             await _transactionRepository.AddNewTransaction(transactionToAdd);
             return Ok(transactionToAdd);
         }
