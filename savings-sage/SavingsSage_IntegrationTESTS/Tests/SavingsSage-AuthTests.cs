@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using savings_sage.Contracts;
 using SavingsSage_IntegrationTESTS.Factories;
 using Xunit.Abstractions;
@@ -28,17 +29,19 @@ public class SavingsSage_AuthControllerTests
     public async Task TestGetCurrentEndPoint()
     {
         var loginRequest = new AuthRequest("admin@admin.com", "Password123!");
+        var loginRequestJson = JsonSerializer.Serialize(loginRequest);
+       
         var loginResponse = await _client.PostAsync("api/Auth/login",
-            new StringContent(JsonConvert.SerializeObject(loginRequest),
-                Encoding.UTF8, "application/json"));
-        var authResponse = JsonConvert.DeserializeObject<AuthResponse>(await loginResponse.Content.ReadAsStringAsync());
-        var userToken = authResponse.Token;
+            new StringContent(loginRequestJson, Encoding.UTF8, "application/json"));
+        
+        var loginResponseContent = await loginResponse.Content.ReadAsStringAsync();
+        var authResponse = JsonSerializer.Deserialize<AuthResponse>(loginResponseContent);
 
         // Assert
         Assert.NotNull(authResponse.Token);
         Assert.Equal("admin@admin.com", authResponse.Email);
         Assert.Equal("admin", authResponse.UserName);
-        output.WriteLine(userToken);
+        output.WriteLine(authResponse.Token);
     }
 
     [Fact]
