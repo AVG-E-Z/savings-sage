@@ -15,6 +15,7 @@ public interface IAccountRepository
     Task<IEnumerable<Account>> GetAllByOwnerByType(string userId, AccountType type);
     Task<IEnumerable<Account>> GetAllSubAccounts(int accountId);
     Task<Account> AddAsync(Account account);
+    Task<Account> AddSubAsync(Account childAccount, Account parentAccount);
     Task DeleteWithSubAccounts(Account account);
     Task Update(Account account);
     Task ManageMembers(Account account, User userToManage, UserAccountDataBody dataBody);

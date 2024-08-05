@@ -118,6 +118,13 @@ public class AccountRepository(SavingsSageContext context) : IAccountRepository
         return account;
     }
 
+    public async Task<Account> AddSubAsync(Account childAccount, Account parentAccount)
+    {
+        await context.AddAsync(childAccount);
+        await context.SaveChangesAsync();
+        return parentAccount;
+    }
+
     public async Task DeleteWithSubAccounts(Account account)
     {
         var allSubAccounts = new List<Account>();

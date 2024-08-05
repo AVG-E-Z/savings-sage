@@ -229,9 +229,14 @@ public class AccountController : ControllerBase
                 _ => throw new Exception("Invalid account type")
             };
 
-            var newAccount = await _accountRepository.AddAsync(userAccount);
-
-            return Ok(new { ok = true, account = newAccount });
+            if (accountDataBody.ParentAccountId == null)
+            {
+                var newAccount = await _accountRepository.AddAsync(userAccount);return Ok(new { ok = true, account = newAccount });
+            } else
+            {
+                var amendedParent = await _accountRepository.AddSubAsync(userAccount, parentAccount); return Ok(new { ok = true, account = amendedParent });
+            }
+            
         }
         catch (Exception e)
         {

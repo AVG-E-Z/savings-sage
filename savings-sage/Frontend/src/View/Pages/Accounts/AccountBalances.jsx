@@ -21,6 +21,7 @@ export default function AccountBalances(){
                 const response = await fetch(`api/Account/All/u/${user.username}`);
                 const data = await response.json();
                 setAccounts(data);
+                console.log("accounts data: "+data)
             } catch(err){
                 console.error("Error fetching accounts: " + err)
             } 
@@ -38,6 +39,7 @@ export default function AccountBalances(){
     }
 
     function handleAddSubAccountClick(account) {
+        console.log(account);
         navigate('/add-new-account', { state: { parentAccount: account, accounts } });
     }
     

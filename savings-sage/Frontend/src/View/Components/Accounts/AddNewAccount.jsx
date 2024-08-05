@@ -19,17 +19,20 @@ export default function AddNewAccount(){
     let seconds = 2;
     const navigate = useNavigate();
     const location = useLocation();
+    
     const { parentAccount, accounts } = location.state || { parentAccount: null, accounts: [] };
 
 
     useEffect(() => {
+        //console.log(parentAccount)
+        console.log('location: '+location.state.parentAccount.id)
         if (parentAccount) {
             setValues((prevValues) => ({
                 ...prevValues,
-                parentAccountId: parentAccount.Id
+                parentAccountId: location.state.parentAccount.id
             }));
         }
-    }, [parentAccount]);
+    }, [parentAccount, location.state]);
 
     function handleInput(event){
         const newObj = {...values, [event.target.name]: event.target.value}
@@ -37,9 +40,9 @@ export default function AddNewAccount(){
     }
 
     useEffect(() => {
-        console.log(accounts)
+        console.log(parentAccount)
         console.log(values)
-        console.log(user.username)
+        //console.log(user.username)
     }, [values]);
     
     async function HandleSubmit(e){

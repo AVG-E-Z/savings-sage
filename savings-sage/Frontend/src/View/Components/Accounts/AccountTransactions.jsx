@@ -15,7 +15,7 @@ export default function AccountTransactions({transaction}){
             try {
                 const response = await fetch(`api/Category/${user.username}/${transaction.categoryId}`);
                 const data = await response.json();
-                console.log(data)
+                //console.log(data)
                 setCategory(data);
             } catch(err){
                 console.error("Error fetching accounts: " + err)
