@@ -15,14 +15,12 @@ public class AccountController : ControllerBase
 {
     private readonly IAccountRepository _accountRepository;
     private readonly ILogger<AccountController> _logger;
-    private readonly IConfiguration _configuration;
     private readonly UserManager<User> _userManager;
 
-    public AccountController(ILogger<AccountController> logger, IAccountRepository accountRepository, IConfiguration configuration, UserManager<User> userManager)
+    public AccountController(ILogger<AccountController> logger, IAccountRepository accountRepository, UserManager<User> userManager)
     {
         _logger = logger;
         _accountRepository = accountRepository;
-        _configuration = configuration;
         _userManager = userManager;
     }
 

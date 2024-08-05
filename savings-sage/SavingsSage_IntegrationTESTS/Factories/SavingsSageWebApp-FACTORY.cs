@@ -1,21 +1,16 @@
-using System.Data.Common;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using savings_sage.Context;
 using savings_sage.Model;
-using Xunit.Abstractions;
 
 namespace SavingsSage_IntegrationTESTS.Factories;
 
 public class SavingsSageWebApp_FACTORY : WebApplicationFactory<Program>
 {
     private readonly string _dbName = Guid.NewGuid().ToString();
-    private readonly ITestOutputHelper output;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {

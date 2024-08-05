@@ -1,42 +1,51 @@
+// using Castle.Core.Configuration;
 // using Microsoft.AspNetCore.Http;
+// using Microsoft.AspNetCore.Identity;
 // using Microsoft.AspNetCore.Mvc;
 // using Microsoft.Extensions.Logging;
+// using MockQueryable.Moq;
 // using Moq;
 // using savings_sage.Controller;
 // using savings_sage.Model;
 // using savings_sage.Model.Accounts;
 // using savings_sage.Service.Repositories;
-//
+
 // namespace SavingsSage_Tests;
 //
 // [TestFixture]
-// public class BankAccountController_Test
+// public class AccountController_Test
 // {
-//     private Mock<ILogger<BankAccountController>> _loggerMock;
-//     private Mock<IBankAccountRepository> _mockBankAccountRepository;
-//     private BankAccountController _controller;
+//     private Mock<ILogger<AccountController>> _loggerMock;
+//     private Mock<IAccountRepository> _mockAccountRepository;
+//     private Mock<UserManager<User>> _mockUserManager;
+//     private AccountController _controller;
 //
 //     [SetUp]
 //     public void Setup()
 //     {
-//         _loggerMock = new Mock<ILogger<BankAccountController>>();
-//         _mockBankAccountRepository = new Mock<IBankAccountRepository>();
-//         _controller = new BankAccountController(
+//         _loggerMock = new Mock<ILogger<AccountController>>();
+//         _mockAccountRepository = new Mock<IAccountRepository>();
+//         _mockUserManager = new Mock<UserManager<User>>();
+//         _controller = new AccountController(
 //             _loggerMock.Object,
-//             _mockBankAccountRepository.Object);
+//             _mockAccountRepository.Object,
+//             _mockUserManager.Object);
 //     }
 //
 //     #region GET
 //     
 //     [Test]
-//     public async Task GetAllAccountsReturnsNotFoundIfDatabaseIsEmpty()
+//     public async Task GetByUserIdReturnsNotFoundIfDatabaseIsEmpty()
 //     {
 //         //Arrange
-//         _mockBankAccountRepository.Setup(x => x.GetAll())
+//         string userName = "testUser";
+//         _mockUserManager.Setup(x => x.Users)
+//             .Returns(new List<User>().AsQueryable().BuildMock());
+//         _mockAccountRepository.Setup(x => x.GetAllIdsByUser(It.IsAny<User>()))
 //             .ThrowsAsync(new Exception());
 //         
 //         //Act
-//         var result = await _controller.GetAllAccounts();
+//         var result = await _controller.GetByUserId(userName);
 //         
 //         //Assert
 //         Assert.IsInstanceOf(typeof(NotFoundObjectResult), result.Result);
@@ -46,7 +55,7 @@
 //     public async Task GetByIdReturnsNotFoundIfIdIsInvalid()
 //     {
 //         //Arrange
-//         _mockBankAccountRepository.Setup(x => x.GetById(It.IsAny<int>()))
+//         _mockAccountRepository.Setup(x => x.GetById(It.IsAny<int>()))
 //             .ThrowsAsync(new Exception());
 //         
 //         //Act
@@ -62,12 +71,12 @@
 //         //Arrange
 //         var id = 100;
 //
-//         var expectedAccount = new BankAccount
+//         var expectedAccount = new Account
 //         {
 //             Id = 100,
 //             Name = "name",
 //             Currency = Currency.HUF,
-//             OwnerId = 1,
+//             OwnerId = "123",
 //             Amount = 1000,
 //             ParentAccountId = null,
 //             GroupSharingOption = false,
@@ -76,7 +85,7 @@
 //             Type = AccountType.Cash
 //         };
 //
-//         _mockBankAccountRepository.Setup(x => x.GetById(id))
+//         _mockAccountRepository.Setup(x => x.GetById(id))
 //             .ReturnsAsync(expectedAccount);
 //         
 //         //Act
@@ -104,7 +113,7 @@
 //     public async Task GetByOwnerIdReturnsNotFoundIfIdIsInvalid()
 //     {
 //         //Arrange
-//         _mockBankAccountRepository.Setup(x => x.GetAllByOwner(It.IsAny<int>()))
+//         _mockAccountRepository.Setup(x => x.GetAllByOwner(It.IsAny<int>()))
 //             .ThrowsAsync(new Exception());
 //         
 //         //Act
@@ -135,7 +144,7 @@
 //         };
 //         var expectedAccounts = new List<BankAccount> { expectedAccount };
 //
-//         _mockBankAccountRepository.Setup(x => x.GetAllByOwner(ownerId))
+//         _mockAccountRepository.Setup(x => x.GetAllByOwner(ownerId))
 //             .ReturnsAsync(expectedAccounts);
 //         
 //         //Act
@@ -163,7 +172,7 @@
 //     public async Task GetByOwnerByTypeIdReturnsNotFoundIfDataIsInvalid()
 //     {
 //         //Arrange
-//         _mockBankAccountRepository.Setup(x => x.GetAllByOwnerByType(It.IsAny<int>(), It.IsAny<AccountType>()))
+//         _mockAccountRepository.Setup(x => x.GetAllByOwnerByType(It.IsAny<int>(), It.IsAny<AccountType>()))
 //             .ThrowsAsync(new Exception());
 //         
 //         //Act
@@ -177,7 +186,7 @@
 //     public async Task GetByIdAllChildrenReturnsNotFoundIfDataIsInvalid()
 //     {
 //         //Arrange
-//         _mockBankAccountRepository.Setup(x => x.GetAllSubAccounts(It.IsAny<int>()))
+//         _mockAccountRepository.Setup(x => x.GetAllSubAccounts(It.IsAny<int>()))
 //             .ThrowsAsync(new Exception());
 //         
 //         //Act
@@ -205,7 +214,7 @@
 //             Type = AccountType.Cash
 //         };
 //         
-//         _mockBankAccountRepository.Setup(x => x.AddAsync(It.IsAny<BankAccount>()))
+//         _mockAccountRepository.Setup(x => x.AddAsync(It.IsAny<BankAccount>()))
 //             .ThrowsAsync(new Exception());
 //         
 //         //Act
@@ -246,7 +255,7 @@
 //         Type = AccountType.Debit
 //     };
 //
-//     _mockBankAccountRepository.Setup(repo => repo.AddAsync(It.IsAny<BankAccount>())).ReturnsAsync(createdAccount);
+//     _mockAccountRepository.Setup(repo => repo.AddAsync(It.IsAny<BankAccount>())).ReturnsAsync(createdAccount);
 //
 //     // Act
 //     var result = await _controller.CreateNewAccount(accountDataBody, ownerId);
@@ -281,7 +290,7 @@
 //         Type = AccountType.Credit
 //     };
 //
-//     _mockBankAccountRepository.Setup(repo => repo.AddAsync(It.IsAny<BankAccount>())).ReturnsAsync(createdAccount);
+//     _mockAccountRepository.Setup(repo => repo.AddAsync(It.IsAny<BankAccount>())).ReturnsAsync(createdAccount);
 //
 //     // Act
 //     var result = await _controller.CreateNewAccount(accountDataBody, ownerId);
@@ -318,7 +327,7 @@
 //         Type = AccountType.Loan
 //     };
 //
-//     _mockBankAccountRepository.Setup(repo => repo.AddAsync(It.IsAny<BankAccount>())).ReturnsAsync(createdAccount);
+//     _mockAccountRepository.Setup(repo => repo.AddAsync(It.IsAny<BankAccount>())).ReturnsAsync(createdAccount);
 //
 //     // Act
 //     var result = await _controller.CreateNewAccount(accountDataBody, ownerId);
@@ -342,7 +351,7 @@
 //         // Arrange
 //         int userId = 1;
 //         int accountId = 1;
-//         _mockBankAccountRepository.Setup(repo => repo.GetById(accountId)).ReturnsAsync((BankAccount)null);
+//         _mockAccountRepository.Setup(repo => repo.GetById(accountId)).ReturnsAsync((BankAccount)null);
 //
 //         // Act
 //         var result = await _controller.DeleteAccountAndSubAccounts(userId, accountId);
@@ -361,7 +370,7 @@
 //         int userId = 1;
 //         int accountId = 1;
 //         var account = new BankAccount { Id = accountId, OwnerId = 2 };
-//         _mockBankAccountRepository.Setup(repo => repo.GetById(accountId)).ReturnsAsync(account);
+//         _mockAccountRepository.Setup(repo => repo.GetById(accountId)).ReturnsAsync(account);
 //
 //         // Act
 //         var result = await _controller.DeleteAccountAndSubAccounts(userId, accountId);
@@ -376,7 +385,7 @@
 //         // Arrange
 //         int userId = 1;
 //         int accountId = 1;
-//         _mockBankAccountRepository.Setup(repo => repo.GetById(accountId)).ThrowsAsync(new Exception());
+//         _mockAccountRepository.Setup(repo => repo.GetById(accountId)).ThrowsAsync(new Exception());
 //
 //         // Act
 //         var result = await _controller.DeleteAccountAndSubAccounts(userId, accountId);
@@ -398,7 +407,7 @@
 //         int userId = 1;
 //         int accountId = 1;
 //         var accountDataBody = new BankAccountDataBody { /* Populate properties */ };
-//         _mockBankAccountRepository.Setup(repo => repo.GetById(accountId)).ReturnsAsync((BankAccount)null);
+//         _mockAccountRepository.Setup(repo => repo.GetById(accountId)).ReturnsAsync((BankAccount)null);
 //
 //         // Act
 //         var result = await _controller.UpdateAccount(accountDataBody, userId, accountId);
@@ -417,7 +426,7 @@
 //         int accountId = 1;
 //         var accountDataBody = new BankAccountDataBody { /* Populate properties */ };
 //         var account = new BankAccount { Id = accountId, OwnerId = 2 };
-//         _mockBankAccountRepository.Setup(repo => repo.GetById(accountId)).ReturnsAsync(account);
+//         _mockAccountRepository.Setup(repo => repo.GetById(accountId)).ReturnsAsync(account);
 //
 //         // Act
 //         var result = await _controller.UpdateAccount(accountDataBody, userId, accountId);
@@ -426,4 +435,4 @@
 //         Assert.IsInstanceOf<ForbidResult>(result.Result);
 //     }
 //     #endregion
-// }
+//}
