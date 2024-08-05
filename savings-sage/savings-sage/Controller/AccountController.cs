@@ -270,13 +270,12 @@ public class AccountController : ControllerBase
             }
 
             await _accountRepository.DeleteWithSubAccounts(account);
-            return Ok(account);
+            return StatusCode(204);
         }
         catch (Exception e)
         {
-            const string message = "Error deleting account";
-            _logger.LogError(e, message);
-            return NotFound(message);
+            _logger.LogError(e, "An error occurred while attempting to delete the account.");
+            return StatusCode(500, "Internal server error. Please try again later.");
         }
     }
 

@@ -15,7 +15,7 @@ import {
 import {useAuth} from "../../../Authentication/AuthProvider.jsx";
 import AccountTransactions from "./AccountTransactions.jsx";
 
-export default function AccountOverview({account, onAddSubAccountClick}){
+export default function AccountOverview({account, onAddSubAccountClick, onDeleteClick}){
     const { user } = useAuth();
     const [ transactions, setTransactions ] = useState([]);
     
@@ -33,7 +33,6 @@ export default function AccountOverview({account, onAddSubAccountClick}){
         fetchAccountTransactions();
     }, []);
 
-    
     useEffect(() => {
         if(account){
             //console.log(account)
@@ -67,7 +66,7 @@ export default function AccountOverview({account, onAddSubAccountClick}){
             <CardButtonCont>
                 <CardButton onClick={onAddSubAccountClick}>Add sub</CardButton> {/*todo fix subAcc addition, parentAcc doesn't get it*/}
                 <CardButton>Edit</CardButton>
-                <CardButtonDngr>Delete</CardButtonDngr>
+                <CardButtonDngr onClick={onDeleteClick}>Delete</CardButtonDngr>
             </CardButtonCont>
         </Card>)
 }

@@ -21,7 +21,6 @@ export default function AccountBalances(){
                 const response = await fetch(`api/Account/All/u/${user.username}`);
                 const data = await response.json();
                 setAccounts(data);
-                console.log("accounts data: "+data)
             } catch(err){
                 console.error("Error fetching accounts: " + err)
             } 
@@ -42,7 +41,35 @@ export default function AccountBalances(){
         console.log(account);
         navigate('/add-new-account', { state: { parentAccount: account, accounts } });
     }
-    
+    function updateStateAfterDeletion(accountId) {
+        setAccounts((prevAccounts) => prevAccounts.filter(account => account.id !== accountId));
+        setAccounts((prevAccounts) => prevAccounts.filter(account => account.parentAccountId !== accountId));
+        // Or navigate to another page
+        navigate('/account-balances');
+    }
+    function handleDeleteClick(accountId) {
+        const isConfirmed = window.confirm("Are you sure you want to delete this account?");
+        if (isConfirmed) {
+            // Perform the delete operation
+            deleteAccount(accountId);
+        }
+    }
+    async function deleteAccount(accountId) {
+        try {
+            const response = await fetch(`api/Account/u/${user.username}/a/${accountId}`, { method: 'DELETE', headers: {'Content-Type': 'application/json'} });
+            
+            if (response.status == 204) {
+                console.log('Account deleted successfully');
+                updateStateAfterDeletion(accountId);
+            } else {
+                alert('Failed to delete the account');
+            }
+        } catch (err) {
+            console.error("Error deleting account: " + err);
+            alert('Error deleting the account');
+        }
+    }
+
     return(<div className={"accountsBalances"}>
         <button className={"mainButton"} onClick={handleAddAccountClick}>Add new account</button>
         <>{!accounts ? 
@@ -59,7 +86,8 @@ export default function AccountBalances(){
                     <AccountOverview key={i} 
                                      id={`${account.type}-${i}`} 
                                      account={account}
-                                     onAddSubAccountClick={() => handleAddSubAccountClick(account)}/>)}
+                                     onAddSubAccountClick={() => handleAddSubAccountClick(account)}
+                                     onDeleteClick={() => handleDeleteClick(account.id)} onEditClick ={() => handleUpdateClick(account.id)}/>)}
                 </div>
             </>)
     }</>

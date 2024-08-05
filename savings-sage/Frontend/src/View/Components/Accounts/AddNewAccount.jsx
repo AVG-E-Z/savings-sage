@@ -25,8 +25,8 @@ export default function AddNewAccount(){
 
     useEffect(() => {
         //console.log(parentAccount)
-        console.log('location: '+location.state.parentAccount.id)
-        if (parentAccount) {
+        if (location.state.parentAccount) {
+            console.log('location: '+location.state.parentAccount.id)
             setValues((prevValues) => ({
                 ...prevValues,
                 parentAccountId: location.state.parentAccount.id
@@ -52,7 +52,7 @@ export default function AddNewAccount(){
 
             const incoming = await response.json();
 
-            console.log('incoming: '+JSON.stringify(incoming));
+            //console.log('incoming: '+JSON.stringify(incoming));
 
             if(incoming.ok){
                 console.log("Successfully added an account!");
