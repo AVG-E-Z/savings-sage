@@ -23,6 +23,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.7" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0-preview.5.24306.3" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+        <PackageReference Include="System.Text.Json" Version="9.0.0-preview.5.24306.7" />
     </ItemGroup>
 
     <ItemGroup>
