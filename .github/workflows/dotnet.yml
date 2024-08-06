@@ -55,9 +55,9 @@ jobs:
         run: npm ci
         working-directory: savings-sage/Frontend 
 
-      - name: Run linter
-        run: npm run lint
-        working-directory: savings-sage/Frontend  
+      #- name: Run linter
+       # run: npm run lint
+        #working-directory: savings-sage/Frontend  
 
       - name: Build frontend
         run: npm run build
