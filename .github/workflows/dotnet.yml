@@ -49,16 +49,16 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./Frontend  
+        working-directory: savings-sage/Frontend  
 
       - name: Run npm CI
         run: npm ci
-        working-directory: ./Frontend 
+        working-directory: savings-sage/Frontend 
 
       - name: Run linter
         run: npm run lint
-        working-directory: ./Frontend  
+        working-directory: savings-sage/Frontend  
 
       - name: Build frontend
         run: npm run build
-        working-directory: ./Frontend 
+        working-directory: savings-sage/Frontend 
