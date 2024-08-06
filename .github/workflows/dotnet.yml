@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-backend:
 
     runs-on: ubuntu-latest
 
@@ -33,4 +33,32 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
       working-directory: savings-sage/
-      
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    needs: build-backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.x'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./Frontend  
+
+      - name: Run npm CI
+        run: npm ci
+        working-directory: ./Frontend 
+
+      - name: Run linter
+        run: npm run lint
+        working-directory: ./Frontend  
+
+      - name: Build frontend
+        run: npm run build
+        working-directory: ./Frontend 
