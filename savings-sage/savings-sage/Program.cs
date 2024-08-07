@@ -116,7 +116,8 @@ if (builder.Environment.IsEnvironment("Testing"))
 }
 else
 {
-    builder.Services.AddDbContext<SavingsSageContext>(options => options.UseSqlServer(connectionString));
+    //builder.Services.AddDbContext<SavingsSageContext>(options => options.UseSqlServer(connectionString)); //mssql
+    builder.Services.AddDbContext<SavingsSageContext>(options => options.UseNpgsql(connectionString)); 
 }
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
