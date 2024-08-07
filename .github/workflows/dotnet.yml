@@ -134,6 +134,6 @@ jobs:
             # The Service ID of your Render service
             serviceId:  ${{ secrets.RENDER_SERVICE_ID }}
             # Your personal API key to interact with Render
-            apiKey: 7587322b16d3287c08334fdb2aad17e1
+            apiKey:   ${{ secrets.RENDER_API_KEY }}
             # Specify if having multiple deployment is allowed
           
