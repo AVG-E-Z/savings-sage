@@ -1,4 +1,3 @@
-using DotNetEnv;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -10,32 +9,31 @@ namespace savings_sage.Context;
 
 public class SavingsSageContext : IdentityDbContext<User, IdentityRole, string>
 {
-        public SavingsSageContext(DbContextOptions<SavingsSageContext> options, IConfiguration configuration)
-            : base(options)
-        {
-        }
+    public SavingsSageContext(DbContextOptions<SavingsSageContext> options, IConfiguration configuration)
+        : base(options)
+    {
+    }
 
-        public DbSet<Account> Accounts { get; set; }
-        public DbSet<Budget> Budgets { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Color> Colors { get; set; }
-        public DbSet<Group> Groups { get; set; }
-        public DbSet<SavingsGoal> SavingsGoals { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<UserAccount> UserAccounts { get; set; }
-        public DbSet<UserBudget> UserBudgets { get; set; }
-        public DbSet<UserSavingsGoal> UserSavingsGoals { get; set; }
+    public DbSet<Account> Accounts { get; set; }
+    public DbSet<Budget> Budgets { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Color> Colors { get; set; }
+    public DbSet<Group> Groups { get; set; }
+    public DbSet<SavingsGoal> SavingsGoals { get; set; }
+    public DbSet<Transaction> Transactions { get; set; }
+    public DbSet<UserAccount> UserAccounts { get; set; }
+    public DbSet<UserBudget> UserBudgets { get; set; }
+    public DbSet<UserSavingsGoal> UserSavingsGoals { get; set; }
         
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
 
         #region Accounts
         
         modelBuilder.Entity<Account>()
             .Property(x => x.Id)
-            .ValueGeneratedOnAdd();
+            .UseSerialColumn();
         
         modelBuilder.Entity<Account>()
             .HasKey(ba => ba.Id);
@@ -70,7 +68,7 @@ public class SavingsSageContext : IdentityDbContext<User, IdentityRole, string>
         
         modelBuilder.Entity<Budget>()
             .Property(x => x.Id)
-            .ValueGeneratedOnAdd();
+            .UseSerialColumn();
         
         modelBuilder.Entity<Budget>()
             .Property(x => x.Currency)
@@ -93,7 +91,7 @@ public class SavingsSageContext : IdentityDbContext<User, IdentityRole, string>
         
         modelBuilder.Entity<Category>()
             .Property(x => x.Id)
-            .ValueGeneratedOnAdd();
+            .UseSerialColumn();
 
         modelBuilder.Entity<Category>()
             .HasIndex(b => new { b.OwnerId, b.Name })
@@ -118,7 +116,7 @@ public class SavingsSageContext : IdentityDbContext<User, IdentityRole, string>
         
         modelBuilder.Entity<Color>()
             .Property(x => x.Id)
-            .ValueGeneratedOnAdd();
+            .UseSerialColumn();
 
         modelBuilder.Entity<Color>()
             .HasIndex(x => x.HexadecimalCode)
@@ -138,7 +136,7 @@ public class SavingsSageContext : IdentityDbContext<User, IdentityRole, string>
         
         modelBuilder.Entity<Group>()
             .Property(x => x.Id)
-            .ValueGeneratedOnAdd();
+            .UseSerialColumn();
         
         modelBuilder.Entity<Group>()
             .HasOne(c => c.Owner)
@@ -157,7 +155,7 @@ public class SavingsSageContext : IdentityDbContext<User, IdentityRole, string>
         
         modelBuilder.Entity<SavingsGoal>()
             .Property(x => x.Id)
-            .ValueGeneratedOnAdd();
+            .UseSerialColumn();
         
         modelBuilder.Entity<SavingsGoal>()
             .Property(x => x.Currency)
@@ -169,20 +167,13 @@ public class SavingsSageContext : IdentityDbContext<User, IdentityRole, string>
             .HasForeignKey(s => s.OwnerId)
             .OnDelete(DeleteBehavior.Restrict);
         
-        //If id is not the connection comment out this and add ICOllection<SavingsGoal> to Category
-        // modelBuilder.Entity<SavingsGoal>()
-        //     .HasOne(s => s.Category)
-        //     .WithOne(x => x.SavingsGoals)
-        //     .HasForeignKey(s => s.CategoryId); //comment out fk in SavingsGoal
-        
-        
         #endregion
         
         #region Transaction
         
         modelBuilder.Entity<Transaction>()
             .Property(x => x.Id)
-            .ValueGeneratedOnAdd();
+            .UseSerialColumn();
         
         modelBuilder.Entity<Transaction>()
             .Property(x => x.Currency)
@@ -203,23 +194,7 @@ public class SavingsSageContext : IdentityDbContext<User, IdentityRole, string>
             .OnDelete(DeleteBehavior.Restrict);
         
         #endregion
-        //
-        // #region Users
-        //
-        // modelBuilder.Entity<User>()
-        //     .Property(x => x.Id)
-        //     .ValueGeneratedOnAdd();
-        //
-        // modelBuilder.Entity<User>()
-        //     .HasIndex(x => x.Email)
-        //     .IsUnique();
-        //
-        // modelBuilder.Entity<User>()
-        //     .HasIndex(x => x.UserName)
-        //     .IsUnique();
-        //
-        // #endregion
-
+        
         #region Connector tables
 
         //Bank account
@@ -287,11 +262,8 @@ public class SavingsSageContext : IdentityDbContext<User, IdentityRole, string>
             new Color {Id = 10, Name = "sailorMercuryBlue", ClassNameColor = "navyBlueColor", HexadecimalCode = "5662CB"},
             new Color {Id = 11, Name = "scoobyDooBrown", ClassNameColor = "brownColor", HexadecimalCode = "98755B"},
             new Color {Id = 12, Name = "astroGray", ClassNameColor = "grayColor", HexadecimalCode = "979C98"}
-            );
-        
+        );
 
         #endregion
-
-
-        }
+    }
 }
