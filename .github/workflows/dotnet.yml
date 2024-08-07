@@ -132,7 +132,7 @@ jobs:
           uses: sws2apps/render-deployment@v1.7.0
           with:
             # The Service ID of your Render service
-            # serviceId: 
+            serviceId:  ${{ secrets.RENDER_SERVICE_ID }}
             # Your personal API key to interact with Render
             apiKey: 7587322b16d3287c08334fdb2aad17e1
             # Specify if having multiple deployment is allowed
