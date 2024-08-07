@@ -120,20 +120,3 @@ jobs:
               echo "running the docker image"
               echo "Testing the nodejs  app endpoints"
               echo ${{ steps.docker_build.outputs.digest }}
-              
-  deploy_to_Render:
-    name: Deploy to Render
-    runs-on: ubuntu-latest
-    needs: [push_to_DockerHub]
-    steps:
-        - name: Render Deployment
-  # You may pin to the exact commit or the version.
-  # uses: sws2apps/render-deployment@3a0b75f73ecde4a4b6a6cd39d9ac013b0a4bffe0
-          uses: sws2apps/render-deployment@v1.7.0
-          with:
-            # The Service ID of your Render service
-            serviceId:  ${{ secrets.RENDER_SERVICE_ID }}
-            # Your personal API key to interact with Render
-            apiKey:   ${{ secrets.RENDER_API_KEY }}
-            # Specify if having multiple deployment is allowed
-          
