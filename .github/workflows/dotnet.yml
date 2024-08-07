@@ -62,3 +62,44 @@ jobs:
       - name: Build frontend
         run: npm run build
         working-directory: savings-sage/Frontend 
+        
+  push_to_DockerHub:
+      name: Push Images to DockerHub
+      # The type of runner that the job will run on
+      runs-on: ubuntu-latest
+      # build Docker image and push to docker hub
+      # only if the app build and test successfully
+      needs: [build-frontend]
+
+      steps:
+        - name: checkout repo
+          uses: actions/checkout@v2
+
+        - name: Set up QEMU
+          uses: docker/setup-qemu-action@v1
+
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v1
+
+        - name: Login to DockerHub
+          uses: docker/login-action@v1
+          with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+        - name: Build and push
+          uses: docker/build-push-action@v2
+          with:
+            context: savings-sage/
+            file: savings-sage/docker-compose.yml
+            push: true
+            tags: ${{ secrets.DOCKERHUB_USERNAME }}/express-demo:latest
+
+        - name: Run the image in a container
+          uses: addnab/docker-run-action@v3
+          with:
+            image: ${{ secrets.DOCKERHUB_USERNAME }}/express-demo:latest
+            run: |
+              echo "running the docker image"
+              echo "Testing the nodejs  app endpoints"
+              echo ${{ steps.docker_build.outputs.digest }}
