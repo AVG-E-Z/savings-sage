@@ -110,13 +110,30 @@ jobs:
             context: savings-sage/
             file: savings-sage/Frontend/Frontend.dockerfile
             push: true
-            tags: ${{ secrets.DOCKERHUB_USERNAME }}/express-demo:latest
+            tags: ${{ secrets.DOCKERHUB_USERNAME }}/savings-sage:latest
                   
         - name: Run the frontend image in a container
           uses: addnab/docker-run-action@v3
           with:
-            image: ${{ secrets.DOCKERHUB_USERNAME }}/express-demo:latest
+            image: ${{ secrets.DOCKERHUB_USERNAME }}/savings-sage:latest
             run: |
               echo "running the docker image"
               echo "Testing the nodejs  app endpoints"
               echo ${{ steps.docker_build.outputs.digest }}
+              
+  deploy_to_Render:
+    name: Deploy to Render
+    runs-on: ubuntu-latest
+    needs: [push_to_DockerHub]
+    steps:
+        - name: Render Deployment
+  # You may pin to the exact commit or the version.
+  # uses: sws2apps/render-deployment@3a0b75f73ecde4a4b6a6cd39d9ac013b0a4bffe0
+          uses: sws2apps/render-deployment@v1.7.0
+          with:
+            # The Service ID of your Render service
+            # serviceId: 
+            # Your personal API key to interact with Render
+            apiKey: 7587322b16d3287c08334fdb2aad17e1
+            # Specify if having multiple deployment is allowed
+          
