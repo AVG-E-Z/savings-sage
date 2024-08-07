@@ -93,12 +93,12 @@ jobs:
             context: savings-sage/
             file: savings-sage/savings-sage/Dockerfile
             push: true
-            tags: ${{ secrets.DOCKERHUB_USERNAME }}/savings-sage:latest ./backend
+            tags: ${{ secrets.DOCKERHUB_USERNAME }}backend-savings-sage:latest
 
         - name: Run the backend image in a container
           uses: addnab/docker-run-action@v3
           with:
-            image: ${{ secrets.DOCKERHUB_USERNAME }}/savings-sage:latest ./backend
+            image: ${{ secrets.DOCKERHUB_USERNAME }}backend-savings-sage:latest
             run: |
               echo "running the docker image"
               echo "Testing the nodejs  app endpoints"
@@ -110,12 +110,12 @@ jobs:
             context: savings-sage/
             file: savings-sage/Frontend/Frontend.dockerfile
             push: true
-            tags: ${{ secrets.DOCKERHUB_USERNAME }}/savings-sage:latest ./frontend
+            tags: ${{ secrets.DOCKERHUB_USERNAME }}frontend-savings-sage:latest
                   
         - name: Run the frontend image in a container
           uses: addnab/docker-run-action@v3
           with:
-            image: ${{ secrets.DOCKERHUB_USERNAME }}/savings-sage:latest ./frontend
+            image: ${{ secrets.DOCKERHUB_USERNAME }}frontend-savings-sage:latest
             run: |
               echo "running the docker image"
               echo "Testing the nodejs  app endpoints"
