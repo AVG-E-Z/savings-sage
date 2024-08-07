@@ -87,15 +87,32 @@ jobs:
             username: ${{ secrets.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-        - name: Build and push
+        - name: Build and push backend
           uses: docker/build-push-action@v2
           with:
             context: savings-sage/
-            file: savings-sage/docker-compose.yml
+            file: savings-sage/savings-sage/Dockerfile
             push: true
             tags: ${{ secrets.DOCKERHUB_USERNAME }}/express-demo:latest
 
-        - name: Run the image in a container
+        - name: Run the backend image in a container
+          uses: addnab/docker-run-action@v3
+          with:
+            image: ${{ secrets.DOCKERHUB_USERNAME }}/express-demo:latest
+            run: |
+              echo "running the docker image"
+              echo "Testing the nodejs  app endpoints"
+              echo ${{ steps.docker_build.outputs.digest }}
+        
+        - name: Build and push frontend
+          uses: docker/build-push-action@v2
+          with:
+            context: savings-sage/
+            file: savings-sage/Frontend/Frontend.dockerfile
+            push: true
+            tags: ${{ secrets.DOCKERHUB_USERNAME }}/express-demo:latest
+                  
+        - name: Run the frontend image in a container
           uses: addnab/docker-run-action@v3
           with:
             image: ${{ secrets.DOCKERHUB_USERNAME }}/express-demo:latest
