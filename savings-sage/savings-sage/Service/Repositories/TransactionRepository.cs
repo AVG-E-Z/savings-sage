@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using savings_sage.Model;
-using Microsoft.Identity.Client;
 using savings_sage.Context;
 
 namespace savings_sage.Service.Repositories;
