@@ -28,7 +28,7 @@ public class SavingsSage_AuthControllerTests
     public async Task TestGetCurrentEndPoint()
     {
         var loginRequest = new AuthRequest("admin@admin.com", "Password123!");
-        var loginResponse = await _client.PostAsync("Auth/login",
+        var loginResponse = await _client.PostAsync("api/Auth/login",
             new StringContent(JsonConvert.SerializeObject(loginRequest),
                 Encoding.UTF8, "application/json"));
         var authResponse = JsonConvert.DeserializeObject<AuthResponse>(await loginResponse.Content.ReadAsStringAsync());
@@ -49,7 +49,7 @@ public class SavingsSage_AuthControllerTests
         
         _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-        var request = new HttpRequestMessage(HttpMethod.Get, "Auth/me");
+        var request = new HttpRequestMessage(HttpMethod.Get, "api/Auth/me");
         var response = await _client.SendAsync(request);
         
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
