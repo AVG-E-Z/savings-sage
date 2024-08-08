@@ -22,7 +22,7 @@ public class LoginTestService
     public async Task<AuthResponse> LoginAdmin()
     {
         var loginRequest = new AuthRequest("admin@admin.com", "Password123!");
-        var loginResponse = await _client.PostAsync("api/Auth/login",
+        var loginResponse = await _client.PostAsync("Auth/login",
             new StringContent(JsonConvert.SerializeObject(loginRequest),
                 Encoding.UTF8, "application/json"));
         var authResponse = JsonConvert.DeserializeObject<AuthResponse>(await loginResponse.Content.ReadAsStringAsync());
@@ -32,7 +32,7 @@ public class LoginTestService
     public async Task<AuthResponse> LoginUser()
     {
         var loginRequest = new AuthRequest("teszt@teszt.com", "asd123");
-        var loginResponse = await _client.PostAsync("api/Auth/login",
+        var loginResponse = await _client.PostAsync("Auth/login",
             new StringContent(JsonConvert.SerializeObject(loginRequest),
                 Encoding.UTF8, "application/json"));
         var authResponse = JsonConvert.DeserializeObject<AuthResponse>(await loginResponse.Content.ReadAsStringAsync());
