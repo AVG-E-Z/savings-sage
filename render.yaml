@@ -14,7 +14,7 @@ services:
   name: backend-savings-sage:latest
   runtime: image
   image:
-    url: docker.io/jeanettemoka/backend-savings-sage:latest
+    url: docker.io/kveszti/backend-savings-sage:latest
   plan: free
   envVars:
   - key: DATABASE_PASSWORD
@@ -37,7 +37,7 @@ services:
   name: frontend-savings-sage:latest
   runtime: image
   image:
-    url: docker.io/jeanettemoka/frontend-savings-sage:latest
+    url: docker.io/kveszti/frontend-savings-sage:latest
   plan: free
   region: frankfurt
 version: "1"
