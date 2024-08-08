@@ -1,0 +1,42 @@
+# Exported from Render on 2024-08-08T07:51:23Z
+databases:
+- name: db-savings-sage
+  databaseName: savingssage
+  user: savingssage_user
+  plan: free
+  region: frankfurt
+  ipAllowList:
+  - source: 0.0.0.0/0
+    description: everywhere
+  postgresMajorVersion: "16"
+services:
+- type: web
+  name: backend-savings-sage:latest
+  runtime: image
+  image:
+    url: docker.io/jeanettemoka/backend-savings-sage:latest
+  plan: free
+  envVars:
+  - key: DATABASE_PASSWORD
+    fromDatabase:
+      name: db-savings-sage
+      property: password
+  - key: DATABASE_USER
+    sync: false
+  - key: DATABASE_NAME
+    sync: false
+  - key: DATABASE_HOST
+    sync: false
+  - key: DATABASE_URL
+    fromDatabase:
+      name: db-savings-sage
+      property: connectionString
+  region: frankfurt
+- type: web
+  name: frontend-savings-sage:latest
+  runtime: image
+  image:
+    url: docker.io/jeanettemoka/frontend-savings-sage:latest
+  plan: free
+  region: frankfurt
+version: "1"
