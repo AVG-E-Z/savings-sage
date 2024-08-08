@@ -23,8 +23,8 @@ COPY Frontend/nginx.conf /etc/nginx/conf.d/default.conf
 # Copy build files from the previous stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Expose port 5173 to the outside world
-EXPOSE 5173
+# Expose port 80 to the outside world
+EXPOSE 80
 
 # Run nginx in the foreground
 CMD ["nginx", "-g", "daemon off;"]
