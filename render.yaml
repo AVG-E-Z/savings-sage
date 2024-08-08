@@ -22,15 +22,16 @@ services:
       name: db-savings-sage
       property: password
   - key: DATABASE_USER
-    sync: false
+    value: savingssage_user
   - key: DATABASE_NAME
-    sync: false
+    value: savingssage
   - key: DATABASE_HOST
-    sync: false
+    value: dpg-cqpmdpij1k6c73dt3st0-a.frankfurt-postgres.render.com
   - key: DATABASE_URL
     fromDatabase:
       name: db-savings-sage
       property: connectionString
+      value: Host=dpg-cqpmdpij1k6c73dt3st0-a.frankfurt-postgres.render.com;Database=savingssage;Username=savingssage_user;Password=2j2bTjTXlhrhNgKynNQ0ndNMcPLLM2Xs
   region: frankfurt
 - type: web
   name: frontend-savings-sage:latest
