@@ -10,7 +10,7 @@ using savings_sage.Service.Repositories;
 namespace savings_sage.Controller;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authenticationService;
