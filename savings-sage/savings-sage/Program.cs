@@ -144,12 +144,41 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-using var
-    scope = app.Services
-        .CreateScope(); 
-var authenticationSeeder = scope.ServiceProvider.GetRequiredService<AuthenticationSeeder>();
-authenticationSeeder.AddRoles();
-authenticationSeeder.AddAdmin();
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        // Attempt to seed roles and admin user
+        var authenticationSeeder = scope.ServiceProvider.GetRequiredService<AuthenticationSeeder>();
+        await authenticationSeeder.AddRoles();
+        authenticationSeeder.AddAdmin();
+        authenticationSeeder.AddAdminCategories();
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine($"Seeding failed: {e.Message}. Attempting to apply migrations and retry seeding...");
+        try
+        {
+            var context = scope.ServiceProvider.GetRequiredService<SavingsSageContext>();
+            context.Database.Migrate();
+
+            Console.WriteLine("Migrations applied successfully. Retrying seeding...");
+
+            // Retry the seeding process after migrations
+            var authenticationSeeder = scope.ServiceProvider.GetRequiredService<AuthenticationSeeder>();
+            await authenticationSeeder.AddRoles();
+            authenticationSeeder.AddAdmin();
+            authenticationSeeder.AddAdminCategories();
+            Console.WriteLine("Seeding completed successfully after applying migrations.");
+        }
+        catch (Exception migrationEx)
+        {
+            
+            Console.WriteLine($"Migrations and retry of seeding failed: {migrationEx.Message}");
+            throw;
+        }
+    }
+} 
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
