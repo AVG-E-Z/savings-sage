@@ -76,13 +76,11 @@ hr{
 
 .categoryName{
     font-size: 10px;
-    width: 81px;
-    margin-left: 10px;
+    width: 100%;
     margin: auto;
     text-align: center;
     padding: 3px;
 }
-
 
 
 .type{
@@ -144,7 +142,7 @@ hr{
 }
 
 .expenseButton{
-    background-color: indianred;
+    background-color: #e8aaaa;
 }
 
 .incomeButton{
