@@ -15,15 +15,18 @@ public class TransactionController : ControllerBase
     private readonly ILogger<TransactionController> _logger;
     private readonly ITransactionRepository _transactionRepository;
     private readonly UserManager<User> _userManager;
+    private readonly IAccountTransactionRepository _accountTransactionRepository;
 
     public TransactionController(
         ILogger<TransactionController> logger, 
         ITransactionRepository transactionRepository,  
-        UserManager<User> userManager)
+        UserManager<User> userManager,
+        IAccountTransactionRepository accountTransactionRepository)
     {
         _logger = logger;
         _transactionRepository = transactionRepository;
         _userManager = userManager;
+        _accountTransactionRepository = accountTransactionRepository;
     }
     
     // [HttpGet("GetAllByOwner/{userName}")]
@@ -116,6 +119,7 @@ public class TransactionController : ControllerBase
             };
             Console.WriteLine(transactionToAdd);
             await _transactionRepository.AddNewTransaction(transactionToAdd);
+            await _accountTransactionRepository.UpdateAmount(transactionToAdd);
             return Ok(transactionToAdd);
         }
         catch (Exception e)

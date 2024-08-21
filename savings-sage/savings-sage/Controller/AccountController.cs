@@ -16,6 +16,7 @@ public class AccountController : ControllerBase
     private readonly IAccountRepository _accountRepository;
     private readonly ILogger<AccountController> _logger;
     private readonly UserManager<User> _userManager;
+    
 
     public AccountController(ILogger<AccountController> logger, IAccountRepository accountRepository, UserManager<User> userManager)
     {
@@ -279,7 +280,7 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpPut("u/{userName}/a/{id:int}")]
+    [HttpPut("u/{userName}/a/{id:int}/edit")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
     public async Task<ActionResult<Account>> UpdateAccount(
         [FromRoute]string userName,

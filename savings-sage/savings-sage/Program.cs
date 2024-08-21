@@ -127,6 +127,7 @@ else
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IAccountTransactionRepository, AccountTransactionRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddLogging();
 builder.Services.AddScoped<IAuthService, AuthService>();

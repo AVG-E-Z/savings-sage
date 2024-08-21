@@ -41,12 +41,17 @@ export default function AccountBalances(){
         console.log(account);
         navigate('/add-new-account', { state: { parentAccount: account, accounts } });
     }
+    
+    function handleUpdateClick(account) {
+        navigate('/edit-account', { state: { account: account } });
+    }
     function updateStateAfterDeletion(accountId) {
         setAccounts((prevAccounts) => prevAccounts.filter(account => account.id !== accountId));
         setAccounts((prevAccounts) => prevAccounts.filter(account => account.parentAccountId !== accountId));
         // Or navigate to another page
         navigate('/account-balances');
     }
+    
     function handleDeleteClick(accountId) {
         const isConfirmed = window.confirm("Are you sure you want to delete this account?");
         if (isConfirmed) {
@@ -87,7 +92,7 @@ export default function AccountBalances(){
                                      id={`${account.type}-${i}`} 
                                      account={account}
                                      onAddSubAccountClick={() => handleAddSubAccountClick(account)}
-                                     onDeleteClick={() => handleDeleteClick(account.id)} onEditClick ={() => handleUpdateClick(account.id)}/>)}
+                                     onDeleteClick={() => handleDeleteClick(account.id)} onEditClick ={() => handleUpdateClick(account)}/>)}
                 </div>
             </>)
     }</>

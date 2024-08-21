@@ -28,7 +28,7 @@ function AddNewTransaction({setIsNewBeingAdded, allAccounts}) {
             try {
                 const response = await fetch(`api/Category/GetAll/${user.username}`);
                 const data = await response.json();
-                setAllCategories(data); 
+                setAllCategories(data.filter(x=> x.name !== "Correction")); 
             } catch (err) {
                 console.error("Error fetching categories: " + err);
             } 

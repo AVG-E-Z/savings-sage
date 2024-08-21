@@ -13,6 +13,7 @@ import Savings from "./Pages/Savings/Savings.jsx";
 import BudgetManagement from "./Pages/BudgetManagement/BudgetManagement.jsx";
 import AccountBalances from "./Pages/Accounts/AccountBalances.jsx";
 import AddNewAccount from "./Components/Accounts/AddNewAccount.jsx";
+import EditAccount from "./Components/Accounts/EditAccount.jsx";
 
 export default function App() {
   
@@ -25,6 +26,7 @@ export default function App() {
                 <Route path='/register' element={<Registration />}></Route>
                 <Route path='/account-balances' element={<ProtectedRoute><AccountBalances /></ProtectedRoute>}></Route>
                 <Route path='/add-new-account' element={<ProtectedRoute><AddNewAccount /></ProtectedRoute>}></Route>
+                <Route path='/edit-account' element={<ProtectedRoute><EditAccount /></ProtectedRoute>}></Route>
                 <Route path='/transactions' element={<ProtectedRoute><Transactions /></ProtectedRoute>}></Route>
                 <Route path='/settings' element={<ProtectedRoute><Settings /></ProtectedRoute>}></Route>
                 <Route path='/homepage' element={<ProtectedRoute><HomePage /></ProtectedRoute>}></Route>
