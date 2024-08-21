@@ -5,13 +5,31 @@ Savings Sage is a budgeting webapp, that lets you track your finances via creati
 ![Static Badge](https://img.shields.io/badge/github-JeanetteMoKa-purple?logo=github&link=https%3A%2F%2Fgithub.com%2FJeanetteMoKa)    
 ![Static Badge](https://img.shields.io/badge/github-kveszti-lightblue?logo=github&link=https%3A%2F%2Fgithub.com%2Fkveszti)
 # Table Of Contents
-[Used technologies](#used-technologies)  
-[Features](#features)  
-[Installation](#installation)   
-[Usage](#usage) 
-# Used technologies
+- [Used technologies](#used-technologies)  
+- [Features](#features)  
+- [Installation](#installation)   
+- [Usage](#usage) 
+# Used technologies  
+
 # Features  
-# Installation    
+Deployed features: 
+- Bank account creation and overview
+- Transaction creation
+
+Planned features: 
+- Transaction overview
+- Statistics page
+- Cutomizable categories
+- Customizable homepage with widgets
+- Saving goals creation
+- Budget threshold creation for categories
+# Installation   
+If you'd like to take the 'easy' way, we have a deployed version you can reach [here]( https://savings-sage-latest.onrender.com/).
+
+If you'd like to install and run the development version, you're going to need to take the following steps:
+1. Prerequisites:
+   - .NET 8.0 SDK
+   - Node.js (20.11 or later) and npm (10.2.4 or later)
 # Usage 
 
 
