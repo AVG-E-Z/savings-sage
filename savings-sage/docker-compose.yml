@@ -10,7 +10,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - frontend_url=http://localhost
-      - CONNECTIONSTRINGS__DEFAULT=Server=db,1433;Database=SavingsSage;User Id=sa;Password=Ant34teR;Encrypt=False;
+      - CONNECTIONSTRINGS__DEFAULT=Server=db,1433;Database=SavingsSage;User Id=sa;Password=YourStrongPassword123!;Encrypt=False;TrustServerCertificate=true;
     depends_on:
       - db
 
@@ -20,7 +20,7 @@ services:
       - "1433:1433"
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "Ant34teR"
+      MSSQL_SA_PASSWORD: "YourStrongPassword123!"
 
   savingssage-frontend:
     image: savingssagefront06
@@ -28,7 +28,7 @@ services:
       context: .
       dockerfile: Frontend/Frontend.dockerfile
     ports:
-      - "5173:5173"
+      - "80:80"
     environment:
       - PROXY_API=http://backend:5106
     depends_on:

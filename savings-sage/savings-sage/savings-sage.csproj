@@ -10,6 +10,7 @@
   </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.1.0" />
         <PackageReference Include="Currencyapi" Version="1.0.2" />
         <PackageReference Include="DotNetEnv" Version="3.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
