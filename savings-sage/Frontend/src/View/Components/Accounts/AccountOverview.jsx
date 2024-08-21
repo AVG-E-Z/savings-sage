@@ -25,7 +25,7 @@ export default function AccountOverview({account, onAddSubAccountClick, onDelete
                 const response = await fetch(`api/Transaction/GetAll/Account/${account.id}`);
                 const data = await response.json();
                 //console.log(data)
-                setTransactions(data.sort((a,b)=> new Date(b.date) - new Date(a.date)).slice(0, 5));
+                setTransactions(data.filter(x => x.name !== "adjustment").sort((a,b)=> new Date(b.date) - new Date(a.date)).slice(0, 5));
             } catch(err){
                 console.error("Error fetching accounts: " + err)
             }
