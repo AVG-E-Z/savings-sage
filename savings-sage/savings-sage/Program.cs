@@ -11,6 +11,11 @@ using savings_sage.Service.Authentication;
 using savings_sage.Service.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true) 
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true) 
+    .AddEnvironmentVariables(); 
+
 builder.Services.AddControllers();
 
 // Add Swagger for API documentation
