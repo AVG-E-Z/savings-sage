@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using savings_sage.Context;
 using savings_sage.Model;
 using savings_sage.Service.Repositories;
 
@@ -11,14 +12,16 @@ public class AuthenticationSeeder
     private readonly RoleManager<IdentityRole> roleManager;
     private readonly UserManager<User> userManager;
     private readonly ICategoryRepository _categoryRepository;
+    private readonly SavingsSageContext _context;
 
     public AuthenticationSeeder(RoleManager<IdentityRole> roleManager, UserManager<User> userManager,
-        IConfiguration configuration, ICategoryRepository categoryRepository)
+        IConfiguration configuration, ICategoryRepository categoryRepository, SavingsSageContext context)
     {
         this.roleManager = roleManager;
         this.userManager = userManager;
         _configuration = configuration;
         _categoryRepository = categoryRepository;
+        _context = context;
     }
 
     public async Task AddRoles()
@@ -73,6 +76,10 @@ public class AuthenticationSeeder
     private async Task AddCategoryToAdmin()
     {
         var adminInDb = await userManager.FindByEmailAsync("admin@admin.com");
-        await _categoryRepository.CreateDefaultCategoriesAsync(adminInDb.Id);
+        var toCheck = _context.Categories.Any();
+        if (toCheck == false)
+        {
+            await _categoryRepository.CreateDefaultCategoriesAsync(adminInDb.Id);
+        }
     }
 }
