@@ -62,6 +62,11 @@ public class SavingsSageContext : IdentityDbContext<User, IdentityRole, string>
             .WithMany(ba => ba.SubAccounts)
             .HasForeignKey(ba => ba.ParentAccountId)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<Account>()
+            .Property(a => a.ExpirationDate)
+            .HasColumnType("date");
+        
         #endregion
 
         #region Budgets
@@ -192,6 +197,10 @@ public class SavingsSageContext : IdentityDbContext<User, IdentityRole, string>
             .WithMany(u => u.Transactions)
             .HasForeignKey(t => t.OwnerId)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<Transaction>()
+            .Property(t => t.Date)
+            .HasColumnType("date");
         
         #endregion
         
