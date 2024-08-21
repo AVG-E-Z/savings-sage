@@ -8,9 +8,23 @@ export default function Transactions() {
     const { user } = useAuth();
     const [isNewBeingAdded, setIsNewBeingAdded] = useState(false);
     const [isEditModeOn, setIsEditModeOn] = useState(false);
-    const [allAccountIdsForUser, setAllAccountIdsForUser] = useState([]);
+    const [allAccounts, setAllAccounts] = useState([]);
     const [allTransactions, setAllTransactions] = useState([]);
     const [filterRules, setFilterRules] = useState(null);
+
+
+    useEffect(() => {
+        async function fetchAccounts() {
+            try {
+                const response = await fetch(`api/Account/All/u/${user.username}`);
+                const data = await response.json();
+                setAllAccounts(data);
+            } catch (err) {
+                console.error("Error fetching accounts: " + err);
+            }
+        }
+        fetchAccounts();
+    }, [user.username]);
 
     // useEffect(() => {
     //     async function fetchAccountIds(){
@@ -58,7 +72,7 @@ export default function Transactions() {
     
     return (
        <> {
-           isNewBeingAdded ?  <AddNewTransaction setIsNewBeingAdded={setIsNewBeingAdded}/> : isEditModeOn ? <EditTransaction/> : <TransactionOverview allTransactions={FilterRules(allTransactions)} setIsNewBeingAdded={setIsNewBeingAdded} setIsEditModeOn={setIsEditModeOn} setFilterRules={setFilterRules}/>
+           isNewBeingAdded ?  <AddNewTransaction setIsNewBeingAdded={setIsNewBeingAdded} allAccounts={allAccounts}/> : isEditModeOn ? <EditTransaction/> : <TransactionOverview allTransactions={FilterRules(allTransactions)} setIsNewBeingAdded={setIsNewBeingAdded} setIsEditModeOn={setIsEditModeOn} setFilterRules={setFilterRules} allAccounts={allAccounts} />
        }
        </>
     );

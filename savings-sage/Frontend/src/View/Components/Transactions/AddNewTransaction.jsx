@@ -3,10 +3,9 @@ import { useAuth } from "../../../Authentication/AuthProvider.jsx";
 import '../../Pages/Transactions/transactions.css';
 import {all} from "axios";
 
-function AddNewTransaction({setIsNewBeingAdded}) {
+function AddNewTransaction({setIsNewBeingAdded, allAccounts}) {
     const { user } = useAuth();
     const [allCategories, setAllCategories] = useState(null);
-    const [allAccounts, setAllAccounts] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [areCategoriesDone, setAreCategoriesDone] = useState(false);
     const [areAccountsDone, setAreAccountsDone] = useState(false);
@@ -23,7 +22,6 @@ function AddNewTransaction({setIsNewBeingAdded}) {
     const [currency, setCurrency] = useState("HUF");
     const [name, setName] = useState("New transaction");
     
-    //todo: legyen defaultja a választott számlának, hogyha egy van, akkor az legyen
 
     useEffect(() => {
         async function fetchCategories() {
@@ -35,17 +33,7 @@ function AddNewTransaction({setIsNewBeingAdded}) {
                 console.error("Error fetching categories: " + err);
             } 
         }
-        async function fetchAccounts() {
-            try {
-                const response = await fetch(`api/Account/All/u/${user.username}`);
-                const data = await response.json();
-                setAllAccounts(data);
-            } catch (err) {
-                console.error("Error fetching accounts: " + err);
-            } 
-        }
         fetchCategories();
-        fetchAccounts();
     }, [user.username]);
 
     useEffect(() => {
