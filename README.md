@@ -43,7 +43,7 @@ Planned features:
 - Saving goals creation
 - Budget threshold creation for categories
 # Installation   
-If you'd like to take the 'easy' way, we have a deployed version you can reach [here]( https://savings-sage-latest.onrender.com/).
+If you'd like to take the 'easy' way, we have a deployed version you can reach [here]( https://savings-sage-latest.onrender.com/). This is a free render.com page, so you should experience slow responses from the server.
 
 If you'd like to install and run the development version, you're going to need to take the following steps:
 1. Prerequisites:
@@ -73,21 +73,63 @@ If you'd like to install and run the development version, you're going to need t
 
 Clone the repository and download the above packages. 
 
-Then set up your .env file for the following variables: 
-- here there are gonna be the variables, this should be done by friday
+You're gonna need to setup an appsettings.Development.json on the backend to set your variables for the db connection and the jwt token settings. It should have the following structure, so the code can interpret it the right way:
+```json
+ "frontend_url": "here comes localhost and the port where your frontend is running",
+  "ConnectionStrings": {
+    "Default": "here comes your local postgres server connection string"
+  },
+  "Jwt": {
+    "ValidIssuer": "here comes the valid issuer you'd like to set for the jwt token generation",
+    "ValidAudience": "here comes the valid audience you'd like to set for the jwt token generation",
+    "IssuerSigningKey": "here comes the issuer signing key you'd like to set for the jwt token generation"
+  },
+  "Roles": {
+    "Admin": "here comes the name you'd like to use for admin roles",
+    "User": "here comes the name you'd like to use for user roles"
+  }
+```
 
-After that, you can start the application with docker-compose (docker compose up), or starting the backend, frontend and db separately. 
-Backend: dotnet run (in the savings-sage folder)
-Frontend: npm run dev (in the Frontend folder)
-Db: start your local postgres server and use your connection string in the .env 
-    
-    
+After that, you can start the application two different ways:
+1. With docker-compose:
+   - From the root folder: ```cd savings-sage```
+   - In the terminal: ```docker compose up```
+2. Running separately the frontend and the backend on your local machine:
+   - Backend:
+       - From the root folder: ```cd savings-sage/savings-sage```
+       - In the terminal: ```dotnet run```
+    - Frontend:
+       - From the root folder: ```cd savings-sage/Frontend```
+       - In the terminal: ```npm run dev```
+    - Make sure your referenced database server is also running
+     
 
 # Usage 
+
 1. Register an account
+ 
+ 
+ ![image](https://github.com/user-attachments/assets/3bb0c749-fd78-4fad-948d-5d59611eefe2)
+
+  
+
 2. Log in
+  
+ ![image](https://github.com/user-attachments/assets/ae004ddd-7616-41ed-937c-761d7b05acdd)
+
+
+  
 3. Create an account
+  
+ ![image](https://github.com/user-attachments/assets/aa0c7bd8-64f9-4df6-939f-29bccb45c8c5)
+
+  
+  
 4. Create transactions
+  
+ ![image](https://github.com/user-attachments/assets/52e53b23-c5ef-4b76-8cdb-37d20747e4a5)
+
+
 
 
 
