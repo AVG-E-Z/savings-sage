@@ -47,7 +47,7 @@ export default function AddNewAccount(){
     async function HandleSubmit(e){
         e.preventDefault();
         try {
-            const response = await fetch(`api/Account/u/${user.username}/Add`, {method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(values)});
+            const response = await fetch(`api/Account/u/Add`, {method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(values)});
 
             const incoming = await response.json();
 

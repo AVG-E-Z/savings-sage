@@ -89,24 +89,18 @@ public class AccountRepository(SavingsSageContext context) : IAccountRepository
 
     private async Task GetSubAccountsRecursive(int accountId, List<Account> allSubAccounts, HashSet<int> visited)
     {
-        // Base case: if the account is already visited, return
         if (visited.Contains(accountId))
         {
             return;
         }
 
-        // Mark this account as visited
         visited.Add(accountId);
 
-        // Get direct child accounts
         var childAccounts = context.Accounts.Where(a => a.ParentAccountId == accountId).ToList();
 
         foreach (var childAccount in childAccounts)
         {
-            // Add child account to the result list
             allSubAccounts.Add(childAccount);
-
-            // Recursively call for each child account
             await GetSubAccountsRecursive(childAccount.Id, allSubAccounts, visited);
         }
     }

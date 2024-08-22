@@ -63,7 +63,7 @@ export default function EditAccount(){
         e.preventDefault();
         
         try {
-            const response = await fetch(`api/Account/u/${user.username}/a/${account.id}/edit`, {method: "PUT", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(values)})
+            const response = await fetch(`api/Account/u/a/${account.id}/edit`, {method: "PUT", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(values)})
 
             const incoming = await response.json();
 

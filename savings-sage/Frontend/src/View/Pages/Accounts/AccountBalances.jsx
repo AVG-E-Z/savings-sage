@@ -18,7 +18,7 @@ export default function AccountBalances(){
     useEffect(() => {
         async function fetchAccounts(){
             try {
-                const response = await fetch(`api/Account/All/u/${user.username}`);
+                const response = await fetch(`api/Account/All/u/owner`);
                 const data = await response.json();
                 setAccounts(data);
             } catch(err){
@@ -61,7 +61,7 @@ export default function AccountBalances(){
     }
     async function deleteAccount(accountId) {
         try {
-            const response = await fetch(`api/Account/u/${user.username}/a/${accountId}`, { method: 'DELETE', headers: {'Content-Type': 'application/json'} });
+            const response = await fetch(`api/Account/u/a/${accountId}`, { method: 'DELETE', headers: {'Content-Type': 'application/json'} });
             
             if (response.status == 204) {
                 console.log('Account deleted successfully');

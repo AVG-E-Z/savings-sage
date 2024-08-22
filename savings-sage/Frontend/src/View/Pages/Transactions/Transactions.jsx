@@ -16,7 +16,7 @@ export default function Transactions() {
     useEffect(() => {
         async function fetchAccounts() {
             try {
-                const response = await fetch(`api/Account/All/u/${user.username}`);
+                const response = await fetch(`api/Account/All/u/owner`);
                 const data = await response.json();
                 setAllAccounts(data);
             } catch (err) {
