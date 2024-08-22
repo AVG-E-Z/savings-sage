@@ -10,7 +10,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - frontend_url=http://localhost
-      - CONNECTIONSTRINGS__DEFAULT=Host=database;Port=5432;Database=savingssage;Username=postgres;Password=pswd
+      - CONNECTIONSTRINGS__DEFAULT=Host=database;Port=5432;Database=savingssage;Username=<your-postgres-username>;Password=<your-postgres-password>
     depends_on:
       - database
   
@@ -18,8 +18,8 @@ services:
     image: postgres:latest
     environment:
       POSTGRES_DB: savingssage
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: pswd
+      POSTGRES_USER: <your-postgres-username>
+      POSTGRES_PASSWORD: <your-postgres-password>
     ports:
       - "5432:5432"
 
