@@ -16,6 +16,7 @@ public class AccountController : ControllerBase
     private readonly IAccountRepository _accountRepository;
     private readonly ILogger<AccountController> _logger;
     private readonly UserManager<User> _userManager;
+    
 
     public AccountController(ILogger<AccountController> logger, IAccountRepository accountRepository, UserManager<User> userManager)
     {
@@ -24,13 +25,13 @@ public class AccountController : ControllerBase
         _userManager = userManager;
     }
 
-    [HttpGet("All/u/{userName}/ha/IdList")]
+    [HttpGet("All/u/owner/ha/IdList")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
-    public async Task<ActionResult<IEnumerable<int>>> GetByUserId(
-        [FromRoute]string userName)
+    public async Task<ActionResult<IEnumerable<int>>> GetByUserId()
     {
         try
         {
+            var userName = User.Identity.Name;
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
             if (user == null)
             {
@@ -47,13 +48,14 @@ public class AccountController : ControllerBase
             return NotFound(message);
         }
     }
-    [HttpGet("All/u/{userName}")]
+    
+    [HttpGet("All/u/owner")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
-    public async Task<ActionResult<IEnumerable<Account>>> GetByOwnerId(
-        [FromRoute]string userName)
+    public async Task<ActionResult<IEnumerable<Account>>> GetByOwnerId()
     {
         try
         {
+            var userName = User.Identity.Name;
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
             if (user == null)
             {
@@ -73,13 +75,13 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpGet("All/u/r/{userName}")]
+    [HttpGet("All/u/reader")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
-    public async Task<ActionResult<IEnumerable<Account>>> GetByReaderId(
-        [FromRoute]string userName)
+    public async Task<ActionResult<IEnumerable<Account>>> GetByReaderId()
     {
         try
         {
+            var userName = User.Identity.Name;
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
             if (user == null)
             {
@@ -97,13 +99,13 @@ public class AccountController : ControllerBase
         }
     }
     
-    [HttpGet("All/u/w/{userName}")]
+    [HttpGet("All/u/writer")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
-    public async Task<ActionResult<IEnumerable<Account>>> GetByWriterId(
-        [FromRoute]string userName)
+    public async Task<ActionResult<IEnumerable<Account>>> GetByWriterId()
     {
         try
         {
+            var userName = User.Identity.Name;
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
             if (user == null)
             {
@@ -121,14 +123,14 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpGet("u/{userName}/a/{id:int}")]
+    [HttpGet("u/a/{id:int}")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
     public async Task<ActionResult<IEnumerable<Account>>> GetById(
-        [FromRoute]string userName,
         [FromRoute]int id)
     {
         try
         {
+            var userName = User.Identity.Name;
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
             if (user == null)
             {
@@ -157,14 +159,14 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpGet("u/{userName}/a/{id:int}/children")]
+    [HttpGet("u/a/{id:int}/children")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
     public async Task<ActionResult<IEnumerable<Account>>> GetByIdAllChildren(
-        [FromRoute]string userName,
         [FromRoute]int id)
     {
         try
         {
+            var userName = User.Identity.Name;
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
             if (user == null)
             {
@@ -193,15 +195,14 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpPost("u/{userName}/Add")]
+    [HttpPost("u/Add")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
     public async Task<ActionResult<Account>> CreateNewAccount(
-        [FromRoute]string userName,
         [FromBody] AccountDataBody accountDataBody)
     {
         try
         {
-            Console.WriteLine(userName);
+            var userName = User.Identity.Name;
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
             if (user == null)
             {
@@ -246,14 +247,14 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpDelete("u/{userName}/a/{id:int}")]
+    [HttpDelete("u/a/{id:int}")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
     public async Task<ActionResult<Account>> DeleteAccountAndSubAccounts(
-        [FromRoute]string userName,
         [FromRoute]int id)
     {
         try
         {
+            var userName = User.Identity.Name;
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
             if (user == null)
             {
@@ -279,15 +280,15 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpPut("u/{userName}/a/{id:int}")]
+    [HttpPut("u/a/{id:int}/edit")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
     public async Task<ActionResult<Account>> UpdateAccount(
-        [FromRoute]string userName,
         [FromRoute]int id,
         [FromBody] AccountDataBody accountDataBody)
     {
         try
         {
+            var userName = User.Identity.Name;
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
             if (user == null)
             {
@@ -320,15 +321,15 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpPut("u/{userName}/a/{id:int}/g/addmembers")]
+    [HttpPut("u/a/{id:int}/g/addmembers")]
     [Authorize(Policy = "RequiredUserOrAdminRole")]
     public async Task<ActionResult<Account>> UpdateAccountMembers(
-        [FromRoute]string userName,
         [FromRoute]int id,
         [FromBody] UserAccountDataBody userAccountDataBody)
     {
         try
         {
+            var userName = User.Identity.Name;
             User owner = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
             if (owner == null)
             {

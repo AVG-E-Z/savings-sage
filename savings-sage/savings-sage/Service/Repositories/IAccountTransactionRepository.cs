@@ -6,5 +6,5 @@ namespace savings_sage.Service.Repositories;
 
 public interface IAccountTransactionRepository
 {
-    Task<Account> UpdateAmount(int accId, Transaction transaction, int? siblingAccId);
+    Task<Account> UpdateAmount(Transaction transaction);
 }

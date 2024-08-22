@@ -273,6 +273,7 @@ public class SavingsSageContext : IdentityDbContext<User, IdentityRole, string>
             new Color {Id = 12, Name = "astroGray", ClassNameColor = "grayColor", HexadecimalCode = "979C98"}
         );
 
+
         #endregion
     }
 }

@@ -15,7 +15,7 @@ import {
 import {useAuth} from "../../../Authentication/AuthProvider.jsx";
 import AccountTransactions from "./AccountTransactions.jsx";
 
-export default function AccountOverview({account, onAddSubAccountClick, onDeleteClick}){
+export default function AccountOverview({account, onAddSubAccountClick, onDeleteClick, onEditClick}){
     const { user } = useAuth();
     const [ transactions, setTransactions ] = useState([]);
     
@@ -25,7 +25,7 @@ export default function AccountOverview({account, onAddSubAccountClick, onDelete
                 const response = await fetch(`api/Transaction/GetAll/Account/${account.id}`);
                 const data = await response.json();
                 //console.log(data)
-                setTransactions(data.sort((a,b)=> new Date(b.date) - new Date(a.date)).slice(0, 5));
+                setTransactions(data.filter(x => x.name !== "adjustment").sort((a,b)=> new Date(b.date) - new Date(a.date)).slice(0, 5));
             } catch(err){
                 console.error("Error fetching accounts: " + err)
             }
@@ -65,7 +65,7 @@ export default function AccountOverview({account, onAddSubAccountClick, onDelete
             ) : null}
             <CardButtonCont>
                 <CardButton onClick={onAddSubAccountClick}>Add sub</CardButton> {/*todo fix subAcc addition, parentAcc doesn't get it*/}
-                <CardButton>Edit</CardButton>
+                <CardButton onClick={onEditClick}>Edit</CardButton>
                 <CardButtonDngr onClick={onDeleteClick}>Delete</CardButtonDngr>
             </CardButtonCont>
         </Card>)

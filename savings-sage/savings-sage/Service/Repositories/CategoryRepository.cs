@@ -13,6 +13,7 @@ public class CategoryRepository(SavingsSageContext context) : ICategoryRepositor
     
         var baseCategories = new List<Category>
         {
+            new() { Name = "Correction", OwnerId = userId, ColorId = 8, IconURL = "/icons/wrench.svg", Color = colors.FirstOrDefault(x => x.Id == 8)},
             new() { Name = "Utilities", OwnerId = userId, ColorId = 1, IconURL = "/icons/lightbulb.svg", Color = colors.FirstOrDefault(x => x.Id == 1)},
             new() { Name = "Food", OwnerId = userId, ColorId = 2, IconURL = "/icons/utensils.svg", Color = colors.FirstOrDefault(x => x.Id == 2)},
             new() { Name = "Clothing", OwnerId = userId, ColorId = 3, IconURL = "/icons/hanger.svg", Color = colors.FirstOrDefault(x => x.Id == 3)},

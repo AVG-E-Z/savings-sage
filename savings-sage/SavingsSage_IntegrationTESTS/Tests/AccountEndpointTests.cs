@@ -28,7 +28,6 @@ public class AccountEndpointTests
         this.output = output;
     }
     
-    
     private readonly AccountDataBody accountData1 = new AccountDataBody
         {
             Name = "teszt 1",
@@ -36,7 +35,6 @@ public class AccountEndpointTests
             Currency = Currency.HUF,
             Type = "Cash"
         };
-    
     
     [Fact]
     public async Task CreateNewAccount()
@@ -50,18 +48,15 @@ public class AccountEndpointTests
     
         var content = new StringContent(JsonConvert.SerializeObject(accountData1), Encoding.UTF8, "application/json");
         
-        var createResponse = await _client.PostAsync($"api/Account/u/{userName}/Add", content);
+        var createResponse = await _client.PostAsync($"api/Account/u/Add", content);
     
         if (!createResponse.IsSuccessStatusCode)
         {
             var errorContent = await createResponse.Content.ReadAsStringAsync();
             output.WriteLine($"Failed to create account. Status Code: {createResponse.StatusCode}, Response: {errorContent}");
-            return; // Exit early if the request failed
+            return; 
         }
     
-        var responseString = await createResponse.Content.ReadAsStringAsync();
-        //output.WriteLine(responseString);
-        
         var response = JsonConvert.DeserializeObject<AccountResponse>(await createResponse.Content.ReadAsStringAsync());
         
         if (response == null)
@@ -86,17 +81,14 @@ public class AccountEndpointTests
     
         var content = new StringContent(JsonConvert.SerializeObject(accountData1), Encoding.UTF8, "application/json");
         
-        var createResponse = await _client.PostAsync($"api/Account/u/{userName}/Add", content);
+        var createResponse = await _client.PostAsync($"api/Account/u/Add", content);
     
         if (!createResponse.IsSuccessStatusCode)
         {
             var errorContent = await createResponse.Content.ReadAsStringAsync();
             output.WriteLine($"Failed to create account. Status Code: {createResponse.StatusCode}, Response: {errorContent}");
-            return; // Exit early if the request failed
+            return;
         }
-    
-        //var responseString = await createResponse.Content.ReadAsStringAsync();
-        //output.WriteLine("first Acc.: "+responseString);
         
         var response = JsonConvert.DeserializeObject<AccountResponse>(await createResponse.Content.ReadAsStringAsync());
         
@@ -111,21 +103,17 @@ public class AccountEndpointTests
             ParentAccountId = response.Account.Id
         };
         
-        //output.WriteLine("ParentAccountId: "+accountData2.ParentAccountId);
         var contentSubAcc = new StringContent(JsonConvert.SerializeObject(accountData2), Encoding.UTF8, "application/json");
         
-        var createSubResponse = await _client.PostAsync($"api/Account/u/{userName}/Add", contentSubAcc);
+        var createSubResponse = await _client.PostAsync($"api/Account/u/Add", contentSubAcc);
     
         if (!createSubResponse.IsSuccessStatusCode)
         {
             var errorContent = await createSubResponse.Content.ReadAsStringAsync();
             output.WriteLine($"Failed to create account. Status Code: {createSubResponse.StatusCode}, Response: {errorContent}");
-            return; // Exit early if the request failed
+            return; 
         }
     
-        var responseSubAccString = await createSubResponse.Content.ReadAsStringAsync();
-        //output.WriteLine("second Acc.: "+responseSubAccString);
-        
         var responseSubAcc = JsonConvert.DeserializeObject<AccountResponse>(await createSubResponse.Content.ReadAsStringAsync());
     
         Assert.Equal(userName, responseSubAcc.Account.Owner.UserName);
