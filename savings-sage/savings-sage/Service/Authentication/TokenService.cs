@@ -33,8 +33,8 @@ public class TokenService : ITokenService
         DateTime expiration)
     {
         return new JwtSecurityToken(
-            "apiWithAuthBackend",
-            "apiWithAuthBackend",
+            _configuration["Jwt:ValidIssuer"],
+            _configuration["Jwt:ValidAudience"],
             claims,
             expires: expiration,
             signingCredentials: credentials

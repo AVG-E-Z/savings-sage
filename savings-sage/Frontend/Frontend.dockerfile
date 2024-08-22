@@ -41,4 +41,4 @@ EXPOSE 80
 # Run nginx in the foreground
 #CMD ["nginx", "-g", "daemon off;"]
 #Robitól
-CMD [ "npm", "run", "preview", "--", "--host", "0.0.0.0" ]
+CMD [ "npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "80"]
