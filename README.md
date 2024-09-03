@@ -92,9 +92,10 @@ You're gonna need to setup an appsettings.Development.json on the backend to set
 
 After that, you can start the application two different ways:
 1. With docker-compose:
+   - Find the docker-compose-pattern.yml file and change the placeholder variables to your own configuration strings
    - From the root folder: ```cd savings-sage```
    - In the terminal: ```docker compose up```
-2. Running separately the frontend and the backend on your local machine:
+3. Running separately the frontend and the backend on your local machine:
    - Backend:
        - From the root folder: ```cd savings-sage/savings-sage```
        - In the terminal: ```dotnet run```
