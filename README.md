@@ -32,7 +32,7 @@ Savings Sage is a budgeting webapp, that lets you track your finances via creati
 
 # Features  
 Deployed features: 
-- Bank account creation and overview
+- Account creation and overview
 - Transaction creation
 
 Planned features: 
@@ -49,7 +49,6 @@ If you'd like to install and run the development version, you're going to need t
 1. Prerequisites:
    - Backend software and package versions:
       - .NET 8.0 SDK
-      - Aspire.Npgsql.EntityFrameworkCore.PostgreSQL	^8.1.0
       - Currencyapi	^1.0.2
       - DotNetEnv	^3.0.0	
       - Microsoft.AspNetCore.Authentication.JwtBearer	^8.0.7	
@@ -87,7 +86,9 @@ You're gonna need to setup an appsettings.Development.json on the backend to set
   "Roles": {
     "Admin": "here comes the name you'd like to use for admin roles",
     "User": "here comes the name you'd like to use for user roles"
-  }
+  },
+  "Secret": {
+    "AdminPW": "here comes the admin password you'd like to use for the admin created with AuthenticationSeeder.cs"
 ```
 
 After that, you can start the application two different ways:
